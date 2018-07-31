@@ -4,4 +4,4 @@ This is the repo for the paper:
 
 A video for the paper can be found [here](https://www.youtube.com/watch?v=57GFQcebceY):
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/57GFQcebceY/0.jpg)](https://www.youtube.com/watch?v=57GFQcebceY)
+[![Plane opt video](https://img.youtube.com/vi/57GFQcebceY/0.jpg)](https://www.youtube.com/watch?v=57GFQcebceY)
