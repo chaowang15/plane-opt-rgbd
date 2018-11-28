@@ -18,7 +18,7 @@ Here is the video for the paper:
 
 ## Plane extraction code
 
-Part of the source codes about plane extraction is listed here:
+Part of the source codes about plane detection is listed here:
 
 ### 1. RGB-D plane detection on frames
 
