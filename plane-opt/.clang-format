@@ -1,0 +1,48 @@
+# I created this based on what I could divine from the confluence document.
+# It seems that our existing codebase is at odds with some of what this results in
+# Please be welcome to start discussions and modify :)
+---
+BasedOnStyle: google
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 128
+---
+Language: Cpp
+Standard: Cpp11
+NamespaceIndentation: None
+AccessModifierOffset: -4
+ContinuationIndentWidth: 4
+SortIncludes: false
+CompactNamespaces: false
+Cpp11BracedListStyle: true
+AlwaysBreakTemplateDeclarations: true
+
+# Break after everything except namespaces.
+BreakBeforeBraces: Custom
+BraceWrapping:
+    AfterClass: true
+    AfterControlStatement: true
+    AfterEnum: true
+    AfterFunction: true
+    AfterNamespace: false
+    AfterStruct: true
+    AfterUnion: true
+    AfterExternBlock: true
+    BeforeCatch: true
+    BeforeElse: true
+    IndentBraces: false
+
+# Wasn't sure about the following. Our code varies.
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+SpaceBeforeParens: ControlStatements
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceInEmptyParentheses: false
+SpacesInAngles: false
+SpacesInCStyleCastParentheses: false
+AlignAfterOpenBracket: DontAlign
