@@ -1,4 +1,5 @@
 #include <iostream>
+#include "partition.h"
 
 int main(int argc, char** argv)
 {
