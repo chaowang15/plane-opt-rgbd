@@ -67,6 +67,25 @@ CovObj &CovObj::operator-=(const CovObj &Q)
     return *this;
 }
 
+bool CovObj::operator==(const CovObj &Q)
+{
+    return cov_ == Q.cov_ && normal_ == Q.normal_ && center_ == Q.center_ && area_ == Q.area_ && size_ == Q.size_;
+}
+
+CovObj &CovObj::operator=(const CovObj &Q)
+{
+    // A good habit to check for self-assignment
+    if (this == &Q)
+        return *this;
+
+    cov_ = Q.cov_;
+    normal_ = Q.normal_;
+    center_ = Q.center_;
+    area_ = Q.area_;
+    size_ = Q.size_;
+    return *this;
+}
+
 double CovObj::energy()
 {
     if (cov_.determinant() / pow(area_, 5) < 1e-15)

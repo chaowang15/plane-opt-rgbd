@@ -23,6 +23,8 @@ public:
     CovObj(const Vector3d &v1, const Vector3d &v2, const Vector3d &v3);
     CovObj &operator+=(const CovObj &Q);
     CovObj &operator-=(const CovObj &Q);
+    bool operator==(const CovObj &Q);
+    CovObj &operator=(const CovObj &Q);
     double energy();
     void computePlaneNormal();
     void clearCov();
