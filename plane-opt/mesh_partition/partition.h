@@ -30,10 +30,10 @@ public:
     {
         int cluster_id;
         bool is_visited;
-        bool is_valid;
+        bool is_border;
         int indices[3];
         unordered_set<int> nbr_faces;
-        Face() : cluster_id(-1), is_visited(false), is_valid(true) {}
+        Face() : cluster_id(-1), is_visited(false), is_border(false) {}
     };
 
     struct Edge : public MxHeapable
@@ -68,7 +68,7 @@ public:
     bool readPLY(const std::string& filename);
     bool writePLY(const std::string& filename);
     void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }
-    void runPartitionPipeline();
+    bool runPartitionPipeline();
     void setTargetClusterNum(int num) { target_cluster_num_ = num; }
 
 private:
@@ -89,18 +89,21 @@ private:
 
     /* Swap */
     void runSwapping();
-    void swapOnce();
+    int swapOnce();
+    double computeSwapDeltaEnergy(int fidx, int from, int to);
 
 
 private:
     int vertex_num_, face_num_;
-    int curr_cluster_num_, target_cluster_num_;
+    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;
     Vector3d center_, maxcoord_, mincoord_;  // bounding box
     vector<Vertex> vertices_;
     vector<Face> faces_;
     vector<Cluster> clusters_;
     MxHeap heap_;
     double total_energy_;
+    unordered_set<int> swap_clusters_; // candidate clusters with swapped faces
+
     // set<Edge> heap_;
     // set<Edge*, EdgeComp> heap_;
 };

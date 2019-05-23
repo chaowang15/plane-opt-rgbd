@@ -31,14 +31,16 @@ int main(int argc, char** argv)
     partition.setTargetClusterNum(target_cluster_num);
 
     auto start = std::chrono::steady_clock::now();
-    partition.runPartitionPipeline();
+    bool flag = partition.runPartitionPipeline();
     auto end = std::chrono::steady_clock::now();
     double delta = std::chrono::duration_cast<chrono::seconds>(end - start).count();
     printInRed("Time: " + std::to_string(delta));
 
-    cout << "Write ply file: " << out_ply_fname << endl;
-    partition.writePLY(out_ply_fname);
-
-    cout << "ALL DONE." << endl;
+    if (flag)
+    {
+        cout << "Write ply file: " << out_ply_fname << endl;
+        partition.writePLY(out_ply_fname);
+        cout << "ALL DONE." << endl;
+    }
     return 0;
 }

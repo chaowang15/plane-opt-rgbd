@@ -2,14 +2,15 @@
 /*
   Try to create a max-heap with following features:
   - Θ(1) time search
-  - Θ(𝑛) time construction and batch insert
-  - Θ(log𝑛) time insert
-  - Θ(log𝑛) time extract top
-  - Θ(log𝑛) time change key (and check key if value was indirectly changed)
+  - Θ(n) time construction and batch insert
+  - Θ(logn) time insert
+  - Θ(logn) time extract top
+  - Θ(logn) time change key (and check key if value was indirectly changed)
 
   Features:
   - Replace the self-defined storage structure 'MxDynBlock' from the original reference code 'qslim'
     with standard STL structure std::vector, since the former is too verbose and also hard to handle.
+  - Easy to use: all code is in current header file.
 
   Usage example:
   //-----------------------------------------------------------//
@@ -17,12 +18,12 @@
   struct Obj : public MxHeapable {
     // Put your own member here
   }
-
   // Define heap and insert element
   MxHeap myheap;
   Obj * obj = new Obj();
   myheap.insert(obj);
   // Use any other heap operations like extract(), update(), remove()
+  //-----------------------------------------------------------//
 
   Reference:
   - qslime code by Michael Garland: http://www.cs.cmu.edu/~./garland/quadrics/qslim.html

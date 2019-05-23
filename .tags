@@ -12,16 +12,16 @@ CovObj	plane-opt/mesh_partition/covariance.cpp	/^CovObj::CovObj(const Vector3d &
 CovObj	plane-opt/mesh_partition/covariance.h	/^class CovObj$/;"	c
 Edge	plane-opt/mesh_partition/partition.h	/^        Edge(int a, int b): v1(a), v2(b){}$/;"	f	struct:Partition::Edge
 Edge	plane-opt/mesh_partition/partition.h	/^    struct Edge : public MxHeapable$/;"	s	class:Partition
-Face	plane-opt/mesh_partition/partition.h	/^        Face() : cluster_id(-1), is_visited(false), is_valid(true) {}$/;"	f	struct:Partition::Face
+Face	plane-opt/mesh_partition/partition.h	/^        Face() : cluster_id(-1), is_visited(false), is_border(false) {}$/;"	f	struct:Partition::Face
 Face	plane-opt/mesh_partition/partition.h	/^    struct Face$/;"	s	class:Partition
-MXHEAP_H	plane-opt/mesh_partition/myheap.h	34;"	d
+MXHEAP_H	plane-opt/mesh_partition/myheap.h	35;"	d
 MxHeap	plane-opt/mesh_partition/myheap.h	/^    MxHeap() { data.reserve(8); }$/;"	f	class:MxHeap
 MxHeap	plane-opt/mesh_partition/myheap.h	/^    MxHeap(unsigned int n) { data.resize(n); }$/;"	f	class:MxHeap
 MxHeap	plane-opt/mesh_partition/myheap.h	/^class MxHeap$/;"	c
 MxHeapable	plane-opt/mesh_partition/myheap.h	/^    MxHeapable()$/;"	f	class:MxHeapable
 MxHeapable	plane-opt/mesh_partition/myheap.h	/^class MxHeapable$/;"	c
 PARTITION_H	plane-opt/mesh_partition/partition.h	2;"	d
-Partition	plane-opt/mesh_partition/partition.cpp	/^Partition::Partition()$/;"	f	class:Partition
+Partition	plane-opt/mesh_partition/partition.cpp	/^Partition::Partition() {}$/;"	f	class:Partition
 Partition	plane-opt/mesh_partition/partition.h	/^class Partition$/;"	c
 SwapFace	plane-opt/mesh_partition/partition.h	/^        SwapFace(int face, int f, int t) : face_id(face), from(f), to(t) {}$/;"	f	struct:Partition::SwapFace
 SwapFace	plane-opt/mesh_partition/partition.h	/^    struct SwapFace$/;"	s	class:Partition
@@ -40,10 +40,11 @@ color	plane-opt/mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struc
 color	plane-opt/mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Vertex
 computeEdgeEnergy	plane-opt/mesh_partition/partition.cpp	/^void Partition::computeEdgeEnergy(Edge* edge)$/;"	f	class:Partition
 computePlaneNormal	plane-opt/mesh_partition/covariance.cpp	/^void CovObj::computePlaneNormal()$/;"	f	class:CovObj
+computeSwapDeltaEnergy	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeSwapDeltaEnergy(int fidx, int from, int to)$/;"	f	class:Partition
 cov	plane-opt/mesh_partition/partition.h	/^        CovObj cov, ini_cov; \/\/ current and initial covariance object$/;"	m	struct:Partition::Cluster
 cov_	plane-opt/mesh_partition/covariance.h	/^    Matrix3d cov_;$/;"	m	class:CovObj
 createClusterColors	plane-opt/mesh_partition/partition.cpp	/^void Partition::createClusterColors()$/;"	f	class:Partition
-curr_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
+curr_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
 data	plane-opt/mesh_partition/myheap.h	/^    std::vector<MxHeapable *> data;  \/\/ we keep the pointers in the heap$/;"	m	class:MxHeap
 destroy	plane-opt/mesh_partition/myheap.h	/^    void destroy()$/;"	f	class:MxHeap
 downheap	plane-opt/mesh_partition/myheap.h	/^    void downheap(unsigned int i)$/;"	f	class:MxHeap
@@ -69,11 +70,12 @@ indices	plane-opt/mesh_partition/partition.h	/^        int indices[3];$/;"	m	str
 ini_cov	plane-opt/mesh_partition/partition.h	/^        CovObj cov, ini_cov; \/\/ current and initial covariance object$/;"	m	struct:Partition::Cluster
 ini_energy	plane-opt/mesh_partition/partition.h	/^        double energy, ini_energy; \/\/ only to save some computation time of calling CovObj::energy() too frequently$/;"	m	struct:Partition::Cluster
 initMerging	plane-opt/mesh_partition/partition.cpp	/^void Partition::initMerging()$/;"	f	class:Partition
+init_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
 insert	plane-opt/mesh_partition/myheap.h	/^    void insert(MxHeapable *t) { insert(t, t->heap_key()); }$/;"	f	class:MxHeap
 insert	plane-opt/mesh_partition/myheap.h	/^    void insert(MxHeapable *t, double v)$/;"	f	class:MxHeap
 isClusterValid	plane-opt/mesh_partition/partition.h	/^    bool isClusterValid(int cidx) { return !clusters_[cidx].faces.empty(); }$/;"	f	class:Partition
+is_border	plane-opt/mesh_partition/partition.h	/^        bool is_border;$/;"	m	struct:Partition::Face
 is_in_heap	plane-opt/mesh_partition/myheap.h	/^    inline bool is_in_heap() { return token != -47; }$/;"	f	class:MxHeapable
-is_valid	plane-opt/mesh_partition/partition.h	/^        bool is_valid;$/;"	m	struct:Partition::Face
 is_valid	plane-opt/mesh_partition/partition.h	/^        bool is_valid;$/;"	m	struct:Partition::Vertex
 is_visited	plane-opt/mesh_partition/partition.h	/^        bool is_visited;$/;"	m	struct:Partition::Face
 item	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *item(uint i) { return data[i]; }$/;"	f	class:MxHeap
@@ -113,14 +115,16 @@ remove	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *remove(MxHeapable *t)
 removeEdgeFromCluster	plane-opt/mesh_partition/partition.cpp	/^bool Partition::removeEdgeFromCluster(int cidx, Edge* edge)$/;"	f	class:Partition
 right	plane-opt/mesh_partition/myheap.h	/^    unsigned int right(unsigned int i) { return 2 * i + 2; }$/;"	f	class:MxHeap
 runMerging	plane-opt/mesh_partition/partition.cpp	/^bool Partition::runMerging()$/;"	f	class:Partition
-runPartitionPipeline	plane-opt/mesh_partition/partition.cpp	/^void Partition::runPartitionPipeline()$/;"	f	class:Partition
+runPartitionPipeline	plane-opt/mesh_partition/partition.cpp	/^bool Partition::runPartitionPipeline()$/;"	f	class:Partition
 runSwapping	plane-opt/mesh_partition/partition.cpp	/^void Partition::runSwapping()$/;"	f	class:Partition
 setTargetClusterNum	plane-opt/mesh_partition/partition.h	/^    void setTargetClusterNum(int num) { target_cluster_num_ = num; }$/;"	f	class:Partition
 set_heap_pos	plane-opt/mesh_partition/myheap.h	/^    inline void set_heap_pos(int t) { token = t; }$/;"	f	class:MxHeapable
 size	plane-opt/mesh_partition/myheap.h	/^    unsigned int size() const { return data.size(); }$/;"	f	class:MxHeap
 size_	plane-opt/mesh_partition/covariance.h	/^    int size_;$/;"	m	class:CovObj
 swap	plane-opt/mesh_partition/myheap.h	/^    void swap(unsigned int i, unsigned int j)$/;"	f	class:MxHeap
-target_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
+swapOnce	plane-opt/mesh_partition/partition.cpp	/^int Partition::swapOnce()$/;"	f	class:Partition
+swap_clusters_	plane-opt/mesh_partition/partition.h	/^    unordered_set<int> swap_clusters_; \/\/ candidate clusters with swapped faces$/;"	m	class:Partition
+target_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
 to	plane-opt/mesh_partition/partition.h	/^        int face_id, from, to;$/;"	m	struct:Partition::SwapFace
 token	plane-opt/mesh_partition/myheap.h	/^    int token;      \/\/ position in the heap$/;"	m	class:MxHeapable
 top	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *top() { return (length() < 1 ? nullptr : data[0]); }$/;"	f	class:MxHeap
