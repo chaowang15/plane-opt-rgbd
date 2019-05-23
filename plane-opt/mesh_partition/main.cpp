@@ -21,6 +21,7 @@ int main(int argc, char** argv)
         out_cluster_fname = string(argv[4]);
     }
     Partition partition;
+    cout << "Read ply file: " << ply_fname << endl;
     if (!partition.readPLY(ply_fname))
     {
         printInRed("ERROR in reading ply file " + ply_fname);
@@ -29,11 +30,15 @@ int main(int argc, char** argv)
     partition.printModelInfo();
     partition.setTargetClusterNum(target_cluster_num);
 
-    auto start = chrono::steady_clock::now();
+    auto start = std::chrono::steady_clock::now();
     partition.runPartitionPipeline();
-    auto end = chrono::steady_clock::now();
-    double delta = chrono::duration_cast<chrono::milliseconds>(end - start).count();
+    auto end = std::chrono::steady_clock::now();
+    double delta = std::chrono::duration_cast<chrono::seconds>(end - start).count();
     printInRed("Time: " + std::to_string(delta));
 
+    cout << "Write ply file: " << out_ply_fname << endl;
+    partition.writePLY(out_ply_fname);
+
+    cout << "ALL DONE." << endl;
     return 0;
 }

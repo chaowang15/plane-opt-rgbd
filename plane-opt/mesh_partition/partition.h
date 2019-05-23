@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <Eigen/Eigen>
 #include "covariance.h"
-#include <memory>
+#include "myheap.h"
 
 using namespace std;
 using namespace Eigen;
@@ -36,13 +36,10 @@ public:
         Face() : cluster_id(-1), is_visited(false), is_valid(true) {}
     };
 
-    struct Edge
+    struct Edge : public MxHeapable
     {
         int v1, v2;
-        double energy;
-        Edge(int a, int b): v1(a), v2(b), energy(0){}
-        Edge(int a, int b, double c) : v1(a), v2(b), energy(c) {}
-        bool operator<(const Edge& rhs) const { return energy < rhs.energy; }  // Sorted by energy
+        Edge(int a, int b): v1(a), v2(b){}
     };
 
     //! For swapping faces on cluster borders
@@ -54,20 +51,19 @@ public:
 
     struct Cluster
     {
-        double energy;
+        double energy, ini_energy; // only to save some computation time of calling CovObj::energy() too frequently
         unordered_set<int> faces; // faces each cluster contains
         unordered_set<int> nbr_clusters;
         vector<SwapFace> faces_to_swap;
-        vector<std::shared_ptr<Edge>> edges;
+        vector<Edge*> edges;
         Vector3f color;
         CovObj cov, ini_cov; // current and initial covariance object
-        Cluster() : energy(0) {}
-        bool isValid() { return !faces.empty(); }
+        Cluster() : energy(0), ini_energy(0){}
     };
 
 public:
-    Partition() {}
-    ~Partition() {}
+    Partition();
+    ~Partition();
 
     bool readPLY(const std::string& filename);
     bool writePLY(const std::string& filename);
@@ -77,10 +73,24 @@ public:
 
 private:
     /* Merging */
-    void runMerging();
+    bool runMerging();
     void initMerging();
+    void computeEdgeEnergy(Edge* edge);
+    bool removeEdgeFromCluster(int cidx, Edge* edge);
+    bool isClusterValid(int cidx) { return !clusters_[cidx].faces.empty(); }
+    bool mergeOnce();
+    void applyFaceEdgeContraction(Edge* edge);
+    void mergeClusters(int c1, int c2);
+    int findClusterNeighbors(int cidx);
+	int findClusterNeighbors(int cidx, unordered_set<int>& cluster_faces, unordered_set<int>& neighbor_clusters);
+    double getTotalEnergy();
+    void createClusterColors();
 
+
+    /* Swap */
     void runSwapping();
+    void swapOnce();
+
 
 private:
     int vertex_num_, face_num_;
@@ -89,7 +99,10 @@ private:
     vector<Vertex> vertices_;
     vector<Face> faces_;
     vector<Cluster> clusters_;
-    set<Edge> heap_;
+    MxHeap heap_;
+    double total_energy_;
+    // set<Edge> heap_;
+    // set<Edge*, EdgeComp> heap_;
 };
 
 #endif  // !PARTITION_H

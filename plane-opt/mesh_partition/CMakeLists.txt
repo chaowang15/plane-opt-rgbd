@@ -7,6 +7,8 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIR})
 # message(${Boost_LIBRARIES})
 
+
+set(CMAKE_BUILD_TYPE "Release")
 SET(EIGEN_INCLUDE_DIR "/usr/include/eigen3")
 message("Eigen path: ${EIGEN_INCLUDE_DIR}")
 include_directories(${EIGEN_INCLUDE_DIR})

@@ -60,4 +60,24 @@ inline void printInCyan(const std::string& str)
     printInColor(str, "cyan");
 }
 
+//! Print a progress bar with given progress. Remember to print a new line after progress reaches 1.0
+inline void printProgressBar(float progress)
+{
+    int bar_width = 70;
+    std::cout << "\r[";
+    int pos = bar_width * progress;
+    for (int i = 0; i < bar_width; ++i)
+    {
+        if (i < pos)
+            std::cout << "=";
+        else if (i == pos)
+            std::cout << ">";
+        else
+            std::cout << " ";
+    }
+    std::cout << "] " << int(progress * 100.0) << " %" << std::flush;
+    if (progress == 1.0)
+        std::cout << std::endl;
+}
+
 #endif

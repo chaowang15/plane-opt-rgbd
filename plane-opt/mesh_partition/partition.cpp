@@ -2,11 +2,20 @@
 #include <stdlib.h>
 #include "../common/tools.h"
 #include <unordered_map>
-#include <boost/functional/hash.hpp>
+#include <random>
 
-// Good reference for set:
-// https://stackoverflow.com/questions/7340434/how-to-update-an-existing-element-of-stdset
-// https://stackoverflow.com/questions/18295333/how-to-efficiently-insert-a-range-of-consecutive-integers-into-a-stdset
+Partition::Partition()
+{
+
+}
+
+
+Partition::~Partition()
+{
+	std::cout << "Releasing edges ... " << std::endl;
+	// This will release memory of all pointers, so no need to release 'edges' in each cluster.
+	heap_.destroy();
+}
 
 //! Read PLY model
 /*!
@@ -42,7 +51,8 @@ bool Partition::readPLY(const std::string& filename)
 
     while (true)
     {
-        fgets(line, 1024, fin);
+        if (fgets(line, 1024, fin) == NULL)
+			return false;
         char* token = strtok(line, seps);
         if (!strcmp(token, "end_header"))
             break;
@@ -216,7 +226,8 @@ bool Partition::readPLY(const std::string& filename)
         for (int i = 0; i < vertex_num_; i++)
         {
             // The vertex data order is: coordinates -> normal -> color -> others (qualities, radius, curvatures, etc)
-            fgets(line, 1024, fin);
+            if (fgets(line, 1024, fin) == NULL)
+				return false;
             char* token = strtok(line, seps);
             // Read 3D point
             Vertex vtx;
@@ -270,7 +281,8 @@ bool Partition::readPLY(const std::string& filename)
         // Read Faces
         for (int i = 0; i < face_num_; i++)
         {
-            fgets(line, 1024, fin);
+            if (fgets(line, 1024, fin) == NULL)
+				return false;
             char* token = strtok(line, seps);
             token = strtok(NULL, seps);
             for (int j = 0; j < 3; ++j)
@@ -347,50 +359,96 @@ bool Partition::writePLY(const std::string& filename)
 
 void Partition::runPartitionPipeline()
 {
-    printInGreen("Initial partition by merging faces ...");
-    runMerging();
+	curr_cluster_num_ = face_num_;
+	assert(target_cluster_num_ < curr_cluster_num_ && target_cluster_num_ > 0);
 
-    printInGreen("Optimization by swapping cluster neighbor faces ...");
+    printInGreen("Mesh partition by merging neighbor faces.");
+    if (!runMerging())
+		return;
 
-    printInGreen("Post processing on clusters ...");
+    printInGreen("(Optional) Optimization by swapping neighbor faces between clusters.");
+	runSwapping();
 
-    printInCyan("#Clusters: " + std::to_string(curr_cluster_num_));
+    printInGreen("Merge neighbor clusters.");
+
+    printInCyan("#Final Clusters: " + std::to_string(curr_cluster_num_));
+
+	createClusterColors();
+
 }
 
-void Partition::runMerging()
+bool Partition::runMerging()
 {
     initMerging();
+
+	cout << "Merging ..." << endl;
+	float progress = 0.0; // for printing a progress bar
+	int cluster_diff = curr_cluster_num_ - target_cluster_num_;
+	const int kStep = (cluster_diff < 100) ? 1 : (cluster_diff / 100);
+	int count = 0;
+	while (curr_cluster_num_ > target_cluster_num_)
+	{
+		if (count % kStep == 0 || count == cluster_diff - 1)
+		{
+			progress = (count == cluster_diff - 1) ? 1.0 : static_cast<float>(count) / cluster_diff;
+			printProgressBar(progress);
+		}
+        if (!mergeOnce())
+			return false;
+		count++;
+	}
+	assert(curr_cluster_num_ == target_cluster_num_);
+
+	cout << "Energy: " << getTotalEnergy() << endl;
+	return true;
 }
 
 void Partition::initMerging()
 {
-	curr_cluster_num_ = face_num_;
     clusters_.resize(curr_cluster_num_);
+
     // One edge -> multiple faces, since the mesh may be non-manifold
     typedef std::pair<int, int> EdgePair;
-    unordered_map<EdgePair, std::vector<int>, boost::hash<EdgePair>> edge_to_face;
-	cout << "Initialize neighbors ... " << endl;
+    // unordered_map<EdgePair, std::vector<int>, boost::hash<EdgePair>> edge_to_face;
+    unordered_map<long long, vector<int>> edge_to_face;  // each long long int presents an edge with two int endpoints
+    cout << "Initialize neighbors ... " << endl;
+    vector<int> fa(3);
+    float progress = 0.0; // used to print a progress bar
+	const int kStep = (face_num_ < 100) ? 1 : (face_num_ / 100);
     for (int fidx = 0; fidx < face_num_; fidx++)
     {
+		// Print a progress bar
+		if (fidx % kStep == 0 || fidx == face_num_ - 1)
+		{
+			progress = (fidx == face_num_ - 1) ? 1.0 : static_cast<float>(fidx) / face_num_;
+			printProgressBar(progress);
+		}
+
+        Face& face = faces_[fidx];
+        face.cluster_id = fidx;  // initially each face is a single cluster
+
         // Initialize neighbors of vertices and faces
-		Face& face = faces_[fidx];
-		face.cluster_id = fidx; // initially each face is a single cluster
+        for (int i = 0; i < 3; ++i)
+            fa[i] = face.indices[i];
+		// One directed edge may be shared by more than one face in a non-manifold edges. So we
+		// sort vertices here to use undirected edge to determine face neighbors.
+        std::sort(fa.begin(), fa.end());
         for (int i = 0; i < 3; ++i)
         {
-            int v0 = face.indices[i], v1 = face.indices[(i + 1) % 3], v2 = face.indices[(i + 2) % 3];
-            vertices_[v0].nbr_vertices.insert(v1);
-            vertices_[v0].nbr_vertices.insert(v2);
-            vertices_[v0].nbr_faces.insert(fidx);
-            edge_to_face[std::make_pair(v0, v1)].push_back(fidx);
-            EdgePair twin_edge(v1, v0);
-            if (edge_to_face.find(twin_edge) != edge_to_face.end())
+            vertices_[fa[i]].nbr_vertices.insert(fa[(i + 1) % 3]);
+            vertices_[fa[i]].nbr_vertices.insert(fa[(i + 2) % 3]);
+            vertices_[fa[i]].nbr_faces.insert(fidx);
+            long long a = static_cast<long long>((i == 2) ? fa[0] : fa[i]);
+            long long b = static_cast<long long>((i == 2) ? fa[i] : fa[i + 1]);
+            long long edge = (a << 32) | b;  // fast bit operation
+            for (int f : edge_to_face[edge])
             {
-                for (int f : edge_to_face[twin_edge])
-                {
-                    face.nbr_faces.insert(f);
-                    faces_[f].nbr_faces.insert(fidx);
-                }
+                face.nbr_faces.insert(f);
+                faces_[f].nbr_faces.insert(fidx);
+				clusters_[fidx].nbr_clusters.insert(f);
+				clusters_[f].nbr_clusters.insert(fidx);
             }
+            edge_to_face[edge].push_back(fidx);
         }
 
         // Initialize covariance quadratic objects
@@ -399,22 +457,188 @@ void Partition::initMerging()
         clusters_[fidx].cov = clusters_[fidx].ini_cov = Q;
     }
 
-	// Initialize edges
-	cout << "Initialize edges ... " << endl;
-	for (int fidx = 0; fidx < face_num_; fidx++)
+    // Initialize edges
+    cout << "Initialize edges ... " << endl;
+	progress = 0;
+    for (int cidx = 0; cidx < curr_cluster_num_; cidx++)
     {
-		Face& face = faces_[fidx];
-		for (int nbr : face.nbr_faces)
+		if (cidx % kStep == 0 || cidx == face_num_ - 1)
 		{
-			assert(fidx != nbr); // neighbor face cannot be itself
-			if (fidx < nbr)
-			{
-				std::shared_ptr<Edge> edge = std::make_shared<Edge>(fidx, nbr);
-				clusters_[fidx].edges.push_back(edge);
-				clusters_[nbr].edges.push_back(edge);
-			}
+			progress = (cidx == face_num_ - 1) ? 1.0 : static_cast<float>(cidx) / face_num_;
+			printProgressBar(progress);
 		}
+		Cluster& cluster = clusters_[cidx];
+        for (int nbr : cluster.nbr_clusters)
+        {
+            if (cidx < nbr)
+            {
+				Edge *edge = new Edge(cidx, nbr);
+				computeEdgeEnergy(edge);
+				heap_.insert(edge);
+				cluster.edges.push_back(edge);
+                clusters_[nbr].edges.push_back(edge);
+            }
+        }
+    }
+}
+
+//! Compute energy of the edge.
+/*!
+	This function assumes the energy data in each cluster is already the latest, like calling
+	`clusters_[cidx].energy = clusters_[cidx].cov.energy()`. This can save some time.
+*/
+void Partition::computeEdgeEnergy(Edge* edge)
+{
+	CovObj cov = clusters_[edge->v1].cov;
+	cov += clusters_[edge->v2].cov;
+	double energy = cov.energy() - clusters_[edge->v1].energy - clusters_[edge->v2].energy;
+	edge->heap_key(-energy); // it's a max heap by default but we need a min heap
+}
+
+//! Remove one edge pointer from a cluster. Note that it doesn't delete/release the pointer.
+bool Partition::removeEdgeFromCluster(int cidx, Edge* edge)
+{
+	if (edge == nullptr) return false;
+	bool flag_found_edge = false;
+	auto iter = clusters_[cidx].edges.begin();
+	while (iter != clusters_[cidx].edges.end())
+	{
+		Edge* e = *iter;
+		if (e == nullptr || e != edge)
+		{
+			iter++;
+		}
+		else
+		{
+			iter = clusters_[cidx].edges.erase(iter);
+			flag_found_edge = true; // Not return here since there may be duplicate edges
+		}
+	}
+	return flag_found_edge;
+}
+
+bool Partition::mergeOnce()
+{
+	Edge* edge = (Edge*)heap_.extract();
+	if (!edge)
+	{
+		cout << "ERROR: No edge exists in the heap. Quitting..." << endl;
+		return false;
+	}
+	if (isClusterValid(edge->v1) && isClusterValid(edge->v2))
+	{
+		applyFaceEdgeContraction(edge);
+		curr_cluster_num_--;
+	}
+	else
+	{
+		cout << "ERROR: This edge does not exist in clusters. Quiting..." << endl;
+		return false;
+	}
+	return true;
+}
+
+//! Edge contraction
+void Partition::applyFaceEdgeContraction(Edge* edge)
+{
+	int c1 = edge->v1, c2 = edge->v2; // two vertices present cluster ids
+	mergeClusters(c1, c2); // merge cluster c2 to c1
+	clusters_[c1].cov += clusters_[c2].cov;
+	clusters_[c1].energy = clusters_[c1].cov.energy(); // remember to update energy as well
+
+	// Get all neighbors of the new merged cluster v1
+	findClusterNeighbors(c1);
+
+	// Remove all old edges next to c1 and c2 from the heap and corresponding edge lists
+	for (Edge* e : clusters_[c1].edges)
+	{
+		// For each edge (c1, u) or (u, c1), delete this edge and remove it from cluster u's edge list,
+		// since cluster c1 and c2's edge list will be cleared later. This is because, each edge pointer is
+		// included twice in two clusters, but can only be released once.
+		int u = (e->v1 == c1) ? e->v2 : e->v1;
+		heap_.remove(e);
+		removeEdgeFromCluster(u, e);
+		delete e;
+	}
+	for (Edge* e : clusters_[c2].edges)
+	{
+		int u = (e->v1 == c2) ? e->v2 : e->v1;
+		heap_.remove(e);
+		removeEdgeFromCluster(u, e);
+		delete e;
+	}
+	clusters_[c1].edges.clear();
+	clusters_[c2].edges.clear();
+
+	// Add new edges between v1 and all its new neighbors into edge list
+	for (int cidx : clusters_[c1].nbr_clusters)
+	{
+		Edge *e = new Edge(c1, cidx);
+		clusters_[c1].edges.push_back(e);
+		clusters_[cidx].edges.push_back(e);
+	}
+
+	// Insert all new edges
+	for (Edge* e : clusters_[c1].edges)
+	{
+		computeEdgeEnergy(e);
+		heap_.insert(e);
 	}
 }
 
-void Partition::runSwapping() {}
+//! Merge cluster c2 into cluster c1
+void Partition::mergeClusters(int c1, int c2)
+{
+	// Merge all faces from c2 to c1, and update the corresponding cluster index
+	for (int fidx : clusters_[c2].faces)
+	{
+		clusters_[c1].faces.insert(fidx);
+		faces_[fidx].cluster_id = c1;
+	}
+	clusters_[c2].faces.clear();
+}
+
+//! Find neighbor clusters of an input cluster with faces
+int Partition::findClusterNeighbors(int cidx, unordered_set<int>& cluster_faces, unordered_set<int>& neighbor_clusters)
+{
+	neighbor_clusters.clear();
+	for (int fidx : cluster_faces) // brute-force: check all faces in the cluster
+	{
+		for (int nbr : faces_[fidx].nbr_faces)
+		{
+			int target_id = faces_[nbr].cluster_id;
+			if (target_id != cidx)
+				neighbor_clusters.insert(target_id);
+		}
+	}
+	return int(neighbor_clusters.size());
+}
+
+//! Overload: find neighbor clusters of an cluster
+int Partition::findClusterNeighbors(int cidx)
+{
+	return findClusterNeighbors(cidx, clusters_[cidx].faces, clusters_[cidx].nbr_clusters);
+}
+
+double Partition::getTotalEnergy()
+{
+	double energy = 0;
+	for (int i = 0; i < face_num_; ++i)
+		if (isClusterValid(i))
+			energy += clusters_[i].energy;
+	return energy;
+}
+
+void Partition::createClusterColors()
+{
+	//srand(time(NULL)); // randomize seed
+	for (int i = 0; i < face_num_; ++i)
+		if (isClusterValid(i)) // create a random color
+			clusters_[i].color = Vector3f(float(rand()) / RAND_MAX, float(rand()) / RAND_MAX, float(rand()) / RAND_MAX);
+}
+
+
+void Partition::runSwapping()
+{
+
+}
