@@ -7,6 +7,8 @@
 #include <queue>
 #include <gflags/gflags.h>
 
+const double kPI = 3.1415926;
+
 DEFINE_double(point_plane_dis_threshold, 0.08, "");
 DEFINE_double(normal_angle_threshold, 10.0, "");
 DEFINE_double(max_normal_angle_threshold, 45.0, "");
@@ -399,7 +401,7 @@ bool Partition::runMerging()
     {
         if (count % kStep == 0 || count == cluster_diff - 1)
         {
-            progress = (count == cluster_diff - 1) ? 1.0 : static_cast<float>(count) / cluster_diff;
+            progress = (count == cluster_diff - 1) ? 1.0f : static_cast<float>(count) / cluster_diff;
             printProgressBar(progress);
         }
         if (!mergeOnce())
@@ -433,7 +435,7 @@ void Partition::initMerging()
         // Print a progress bar
         if (fidx % kStep == 0 || fidx == face_num_ - 1)
         {
-            progress = (fidx == face_num_ - 1) ? 1.0 : static_cast<float>(fidx) / face_num_;
+            progress = (fidx == face_num_ - 1) ? 1.0f : static_cast<float>(fidx) / face_num_;
             printProgressBar(progress);
         }
 
@@ -477,7 +479,7 @@ void Partition::initMerging()
     {
         if (cidx % kStep == 0 || cidx == init_cluster_num_ - 1)
         {
-            progress = (cidx == init_cluster_num_ - 1) ? 1.0 : static_cast<float>(cidx) / init_cluster_num_;
+            progress = (cidx == init_cluster_num_ - 1) ? 1.0f : static_cast<float>(cidx) / init_cluster_num_;
             printProgressBar(progress);
         }
         Cluster& cluster = clusters_[cidx];
@@ -744,7 +746,7 @@ int Partition::swapOnce()
             swap_clusters_.insert(from);
             swap_clusters_.insert(to);
         }
-        count_swap_faces += clusters_[cidx].faces_to_swap.size();
+        count_swap_faces += static_cast<int>(clusters_[cidx].faces_to_swap.size());
     }
     // Remember to update the energy each time after updating the covariance object
     for (int cidx : swap_clusters_)
@@ -893,8 +895,8 @@ void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unorder
 void Partition::mergeAdjacentPlanes()
 {
     const double kPointPlaneDisThrsd = FLAGS_point_plane_dis_threshold;
-    const double kNormalAngleThrsd = cos(M_PI * FLAGS_normal_angle_threshold / 180);
-    const double kCenterNormalAngleThrsd = cos(M_PI * FLAGS_center_normal_angle_threshold / 180);
+    const double kNormalAngleThrsd = cos(kPI * FLAGS_normal_angle_threshold / 180);
+    const double kCenterNormalAngleThrsd = cos(kPI * FLAGS_center_normal_angle_threshold / 180);
     heap_.destroy();
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {

@@ -169,12 +169,12 @@ public:
     //! Overload function of update(), if key is already inside heap element
     bool update(MxHeapable *t) { return update(t, t->heap_key()); }
     //! Data size
-    unsigned int size() const { return data.size(); }
+    unsigned int size() const { return static_cast<unsigned int>(data.size()); }
     //! Different name but same function of 'size()'
-    unsigned int length() const { return data.size(); }
+    unsigned int length() const {return static_cast<unsigned int>(data.size()); }
     //! Get item in a position
-    MxHeapable *item(uint i) { return data[i]; }
-    const MxHeapable *item(uint i) const { return data[i]; }
+    MxHeapable *item(unsigned int i) { return data[i]; }
+    const MxHeapable *item(unsigned int i) const { return data[i]; }
     //! Extract the max value from the heap
     MxHeapable *extract()
     {

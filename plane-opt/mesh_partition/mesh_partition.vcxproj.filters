@@ -3,8 +3,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="partition.cpp" />
+    <ClCompile Include="covariance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="partition.h" />
+    <ClInclude Include="covariance.h" />
+    <ClInclude Include="myheap.h" />
   </ItemGroup>
 </Project>

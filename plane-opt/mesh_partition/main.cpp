@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     auto start = std::chrono::steady_clock::now();
     bool flag = partition.runPartitionPipeline();
     auto end = std::chrono::steady_clock::now();
-    double delta = std::chrono::duration_cast<chrono::seconds>(end - start).count();
+    double delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
     printInRed("Time: " + std::to_string(delta));
 
     if (flag)

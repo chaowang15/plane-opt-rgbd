@@ -65,7 +65,7 @@ inline void printProgressBar(float progress)
 {
     int bar_width = 70;
     std::cout << "\r[";
-    int pos = bar_width * progress;
+    int pos = static_cast<int>(bar_width * progress);
     for (int i = 0; i < bar_width; ++i)
     {
         if (i < pos)
