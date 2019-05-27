@@ -14,6 +14,8 @@ if (OPENMP_FOUND)
     set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
 endif()
 
+find_package(gflags REQUIRED)
+
 set(CMAKE_BUILD_TYPE "Release")
 SET(EIGEN_INCLUDE_DIR "/usr/include/eigen3")
 message("Eigen path: ${EIGEN_INCLUDE_DIR}")
@@ -23,3 +25,4 @@ file(GLOB SRC "*.cpp")
 # message("cpp file list: ${SRC}")
 add_executable(mesh_partition ${SRC})
 # target_link_libraries( mesh_partition ${Boost_LIBRARIES} )
+target_link_libraries( mesh_partition gflags)

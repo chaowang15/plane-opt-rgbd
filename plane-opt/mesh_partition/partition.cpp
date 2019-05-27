@@ -4,6 +4,14 @@
 #include <unordered_map>
 #include <random>
 #include <chrono>
+#include <queue>
+#include <gflags/gflags.h>
+
+DEFINE_double(point_plane_dis_threshold, 0.08, "");
+DEFINE_double(normal_angle_threshold, 10.0, "");
+DEFINE_double(max_normal_angle_threshold, 45.0, "");
+DEFINE_double(center_normal_angle_threshold, 70.0, "");
+DEFINE_double(energy_increase_threshold, 0.1, "");
 
 Partition::Partition() {}
 
@@ -369,10 +377,10 @@ bool Partition::runPartitionPipeline()
     printInGreen("(Optional) Optimization by swapping neighbor faces between clusters:");
     runSwapping();
 
-    printInGreen("Merge neighbor clusters:");
+    printInGreen("Post process: merge neighbor clusters:");
+    mergeAdjacentPlanes();
 
     printInCyan("#Final Clusters: " + std::to_string(curr_cluster_num_));
-
     createClusterColors();
 
     return true;
@@ -459,7 +467,7 @@ void Partition::initMerging()
         // Initialize covariance quadratic objects
         clusters_[fidx].faces.insert(fidx);  // initially each face is a cluster
         CovObj Q(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
-        clusters_[fidx].cov = clusters_[fidx].ini_cov = Q;
+        clusters_[fidx].cov = faces_[fidx].cov = Q;
     }
 
     // Initialize edges
@@ -552,7 +560,7 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
     clusters_[c1].cov += clusters_[c2].cov;
     clusters_[c1].energy = clusters_[c1].cov.energy();  // remember to update energy as well
 
-    // Get all neighbors of the new merged cluster v1
+    // NOTE: this function also works but slow, so already computed neighbor clusters in mergeClusters()
     // findClusterNeighbors(c1);
 
     // Remove all old edges next to c1 and c2 from the heap and corresponding edge lists
@@ -661,10 +669,10 @@ void Partition::runSwapping()
             swap_clusters_.insert(i);
     }
     double last_energy = getTotalEnergy();
-    double scale = 1e5;
+    double scale = 1e5;  // scale the energy since it is usually too small
     cout << "Energy 0 (x " << scale << "): " << last_energy * scale << endl;
     double curr_energy = 0;
-    const int kMaxIter = 300;
+    const int kMaxIter = 300;  // change it as you like
     int iter = 0;
     while (iter++ < kMaxIter)
     {
@@ -675,97 +683,72 @@ void Partition::runSwapping()
             break;
         last_energy = curr_energy;
     }
+
+    processIslandClusters();
 }
 
 //! Run swapping step for one time, which means swapping some border face to its neighbor cluster once.
 //! Return the number of faces got swapped.
 int Partition::swapOnce()
 {
-    auto start = std::chrono::steady_clock::now();
-    // Find all cluster border faces (at least one neighbor is in different cluster)
-    vector<int> border_faces;
-    unordered_map<int, pair<int, int>> swap_faces;  // face -> (from_cluster, swap_to_cluster)
-    for (int cidx : swap_clusters_)
+    // Find all faces to swap
+    vector<int> vec_clusters(swap_clusters_.begin(), swap_clusters_.end());  // cannot use set in OpenMP for loop
+#pragma omp parallel for
+    for (size_t i = 0; i < vec_clusters.size(); ++i)
     {
+        int cidx = vec_clusters[i];
+        clusters_[cidx].faces_to_swap.clear();
         for (int fidx : clusters_[cidx].faces)
         {
+            unordered_set<int> visited_clusters;
+            double max_delta_energy = 0;
+            int opt_cidx = -1;
             for (int nbr : faces_[fidx].nbr_faces)
             {
                 int ncidx = faces_[nbr].cluster_id;
-                if (cidx != ncidx)
-                {
-                    border_faces.push_back(fidx);
-                    swap_faces[fidx] = std::make_pair(cidx, ncidx);
+                if (ncidx != cidx && !visited_clusters.count(ncidx))
+                {  // Swapping faces must be in cluster border
+                    visited_clusters.insert(ncidx);
+                    double delta_energy = computeSwapDeltaEnergy(fidx, cidx, ncidx);
+                    // Find the neighbor cluster with max energy decrease
+                    if (delta_energy > max_delta_energy)
+                    {
+                        opt_cidx = ncidx;
+                        max_delta_energy = delta_energy;
+                    }
                 }
             }
+            if (opt_cidx != -1)
+                clusters_[cidx].faces_to_swap.push_back(std::make_pair(fidx, opt_cidx));
         }
     }
-    auto end = std::chrono::steady_clock::now();
-    double delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    cout << "Time1: " << delta << endl;
-
-    // Find border faces to be swapped
-    start = std::chrono::steady_clock::now();
-#pragma omp parallel for
-    for (size_t i = 0; i < border_faces.size(); ++i)
-    {
-        int fidx = border_faces[i];
-        int cidx = faces_[fidx].cluster_id;
-        unordered_set<int> visited_clusters;
-        double max_delta_energy = 0;
-        int opt_cidx = -1;
-        for (int nbr : faces_[fidx].nbr_faces)
-        {
-            int ncidx = faces_[nbr].cluster_id;
-            if (ncidx != cidx && !visited_clusters.count(ncidx))
-            {
-                visited_clusters.insert(ncidx);
-                double delta_energy = computeSwapDeltaEnergy(fidx, cidx, ncidx);
-                // Find the neighbor cluster with max energy change (decrease)
-                if (delta_energy > max_delta_energy)
-                {
-                    opt_cidx = ncidx;
-                    max_delta_energy = delta_energy;
-                }
-            }
-        }
-        if (opt_cidx == -1)
-            cidx = -1;  // found no cluster to swap this face to
-        swap_faces[fidx] = std::make_pair(cidx, opt_cidx);
-    }
-
-    end = std::chrono::steady_clock::now();
-    delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    cout << "Time2: " << delta << endl;
 
     // Swap faces now
-    start = std::chrono::steady_clock::now();
     int count_swap_faces = 0;
     swap_clusters_.clear();
-    for (auto& it : swap_faces)
+    for (size_t i = 0; i < vec_clusters.size(); ++i)
     {
-        int fidx = it.first;
-        int from = it.second.first;
-        if (from == -1)
+        int cidx = vec_clusters[i];
+        if (clusters_[cidx].faces_to_swap.empty())
             continue;
-        int to = it.second.second;
-        faces_[fidx].cluster_id = to;
-        clusters_[to].cov += clusters_[fidx].ini_cov;
-        clusters_[from].cov -= clusters_[fidx].ini_cov;
-        clusters_[from].faces.erase(fidx);
-        clusters_[to].faces.insert(fidx);
-        swap_clusters_.insert(from);  // record relevant clusters for future use
-        swap_clusters_.insert(to);
-        count_swap_faces++;
+        int from = cidx;
+        for (auto it : clusters_[cidx].faces_to_swap)
+        {
+            int fidx = it.first;
+            int to = it.second;
+            faces_[fidx].cluster_id = to;
+            clusters_[to].cov += faces_[fidx].cov;
+            clusters_[from].cov -= faces_[fidx].cov;
+            clusters_[from].faces.erase(fidx);
+            clusters_[to].faces.insert(fidx);
+            swap_clusters_.insert(from);
+            swap_clusters_.insert(to);
+        }
+        count_swap_faces += clusters_[cidx].faces_to_swap.size();
     }
     // Remember to update the energy each time after updating the covariance object
     for (int cidx : swap_clusters_)
         clusters_[cidx].energy = clusters_[cidx].cov.energy();
-
-    end = std::chrono::steady_clock::now();
-    delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    cout << "Time3: " << delta << endl;
-
     return count_swap_faces;
 }
 
@@ -774,8 +757,156 @@ double Partition::computeSwapDeltaEnergy(int fidx, int from, int to)
 {
     double energy0 = clusters_[from].energy + clusters_[to].energy;
     CovObj cov_from = clusters_[from].cov, cov_to = clusters_[to].cov;
-    cov_from -= clusters_[fidx].ini_cov;
-    cov_to += clusters_[fidx].ini_cov;
+    cov_from -= faces_[fidx].cov;
+    cov_to += faces_[fidx].cov;
     double energy1 = cov_from.energy() + cov_to.energy();
     return energy0 - energy1;
+}
+
+/*! After swapping step, some clusters may be split into unconnected 'component islands' (like
+    one component totally located inside another cluster). This is not good. Here we split each
+    of these 'island' clusters into different connected components and merge the island components
+    to their neighbor clusters.
+*/
+void Partition::processIslandClusters()
+{
+    for (int i = 0; i < face_num_; ++i)
+        faces_[i].is_visited = false;
+    int count_split_clusters = 0;
+	int last_valid_cidx = 0;
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (!isClusterValid(cidx))
+            continue;
+        vector<unordered_set<int>> connected_components;
+		auto cmp = [](unordered_set<int>& a, unordered_set<int>& b) { return a.size() > b.size(); };
+        if (splitCluster(cidx, connected_components) > 1)
+        {
+			std::sort(connected_components.begin(), connected_components.end(), cmp);
+            mergeIslandComponentsInCluster(cidx, connected_components);
+            count_split_clusters++;
+			if (connected_components.size() > 1)
+			{
+				// Create a new cluster for each unmerged component
+				for (size_t i = 1; i < connected_components.size(); ++i) // leave the largest component in origial cluster position
+				{
+					// Find a valid cluster index to 'hold' the component as a new cluster
+					int pos = last_valid_cidx;
+					while (pos < init_cluster_num_ && isClusterValid(pos))
+						pos++; // get next available position
+					assert(pos < init_cluster_num_);
+					last_valid_cidx = pos;
+					clusters_[pos].faces.clear();
+					clusters_[pos].cov.clearCov();
+					for (int fidx : connected_components[i])
+					{
+						faces_[fidx].cluster_id = pos;
+						clusters_[pos].cov += faces_[fidx].cov;
+						clusters_[pos].faces.insert(fidx);
+					}
+					clusters_[pos].energy = clusters_[pos].cov.energy();
+				}
+			}
+        }
+    }
+    cout << "#Split clusters: " << count_split_clusters << endl;
+}
+
+//! Split faces in one cluster into connected components by breath-first search. Return the component number.
+int Partition::splitCluster(int cidx, vector<unordered_set<int>>& connected_components)
+{
+    int count_left_faces = int(clusters_[cidx].faces.size());
+    connected_components.push_back(unordered_set<int>());
+    for (int fidx : clusters_[cidx].faces)
+    {
+        int count = traverseFaceBFS(fidx, cidx, connected_components.back());
+        if (count == 0)  // visited face
+            continue;
+        count_left_faces -= count;
+        if (count_left_faces == 0)
+            break;  // quit until all faces in the cluster are visited
+        connected_components.push_back(unordered_set<int>());
+    }
+    return int(connected_components.size());
+}
+
+//! Traverse (unvisited) faces with BFS. Return the number of visited faces.
+int Partition::traverseFaceBFS(int start_fidx, int start_cidx, unordered_set<int>& component)
+{
+    if (faces_[start_fidx].is_visited)
+        return 0;
+    faces_[start_fidx].is_visited = true;
+    queue<int> qe;  // typical BFS with a queue
+    qe.push(start_fidx);
+    while (!qe.empty())
+    {
+        int fidx = qe.front();
+        qe.pop();
+        component.insert(fidx);
+        for (int nbr : faces_[fidx].nbr_faces)
+        {
+            if (faces_[nbr].is_visited || faces_[nbr].cluster_id != start_cidx)
+                continue;
+            faces_[nbr].is_visited = true;
+            qe.push(nbr);
+        }
+    }
+    return int(component.size());
+}
+
+//! Merge each island component from one cluster to its neighbor cluster.
+/*!
+    NOTE: 'island' component is a connected component with only 1 neighbor cluster.
+*/
+void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)
+{
+    if (connected_components.size() <= 1)
+        return;
+    for (auto iter = connected_components.begin(); iter != connected_components.end();)
+    {
+        unordered_set<int> neighbors;
+        unordered_set<int>& component = *iter;
+        int neighbor_num = findClusterNeighbors(original_cidx, component, neighbors);
+        if (neighbor_num != 1)
+		{
+			++iter;
+			continue;
+		}
+        // Merge this component into its neighbor cluster
+        int target_cidx = *neighbors.begin();
+        for (int fidx : component)
+        {
+            clusters_[target_cidx].cov += faces_[fidx].cov;
+            clusters_[original_cidx].cov -= faces_[fidx].cov;
+            clusters_[target_cidx].faces.insert(fidx);
+            clusters_[original_cidx].faces.erase(fidx);
+            faces_[fidx].cluster_id = target_cidx;
+            faces_[fidx].is_visited = false;  // do NOT forget this
+        }
+        clusters_[original_cidx].energy = clusters_[original_cidx].cov.energy();
+        clusters_[target_cidx].energy = clusters_[target_cidx].cov.energy();
+		iter = connected_components.erase(iter);
+    }
+}
+
+//! Merge adjacent planes together if satisfying merging criteria. This is usually some post process step.
+void Partition::mergeAdjacentPlanes()
+{
+    const double kPointPlaneDisThrsd = FLAGS_point_plane_dis_threshold;
+    const double kNormalAngleThrsd = cos(M_PI * FLAGS_normal_angle_threshold / 180);
+    const double kCenterNormalAngleThrsd = cos(M_PI * FLAGS_center_normal_angle_threshold / 180);
+    heap_.destroy();
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (!isClusterValid(cidx))
+            continue;
+        clusters_[cidx].cov.computePlaneNormal();
+        findClusterNeighbors(cidx);
+    }
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+		if (!isClusterValid(cidx))
+			continue;
+        const Vector3d& n = clusters_[cidx].cov.normal_;
+    }
 }

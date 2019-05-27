@@ -29,9 +29,10 @@ public:
     struct Face
     {
         int cluster_id;
-        bool is_visited;
+        bool is_visited; // used in Breath-first search to get connected components in clusters
         bool is_border;
         int indices[3];
+        CovObj cov;
         unordered_set<int> nbr_faces;
         Face() : cluster_id(-1), is_visited(false), is_border(false) {}
     };
@@ -42,23 +43,23 @@ public:
         Edge(int a, int b): v1(a), v2(b){}
     };
 
-    //! For swapping faces on cluster borders
-    struct SwapFace
-    {
-        int face_id, from, to;
-        SwapFace(int face, int f, int t) : face_id(face), from(f), to(t) {}
-    };
+    // //! For swapping faces on cluster borders
+    // struct SwapFace
+    // {
+    //     int face_id, from, to;
+    //     SwapFace(int face, int f, int t) : face_id(face), from(f), to(t) {}
+    // };
 
     struct Cluster
     {
-        double energy, ini_energy; // only to save some computation time of calling CovObj::energy() too frequently
+        double energy; // to save some computation time of calling CovObj::energy() too frequently
         unordered_set<int> faces; // faces each cluster contains
         unordered_set<int> nbr_clusters;
-        vector<SwapFace> faces_to_swap;
+        vector<pair<int, int>> faces_to_swap; // first is face-id, second is cluter to be swapped to
         vector<Edge*> edges;
         Vector3f color;
-        CovObj cov, ini_cov; // current and initial covariance object
-        Cluster() : energy(0), ini_energy(0){}
+        CovObj cov;
+        Cluster() : energy(0){}
     };
 
 public:
@@ -86,12 +87,17 @@ private:
     double getTotalEnergy();
     void createClusterColors();
 
-
     /* Swap */
     void runSwapping();
     int swapOnce();
     double computeSwapDeltaEnergy(int fidx, int from, int to);
 
+    /* Post processing */
+    void processIslandClusters();
+    int splitCluster(int cidx, vector<unordered_set<int>>& connected_components);
+    int traverseFaceBFS(int start_fidx, int start_cidx, unordered_set<int>& component);
+    void mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components);
+    void mergeAdjacentPlanes();
 
 private:
     int vertex_num_, face_num_;
