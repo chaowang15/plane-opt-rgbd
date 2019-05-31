@@ -88,6 +88,8 @@ CovObj &CovObj::operator=(const CovObj &Q)
 
 double CovObj::energy()
 {
+    if (area_ < 1e-10 || size_ <= 1) // 1 triangle has 0 energy
+        return 0;
     if (cov_.determinant() / pow(area_, 5) < 1e-15)
         return cov_.trace() * area_ * 1e-20;
     else
@@ -106,4 +108,5 @@ void CovObj::computePlaneNormal()
     }
     // Plane normal is the eigenvector corresponding to the smallest eigenvalue
     normal_ = es.eigenvectors().col(smallest);
+    normal_.normalize();
 }

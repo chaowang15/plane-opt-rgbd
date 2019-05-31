@@ -8,7 +8,8 @@
 #include <unordered_set>
 #include <Eigen/Eigen>
 #include "covariance.h"
-#include "myheap.h"
+// #include "myheap.h"
+#include "MxHeap.h"
 
 using namespace std;
 using namespace Eigen;
@@ -43,13 +44,6 @@ public:
         Edge(int a, int b): v1(a), v2(b){}
     };
 
-    // //! For swapping faces on cluster borders
-    // struct SwapFace
-    // {
-    //     int face_id, from, to;
-    //     SwapFace(int face, int f, int t) : face_id(face), from(f), to(t) {}
-    // };
-
     struct Cluster
     {
         double energy; // to save some computation time of calling CovObj::energy() too frequently
@@ -71,6 +65,7 @@ public:
     void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }
     bool runPartitionPipeline();
     void setTargetClusterNum(int num) { target_cluster_num_ = num; }
+    void writeClusterFile(const std::string& filename);
 
 private:
     /* Merging */
@@ -86,6 +81,7 @@ private:
 	int findClusterNeighbors(int cidx, unordered_set<int>& cluster_faces, unordered_set<int>& neighbor_clusters);
     double getTotalEnergy();
     void createClusterColors();
+    void updateCurrentClusterNum();
 
     /* Swap */
     void runSwapping();
@@ -98,6 +94,7 @@ private:
     int traverseFaceBFS(int start_fidx, int start_cidx, unordered_set<int>& component);
     void mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components);
     void mergeAdjacentPlanes();
+    double computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection = false);
 
 private:
     int vertex_num_, face_num_;
@@ -110,8 +107,6 @@ private:
     double total_energy_;
     unordered_set<int> swap_clusters_; // candidate clusters with swapped faces
 
-    // set<Edge> heap_;
-    // set<Edge*, EdgeComp> heap_;
 };
 
 #endif  // !PARTITION_H

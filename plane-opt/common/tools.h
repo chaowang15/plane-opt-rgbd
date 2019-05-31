@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-//! Print text in color in the console
+//! Print text in color in the console. Only works in Linux.
 /*!
   Ref: https://misc.flogisoft.com/bash/tip_colors_and_formatting
 */

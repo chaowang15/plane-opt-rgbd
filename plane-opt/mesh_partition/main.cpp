@@ -2,9 +2,11 @@
 #include "partition.h"
 #include "../common/tools.h"
 #include <chrono>
+#include <gflags/gflags.h>
 
 int main(int argc, char** argv)
 {
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
     if (argc != 3 && argc != 5)
     {
         printInRed("Usage: mesh_partition input_ply target_cluster_num [output_ply] [output_cluster_file]");
@@ -40,6 +42,9 @@ int main(int argc, char** argv)
     {
         cout << "Write ply file: " << out_ply_fname << endl;
         partition.writePLY(out_ply_fname);
+
+        cout << "Write cluster file: " << out_cluster_fname << endl;
+        partition.writeClusterFile(out_cluster_fname);
         cout << "ALL DONE." << endl;
     }
     return 0;

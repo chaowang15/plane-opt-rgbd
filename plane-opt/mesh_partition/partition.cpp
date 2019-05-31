@@ -9,19 +9,31 @@
 
 const double kPI = 3.1415926;
 
-DEFINE_double(point_plane_dis_threshold, 0.08, "");
-DEFINE_double(normal_angle_threshold, 10.0, "");
-DEFINE_double(max_normal_angle_threshold, 45.0, "");
+DEFINE_double(point_plane_dis_threshold, 0.12, "");
+DEFINE_double(normal_angle_threshold, 50.0, "");
 DEFINE_double(center_normal_angle_threshold, 70.0, "");
 DEFINE_double(energy_increase_threshold, 0.1, "");
+DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
+DEFINE_bool(run_post_processing, true, "");
 
 Partition::Partition() {}
 
 Partition::~Partition()
 {
     std::cout << "Releasing edges ... " << std::endl;
-    // This will release memory of all pointers, so no need to release 'edges' in each cluster.
-    heap_.destroy();
+    for (int i = 0; i < init_cluster_num_; ++i)
+    {
+        for (Edge* e : clusters_[i].edges)
+        {
+            int u = e->v1 == i ? e->v2 : e->v1;
+            removeEdgeFromCluster(u, e);
+            heap_.remove(e);
+            // Each edge pointer is stored twice in edge list, and MUST only delete it only once.
+            // So here for each edge, we delete it in the edge list of the other endpoint of this edge.
+            delete e;
+        }
+        clusters_[i].edges.clear();
+    }
 }
 
 //! Read PLY model
@@ -366,6 +378,32 @@ bool Partition::writePLY(const std::string& filename)
     return true;
 }
 
+//! Write cluster file in binary
+void Partition::writeClusterFile(const std::string& filename)
+{
+    FILE* fout = fopen(filename.c_str(), "wb");
+    // NOTE: here assume the current cluster number is the latest
+    // (call updateCurrentClusterNum() before this function)
+    fwrite(&curr_cluster_num_, sizeof(int), 1, fout);  // #clusters at first
+    float color[3];
+    int new_cidx = 0;
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (!isClusterValid(cidx))
+            continue;
+        int num = int(clusters_[cidx].faces.size());
+        fwrite(&new_cidx, sizeof(int), 1, fout);  // cluster index
+        fwrite(&num, sizeof(int), 1, fout);       // #faces in this cluster
+        vector<int> indices(clusters_[cidx].faces.begin(), clusters_[cidx].faces.end());
+        fwrite(&indices[0], sizeof(int), num, fout);  // face indices
+        for (int i = 0; i < 3; ++i)
+            color[i] = clusters_[cidx].color[i];
+        fwrite(&color[0], sizeof(float), 3, fout);  // cluster color
+        new_cidx++;
+    }
+    fclose(fout);
+}
+
 bool Partition::runPartitionPipeline()
 {
     init_cluster_num_ = face_num_;
@@ -376,15 +414,20 @@ bool Partition::runPartitionPipeline()
     if (!runMerging())
         return false;
 
-    printInGreen("(Optional) Optimization by swapping neighbor faces between clusters:");
-    runSwapping();
+    if (FLAGS_swapping_loop_num > 0)
+    {
+        printInGreen("(Optional) A further optimization by swapping border faces between clusters:");
+        runSwapping();
+    }
+    if (FLAGS_run_post_processing)
+    {
+        printInGreen("(Optional) Post processing: merge neighbor clusters:");
+        printInCyan("#Clusters before merging: " + std::to_string(curr_cluster_num_));
+        mergeAdjacentPlanes();
+        printInCyan("#Clusters after merging: " + std::to_string(curr_cluster_num_));
+    }
 
-    printInGreen("Post process: merge neighbor clusters:");
-    mergeAdjacentPlanes();
-
-    printInCyan("#Final Clusters: " + std::to_string(curr_cluster_num_));
     createClusterColors();
-
     return true;
 }
 
@@ -561,9 +604,10 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
     mergeClusters(c1, c2);             // merge cluster c2 to c1
     clusters_[c1].cov += clusters_[c2].cov;
     clusters_[c1].energy = clusters_[c1].cov.energy();  // remember to update energy as well
+    clusters_[c2].energy = 0;
 
     // NOTE: this function also works but slow, so already computed neighbor clusters in mergeClusters()
-    // findClusterNeighbors(c1);
+    findClusterNeighbors(c1);
 
     // Remove all old edges next to c1 and c2 from the heap and corresponding edge lists
     for (Edge* e : clusters_[c1].edges)
@@ -589,8 +633,8 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
     // Add new edges between v1 and all its new neighbors into edge list
     for (int cidx : clusters_[c1].nbr_clusters)
     {
-        if (c1 > cidx)
-            std::swap(c1, cidx);
+        // if (c1 > cidx)
+        //     std::swap(c1, cidx);
         Edge* e = new Edge(c1, cidx);
         computeEdgeEnergy(e);
         heap_.insert(e);
@@ -609,19 +653,6 @@ void Partition::mergeClusters(int c1, int c2)
         faces_[fidx].cluster_id = c1;
     }
     clusters_[c2].faces.clear();
-    // Update relevant cluster neighbors
-    for (int cidx : clusters_[c2].nbr_clusters)
-    {
-        if (cidx != c1)
-        {
-            clusters_[cidx].nbr_clusters.erase(c2);
-            clusters_[cidx].nbr_clusters.insert(c1);
-        }
-    }
-    clusters_[c1].nbr_clusters.insert(clusters_[c2].nbr_clusters.begin(), clusters_[c2].nbr_clusters.end());
-    clusters_[c1].nbr_clusters.erase(c1);
-    clusters_[c1].nbr_clusters.erase(c2);
-    clusters_[c2].nbr_clusters.clear();
 }
 
 //! Find neighbor clusters of an input cluster with faces
@@ -665,6 +696,7 @@ void Partition::createClusterColors()
 
 void Partition::runSwapping()
 {
+    // Swapping process
     for (int i = 0; i < init_cluster_num_; ++i)
     {
         if (isClusterValid(i))
@@ -674,9 +706,8 @@ void Partition::runSwapping()
     double scale = 1e5;  // scale the energy since it is usually too small
     cout << "Energy 0 (x " << scale << "): " << last_energy * scale << endl;
     double curr_energy = 0;
-    const int kMaxIter = 300;  // change it as you like
     int iter = 0;
-    while (iter++ < kMaxIter)
+    while (iter++ < FLAGS_swapping_loop_num)
     {
         int count_swap_faces = swapOnce();
         curr_energy = getTotalEnergy();
@@ -685,8 +716,9 @@ void Partition::runSwapping()
             break;
         last_energy = curr_energy;
     }
-
+    // Post process
     processIslandClusters();
+    updateCurrentClusterNum();
 }
 
 //! Run swapping step for one time, which means swapping some border face to its neighbor cluster once.
@@ -694,8 +726,8 @@ void Partition::runSwapping()
 int Partition::swapOnce()
 {
     // Find all faces to swap
-    vector<int> vec_clusters(swap_clusters_.begin(), swap_clusters_.end());  // cannot use set in OpenMP for loop
-#pragma omp parallel for
+    vector<int> vec_clusters(swap_clusters_.begin(), swap_clusters_.end());
+// #pragma omp parallel for
     for (size_t i = 0; i < vec_clusters.size(); ++i)
     {
         int cidx = vec_clusters[i];
@@ -745,9 +777,12 @@ int Partition::swapOnce()
             clusters_[to].faces.insert(fidx);
             swap_clusters_.insert(from);
             swap_clusters_.insert(to);
+            count_swap_faces++;
         }
         count_swap_faces += static_cast<int>(clusters_[cidx].faces_to_swap.size());
+        clusters_[cidx].faces_to_swap.clear();
     }
+
     // Remember to update the energy each time after updating the covariance object
     for (int cidx : swap_clusters_)
         clusters_[cidx].energy = clusters_[cidx].cov.energy();
@@ -775,40 +810,41 @@ void Partition::processIslandClusters()
     for (int i = 0; i < face_num_; ++i)
         faces_[i].is_visited = false;
     int count_split_clusters = 0;
-	int last_valid_cidx = 0;
+    int last_valid_cidx = 0;
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (!isClusterValid(cidx))
             continue;
         vector<unordered_set<int>> connected_components;
-		auto cmp = [](unordered_set<int>& a, unordered_set<int>& b) { return a.size() > b.size(); };
+        auto cmp = [](unordered_set<int>& a, unordered_set<int>& b) { return a.size() > b.size(); };
         if (splitCluster(cidx, connected_components) > 1)
         {
-			std::sort(connected_components.begin(), connected_components.end(), cmp);
+            std::sort(connected_components.begin(), connected_components.end(), cmp);
             mergeIslandComponentsInCluster(cidx, connected_components);
             count_split_clusters++;
-			if (connected_components.size() > 1)
-			{
-				// Create a new cluster for each unmerged component
-				for (size_t i = 1; i < connected_components.size(); ++i) // leave the largest component in origial cluster position
-				{
-					// Find a valid cluster index to 'hold' the component as a new cluster
-					int pos = last_valid_cidx;
-					while (pos < init_cluster_num_ && isClusterValid(pos))
-						pos++; // get next available position
-					assert(pos < init_cluster_num_);
-					last_valid_cidx = pos;
-					clusters_[pos].faces.clear();
-					clusters_[pos].cov.clearCov();
-					for (int fidx : connected_components[i])
-					{
-						faces_[fidx].cluster_id = pos;
-						clusters_[pos].cov += faces_[fidx].cov;
-						clusters_[pos].faces.insert(fidx);
-					}
-					clusters_[pos].energy = clusters_[pos].cov.energy();
-				}
-			}
+            if (connected_components.size() > 1)
+            {
+                // Create a new cluster for each unmerged component
+                for (size_t i = 1; i < connected_components.size();
+                     ++i)  // leave the largest component in origial cluster position
+                {
+                    // Find a valid cluster index to 'hold' the component as a new cluster
+                    int pos = last_valid_cidx;
+                    while (pos < init_cluster_num_ && isClusterValid(pos))
+                        pos++;  // get next available position
+                    assert(pos < init_cluster_num_);
+                    last_valid_cidx = pos;
+                    clusters_[pos].faces.clear();
+                    clusters_[pos].cov.clearCov();
+                    for (int fidx : connected_components[i])
+                    {
+                        faces_[fidx].cluster_id = pos;
+                        clusters_[pos].cov += faces_[fidx].cov;
+                        clusters_[pos].faces.insert(fidx);
+                    }
+                    clusters_[pos].energy = clusters_[pos].cov.energy();
+                }
+            }
         }
     }
     cout << "#Split clusters: " << count_split_clusters << endl;
@@ -870,10 +906,10 @@ void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unorder
         unordered_set<int>& component = *iter;
         int neighbor_num = findClusterNeighbors(original_cidx, component, neighbors);
         if (neighbor_num != 1)
-		{
-			++iter;
-			continue;
-		}
+        {
+            ++iter;
+            continue;
+        }
         // Merge this component into its neighbor cluster
         int target_cidx = *neighbors.begin();
         for (int fidx : component)
@@ -887,28 +923,90 @@ void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unorder
         }
         clusters_[original_cidx].energy = clusters_[original_cidx].cov.energy();
         clusters_[target_cidx].energy = clusters_[target_cidx].cov.energy();
-		iter = connected_components.erase(iter);
+        iter = connected_components.erase(iter);
     }
+}
+
+//! Compute maximum distance between points from cluster c2 to plane c1.
+/*!
+    \param flag_use_projection Use projected vertices (projections on the plane) instead of original vertices
+*/
+double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection)
+{
+    unordered_set<int> cluster_vertices;
+    for (int fidx : clusters_[c2].faces)
+        for (int i = 0; i < 3; ++i)
+            cluster_vertices.insert(faces_[fidx].indices[i]);
+
+    const Vector3d& ctr1 = clusters_[c1].cov.center_;
+    const Vector3d& ctr2 = clusters_[c2].cov.center_;
+    const Vector3d& n1 = clusters_[c1].cov.normal_;  // NOTE: here assume the normal is the latest
+    const Vector3d& n2 = clusters_[c2].cov.normal_;
+    double max_dis = 0;
+    for (int vidx : cluster_vertices)
+    {
+        Vector3d vtx = vertices_[vidx].pt;
+        if (flag_use_projection)
+        {
+            // Project the vertex on its plane
+            vtx = vtx - ((vtx - ctr2).dot(n2)) * n2;
+        }
+        double dis = fabs((vtx - ctr1).dot(n1));
+        max_dis = std::max(max_dis, dis);
+    }
+    return max_dis;
+}
+
+void Partition::updateCurrentClusterNum()
+{
+    curr_cluster_num_ = 0;
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+        if (isClusterValid(cidx))
+            curr_cluster_num_++;
 }
 
 //! Merge adjacent planes together if satisfying merging criteria. This is usually some post process step.
 void Partition::mergeAdjacentPlanes()
 {
-    const double kPointPlaneDisThrsd = FLAGS_point_plane_dis_threshold;
-    const double kNormalAngleThrsd = cos(kPI * FLAGS_normal_angle_threshold / 180);
-    const double kCenterNormalAngleThrsd = cos(kPI * FLAGS_center_normal_angle_threshold / 180);
-    heap_.destroy();
+    // Update cluster information at first
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (!isClusterValid(cidx))
             continue;
         clusters_[cidx].cov.computePlaneNormal();
-        findClusterNeighbors(cidx);
     }
-    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+
+    // Create candidate plane pairs to merge and put them into the min heap
+    const double kNormalAngleThrsd = cos(kPI * FLAGS_normal_angle_threshold / 180);
+    const double kCenterNormalAngleThrsd = cos(kPI * FLAGS_center_normal_angle_threshold / 180);
+    for (int c1 = 0; c1 < init_cluster_num_; ++c1)
     {
-		if (!isClusterValid(cidx))
-			continue;
-        const Vector3d& n = clusters_[cidx].cov.normal_;
+        if (!isClusterValid(c1))
+            continue;
+        findClusterNeighbors(c1);
+        const Vector3d& n1 = clusters_[c1].cov.normal_;
+        while (!clusters_[c1].nbr_clusters.empty())
+        {
+            int c2 = *clusters_[c1].nbr_clusters.begin();
+            clusters_[c1].nbr_clusters.erase(c2);
+            if (!isClusterValid(c2))
+                continue;
+            const Vector3d& n2 = clusters_[c2].cov.normal_;
+            if (n1.dot(n2) < kNormalAngleThrsd)
+                continue;  // skip pair of planes with large normal direction difference
+            Vector3d dir = clusters_[c1].cov.center_ - clusters_[c2].cov.center_;
+            if (fabs(dir.dot(n1)) > kCenterNormalAngleThrsd || fabs(dir.dot(n2)) > kCenterNormalAngleThrsd)
+                continue;  // skip plane pair if the direction of two centers is close to one plane normal
+            double dis = computeMaxDisBetweenTwoPlanes(c1, c2);
+            if (computeMaxDisBetweenTwoPlanes(c1, c2) > FLAGS_point_plane_dis_threshold ||
+                computeMaxDisBetweenTwoPlanes(c2, c1) > FLAGS_point_plane_dis_threshold)
+                continue;  // skip plane pair if their distance is too far
+            mergeClusters(c1, c2);
+            clusters_[c1].cov += clusters_[c2].cov;
+            clusters_[c2].cov.clearCov();
+            clusters_[c1].cov.computePlaneNormal();
+            findClusterNeighbors(c1);
+        }
     }
+    updateCurrentClusterNum();
 }

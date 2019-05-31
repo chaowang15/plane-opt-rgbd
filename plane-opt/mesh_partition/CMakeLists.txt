@@ -20,9 +20,11 @@ set(CMAKE_BUILD_TYPE "Release")
 SET(EIGEN_INCLUDE_DIR "/usr/include/eigen3")
 message("Eigen path: ${EIGEN_INCLUDE_DIR}")
 include_directories(${EIGEN_INCLUDE_DIR})
+include_directories("heap")
+
 
 file(GLOB SRC "*.cpp")
-# message("cpp file list: ${SRC}")
-add_executable(mesh_partition ${SRC})
+message("cpp file list: ${SRC}")
+add_executable(mesh_partition ${SRC} heap/MxHeap.cxx)
 # target_link_libraries( mesh_partition ${Boost_LIBRARIES} )
 target_link_libraries( mesh_partition gflags)
