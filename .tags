@@ -93,6 +93,8 @@ SAFETY	plane-opt/mesh_partition/heap/stdmix.h	72;"	d
 STDMIX_INCLUDED	plane-opt/mesh_partition/heap/stdmix.h	2;"	d
 SanityCheck	plane-opt/mesh_partition/heap/stdmix.h	93;"	d
 SanityCheck	plane-opt/mesh_partition/heap/stdmix.h	96;"	d
+SwapFace	plane-opt/mesh_partition/partition.h	/^    	SwapFace(int v, int f, int t){ face_id = v; from = f; to = t; }$/;"	f	struct:Partition::SwapFace
+SwapFace	plane-opt/mesh_partition/partition.h	/^    struct SwapFace$/;"	s	class:Partition
 TIMING	plane-opt/mesh_partition/heap/gfx.h	88;"	d
 TOOLS_H	plane-opt/common/tools.h	2;"	d
 Vertex	plane-opt/mesh_partition/partition.h	/^        Vertex() : is_valid(true), cluster_id(-1) {}$/;"	f	struct:Partition::Vertex
@@ -120,8 +122,10 @@ clearCov	plane-opt/mesh_partition/covariance.cpp	/^void CovObj::clearCov()$/;"	f
 cluster_id	plane-opt/mesh_partition/partition.h	/^        int cluster_id;$/;"	m	struct:Partition::Face
 cluster_id	plane-opt/mesh_partition/partition.h	/^        int cluster_id;$/;"	m	struct:Partition::Vertex
 clusters_	plane-opt/mesh_partition/partition.h	/^    vector<Cluster> clusters_;$/;"	m	class:Partition
+clusters_in_swap_	plane-opt/mesh_partition/partition.h	/^    unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;$/;"	m	class:Partition
 color	plane-opt/mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Cluster
 color	plane-opt/mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Vertex
+computeAvgDisBtwTwoPlanes	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeAvgDisBtwTwoPlanes(int c1, int c2)$/;"	f	class:Partition
 computeEdgeEnergy	plane-opt/mesh_partition/partition.cpp	/^void Partition::computeEdgeEnergy(Edge* edge)$/;"	f	class:Partition
 computeMaxDisBetweenTwoPlanes	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection)$/;"	f	class:Partition
 computePlaneNormal	plane-opt/mesh_partition/covariance.cpp	/^void CovObj::computePlaneNormal()$/;"	f	class:CovObj
@@ -150,16 +154,18 @@ energy	plane-opt/mesh_partition/covariance.cpp	/^double CovObj::energy()$/;"	f	c
 energy	plane-opt/mesh_partition/partition.h	/^        double energy; \/\/ to save some computation time of calling CovObj::energy() too frequently$/;"	m	struct:Partition::Cluster
 extract	plane-opt/mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::extract()$/;"	f	class:MxHeap
 extract	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *extract()$/;"	f	class:MxHeap
+face_id	plane-opt/mesh_partition/partition.h	/^    	int face_id;$/;"	m	struct:Partition::SwapFace
 face_num_	plane-opt/mesh_partition/partition.h	/^    int vertex_num_, face_num_;$/;"	m	class:Partition
 faces	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> faces; \/\/ faces each cluster contains$/;"	m	struct:Partition::Cluster
 faces_	plane-opt/mesh_partition/partition.h	/^    vector<Face> faces_;$/;"	m	class:Partition
-faces_to_swap	plane-opt/mesh_partition/partition.h	/^        vector<pair<int, int>> faces_to_swap; \/\/ first is face-id, second is cluter to be swapped to$/;"	m	struct:Partition::Cluster
+faces_to_swap	plane-opt/mesh_partition/partition.h	/^        vector<SwapFace> faces_to_swap;$/;"	m	struct:Partition::Cluster
 fatal_error	plane-opt/mesh_partition/heap/stdmix.h	77;"	d
 filename	plane-opt/mesh_partition/heap/mixmsg.h	/^    const char *filename;$/;"	m	class:MxMsgInfo
 fill	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    int fill;$/;"	m	class:MxDynBlock
 findClusterNeighbors	plane-opt/mesh_partition/partition.cpp	/^int Partition::findClusterNeighbors(int cidx)$/;"	f	class:Partition
 findClusterNeighbors	plane-opt/mesh_partition/partition.cpp	/^int Partition::findClusterNeighbors(int cidx, unordered_set<int>& cluster_faces, unordered_set<int>& neighbor_clusters)$/;"	f	class:Partition
 free_block	plane-opt/mesh_partition/heap/MxBlock.h	/^    void free_block()$/;"	f	class:MxBlock
+from	plane-opt/mesh_partition/partition.h	/^    	int from;$/;"	m	struct:Partition::SwapFace
 getTotalEnergy	plane-opt/mesh_partition/partition.cpp	/^double Partition::getTotalEnergy()$/;"	f	class:Partition
 get_heap_pos	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
 get_heap_pos	plane-opt/mesh_partition/myheap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
@@ -192,6 +198,7 @@ iterator	plane-opt/mesh_partition/heap/MxBlock.h	/^    typedef value_type *itera
 kPI	plane-opt/mesh_partition/partition.cpp	/^const double kPI = 3.1415926;$/;"	v
 last	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    T& last() { return (*this)[last_id()]; }$/;"	f	class:MxDynBlock
 last	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    const T& last() const { return (*this)[last_id()]; }$/;"	f	class:MxDynBlock
+last_clusters_in_swap_	plane-opt/mesh_partition/partition.h	/^    unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;$/;"	m	class:Partition
 last_id	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    int last_id() const { return fill - 1; }$/;"	f	class:MxDynBlock
 left	plane-opt/mesh_partition/heap/MxHeap.h	/^    unsigned int left(unsigned int i) { return 2 * i + 1; }$/;"	f	class:MxHeap
 left	plane-opt/mesh_partition/myheap.h	/^    unsigned int left(unsigned int i) { return 2 * i + 1; }$/;"	f	class:MxHeap
@@ -249,6 +256,7 @@ random1	plane-opt/mesh_partition/heap/gfx.h	/^  inline double random1() { return
 random1	plane-opt/mesh_partition/heap/gfx.h	/^  inline double random1() { return (double)random() \/ (double)LONG_MAX; }$/;"	f
 random_byte	plane-opt/mesh_partition/heap/gfx.h	/^  inline char   random_byte() { return (char)(rand() & 0xff); }$/;"	f
 random_byte	plane-opt/mesh_partition/heap/gfx.h	/^  inline char   random_byte() { return (char)(random() & 0xff); }$/;"	f
+readClusterFile	plane-opt/mesh_partition/partition.cpp	/^void Partition::readClusterFile(const std::string& filename) {}$/;"	f	class:Partition
 readPLY	plane-opt/mesh_partition/partition.cpp	/^bool Partition::readPLY(const std::string& filename)$/;"	f	class:Partition
 ref	plane-opt/mesh_partition/heap/MxHeap.cxx	14;"	d	file:
 remove	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void remove(int i) { (*this)[i] = (*this)[--fill]; }$/;"	f	class:MxDynBlock
@@ -280,8 +288,8 @@ streq	plane-opt/mesh_partition/heap/stdmix.h	/^inline bool streq(const char *a, 
 swap	plane-opt/mesh_partition/heap/MxHeap.cxx	/^void MxHeap::swap(unsigned int i, unsigned int j)$/;"	f	class:MxHeap
 swap	plane-opt/mesh_partition/myheap.h	/^    void swap(unsigned int i, unsigned int j)$/;"	f	class:MxHeap
 swapOnce	plane-opt/mesh_partition/partition.cpp	/^int Partition::swapOnce()$/;"	f	class:Partition
-swap_clusters_	plane-opt/mesh_partition/partition.h	/^    unordered_set<int> swap_clusters_; \/\/ candidate clusters with swapped faces$/;"	m	class:Partition
 target_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
+to	plane-opt/mesh_partition/partition.h	/^    	int to;$/;"	m	struct:Partition::SwapFace
 token	plane-opt/mesh_partition/heap/MxHeap.h	/^    int token;$/;"	m	class:MxHeapable
 token	plane-opt/mesh_partition/myheap.h	/^    int token;      \/\/ position in the heap$/;"	m	class:MxHeapable
 top	plane-opt/mesh_partition/heap/MxHeap.h	/^    MxHeapable *top() { return (length() < 1 ? (MxHeapable *)NULL : item(0)); }$/;"	f	class:MxHeap

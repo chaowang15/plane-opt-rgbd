@@ -44,12 +44,22 @@ public:
         Edge(int a, int b): v1(a), v2(b){}
     };
 
+    struct SwapFace
+    {
+    	int face_id;
+    	int from;
+    	int to;
+    	SwapFace(int v, int f, int t){ face_id = v; from = f; to = t; }
+    };
+
+
     struct Cluster
     {
         double energy; // to save some computation time of calling CovObj::energy() too frequently
         unordered_set<int> faces; // faces each cluster contains
         unordered_set<int> nbr_clusters;
-        vector<pair<int, int>> faces_to_swap; // first is face-id, second is cluter to be swapped to
+        vector<SwapFace> faces_to_swap;
+        // vector<pair<int, int>> faces_to_swap; // first is face-id, second is cluter to be swapped to
         vector<Edge*> edges;
         Vector3f color;
         CovObj cov;
@@ -66,6 +76,7 @@ public:
     bool runPartitionPipeline();
     void setTargetClusterNum(int num) { target_cluster_num_ = num; }
     void writeClusterFile(const std::string& filename);
+    void readClusterFile(const std::string& filename);
 
 private:
     /* Merging */
@@ -95,6 +106,7 @@ private:
     void mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components);
     void mergeAdjacentPlanes();
     double computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection = false);
+    double computeAvgDisBtwTwoPlanes(int c1, int c2);
 
 private:
     int vertex_num_, face_num_;
@@ -105,8 +117,7 @@ private:
     vector<Cluster> clusters_;
     MxHeap heap_;
     double total_energy_;
-    unordered_set<int> swap_clusters_; // candidate clusters with swapped faces
-
+    unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;
 };
 
 #endif  // !PARTITION_H

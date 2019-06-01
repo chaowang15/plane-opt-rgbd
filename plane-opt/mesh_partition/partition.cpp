@@ -10,7 +10,7 @@
 const double kPI = 3.1415926;
 
 DEFINE_double(point_plane_dis_threshold, 0.12, "");
-DEFINE_double(normal_angle_threshold, 50.0, "");
+DEFINE_double(normal_angle_threshold, 45.0, "");
 DEFINE_double(center_normal_angle_threshold, 70.0, "");
 DEFINE_double(energy_increase_threshold, 0.1, "");
 DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
@@ -404,6 +404,8 @@ void Partition::writeClusterFile(const std::string& filename)
     fclose(fout);
 }
 
+void Partition::readClusterFile(const std::string& filename) {}
+
 bool Partition::runPartitionPipeline()
 {
     init_cluster_num_ = face_num_;
@@ -700,7 +702,7 @@ void Partition::runSwapping()
     for (int i = 0; i < init_cluster_num_; ++i)
     {
         if (isClusterValid(i))
-            swap_clusters_.insert(i);
+            last_clusters_in_swap_.insert(i);
     }
     double last_energy = getTotalEnergy();
     double scale = 1e5;  // scale the energy since it is usually too small
@@ -712,7 +714,7 @@ void Partition::runSwapping()
         int count_swap_faces = swapOnce();
         curr_energy = getTotalEnergy();
         cout << "Energy " << iter << ": " << curr_energy * scale << ", #Swapped faces: " << count_swap_faces << endl;
-        if ((last_energy - curr_energy) / last_energy < 1e-7 || count_swap_faces == 0)
+        if ((last_energy - curr_energy) / last_energy < 1e-10 || count_swap_faces == 0)
             break;
         last_energy = curr_energy;
     }
@@ -725,67 +727,67 @@ void Partition::runSwapping()
 //! Return the number of faces got swapped.
 int Partition::swapOnce()
 {
-    // Find all faces to swap
-    vector<int> vec_clusters(swap_clusters_.begin(), swap_clusters_.end());
-// #pragma omp parallel for
-    for (size_t i = 0; i < vec_clusters.size(); ++i)
+    clusters_in_swap_.clear();
+    for (int cidx : last_clusters_in_swap_)
     {
-        int cidx = vec_clusters[i];
         clusters_[cidx].faces_to_swap.clear();
+        clusters_in_swap_.insert(cidx);
+    }
+    last_clusters_in_swap_.clear();
+    // Find faces to be swapped. Such a face is a cluster border face and
+    // must decrease the total energy after swapping to its neighbor cluster.
+    int count_swap_faces = 0;
+    for (int cidx : clusters_in_swap_)
+    {
         for (int fidx : clusters_[cidx].faces)
         {
             unordered_set<int> visited_clusters;
             double max_delta_energy = 0;
-            int opt_cidx = -1;
-            for (int nbr : faces_[fidx].nbr_faces)
+            int max_cidx = -1;
+            for (int nidx : faces_[fidx].nbr_faces)
             {
-                int ncidx = faces_[nbr].cluster_id;
-                if (ncidx != cidx && !visited_clusters.count(ncidx))
-                {  // Swapping faces must be in cluster border
+                int ncidx = faces_[nidx].cluster_id;
+                // Skip the neighbor clusters visited before
+                if (ncidx != cidx && visited_clusters.count(ncidx) == 0)
+                {
                     visited_clusters.insert(ncidx);
                     double delta_energy = computeSwapDeltaEnergy(fidx, cidx, ncidx);
-                    // Find the neighbor cluster with max energy decrease
                     if (delta_energy > max_delta_energy)
                     {
-                        opt_cidx = ncidx;
+                        max_cidx = ncidx;
                         max_delta_energy = delta_energy;
                     }
                 }
             }
-            if (opt_cidx != -1)
-                clusters_[cidx].faces_to_swap.push_back(std::make_pair(fidx, opt_cidx));
+            if (max_cidx != -1)
+            {
+                SwapFace sf(fidx, cidx, max_cidx);
+                clusters_[cidx].faces_to_swap.push_back(sf);
+                count_swap_faces++;
+                last_clusters_in_swap_.insert(cidx);
+                last_clusters_in_swap_.insert(max_cidx);
+            }
         }
     }
-
-    // Swap faces now
-    int count_swap_faces = 0;
-    swap_clusters_.clear();
-    for (size_t i = 0; i < vec_clusters.size(); ++i)
+    // Now swap faces
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
-        int cidx = vec_clusters[i];
-        if (clusters_[cidx].faces_to_swap.empty())
-            continue;
-        int from = cidx;
-        for (auto it : clusters_[cidx].faces_to_swap)
+        for (SwapFace& sf : clusters_[cidx].faces_to_swap)
         {
-            int fidx = it.first;
-            int to = it.second;
+            int from = sf.from;
+            int to = sf.to;
+            int fidx = sf.face_id;
             faces_[fidx].cluster_id = to;
             clusters_[to].cov += faces_[fidx].cov;
             clusters_[from].cov -= faces_[fidx].cov;
             clusters_[from].faces.erase(fidx);
             clusters_[to].faces.insert(fidx);
-            swap_clusters_.insert(from);
-            swap_clusters_.insert(to);
-            count_swap_faces++;
         }
-        count_swap_faces += static_cast<int>(clusters_[cidx].faces_to_swap.size());
-        clusters_[cidx].faces_to_swap.clear();
     }
-
     // Remember to update the energy each time after updating the covariance object
-    for (int cidx : swap_clusters_)
-        clusters_[cidx].energy = clusters_[cidx].cov.energy();
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+        if (isClusterValid(cidx))
+            clusters_[cidx].energy = clusters_[cidx].cov.energy();
     return count_swap_faces;
 }
 
@@ -933,19 +935,14 @@ void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unorder
 */
 double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection)
 {
-    unordered_set<int> cluster_vertices;
-    for (int fidx : clusters_[c2].faces)
-        for (int i = 0; i < 3; ++i)
-            cluster_vertices.insert(faces_[fidx].indices[i]);
-
     const Vector3d& ctr1 = clusters_[c1].cov.center_;
-    const Vector3d& ctr2 = clusters_[c2].cov.center_;
     const Vector3d& n1 = clusters_[c1].cov.normal_;  // NOTE: here assume the normal is the latest
-    const Vector3d& n2 = clusters_[c2].cov.normal_;
+    const Vector3d& ctr2 = clusters_[c2].cov.center_;
+    const Vector3d& n2 = clusters_[c2].cov.normal_;  // NOTE: here assume the normal is the latest
     double max_dis = 0;
-    for (int vidx : cluster_vertices)
+    for (int fidx : clusters_[c2].faces)
     {
-        Vector3d vtx = vertices_[vidx].pt;
+        Vector3d vtx = faces_[fidx].cov.center_;
         if (flag_use_projection)
         {
             // Project the vertex on its plane
@@ -955,6 +952,19 @@ double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_pr
         max_dis = std::max(max_dis, dis);
     }
     return max_dis;
+}
+
+double Partition::computeAvgDisBtwTwoPlanes(int c1, int c2)
+{
+    double dis = 0;
+    const Vector3d& n1 = clusters_[c1].cov.normal_;
+    const Vector3d& ctr1 = clusters_[c1].cov.center_;
+    for (int fidx : clusters_[c2].faces)
+    {
+        Vector3d pt = faces_[fidx].cov.center_;
+        dis += fabs(n1.dot(pt - ctr1));
+    }
+    return dis / int(clusters_[c2].faces.size());
 }
 
 void Partition::updateCurrentClusterNum()
@@ -983,6 +993,7 @@ void Partition::mergeAdjacentPlanes()
     {
         if (!isClusterValid(c1))
             continue;
+        clusters_[c1].cov.computePlaneNormal();
         findClusterNeighbors(c1);
         const Vector3d& n1 = clusters_[c1].cov.normal_;
         while (!clusters_[c1].nbr_clusters.empty())
@@ -992,15 +1003,18 @@ void Partition::mergeAdjacentPlanes()
             if (!isClusterValid(c2))
                 continue;
             const Vector3d& n2 = clusters_[c2].cov.normal_;
-            if (n1.dot(n2) < kNormalAngleThrsd)
+            if (fabs(n1.dot(n2)) < kNormalAngleThrsd)
                 continue;  // skip pair of planes with large normal direction difference
             Vector3d dir = clusters_[c1].cov.center_ - clusters_[c2].cov.center_;
+            dir.normalize();
             if (fabs(dir.dot(n1)) > kCenterNormalAngleThrsd || fabs(dir.dot(n2)) > kCenterNormalAngleThrsd)
                 continue;  // skip plane pair if the direction of two centers is close to one plane normal
-            double dis = computeMaxDisBetweenTwoPlanes(c1, c2);
-            if (computeMaxDisBetweenTwoPlanes(c1, c2) > FLAGS_point_plane_dis_threshold ||
-                computeMaxDisBetweenTwoPlanes(c2, c1) > FLAGS_point_plane_dis_threshold)
-                continue;  // skip plane pair if their distance is too far
+            if (computeMaxDisBetweenTwoPlanes(c1, c2, true) > FLAGS_point_plane_dis_threshold ||
+                computeMaxDisBetweenTwoPlanes(c2, c1, true) > FLAGS_point_plane_dis_threshold)
+                continue;
+            // if (computeAvgDisBtwTwoPlanes(c1, c2) > FLAGS_point_plane_dis_threshold ||
+            //     computeAvgDisBtwTwoPlanes(c2, c1) > FLAGS_point_plane_dis_threshold)
+            //     continue;  // skip plane pair if their distance is too far
             mergeClusters(c1, c2);
             clusters_[c1].cov += clusters_[c2].cov;
             clusters_[c2].cov.clearCov();
