@@ -9,14 +9,20 @@
 
 const double kPI = 3.1415926;
 
-DEFINE_double(point_plane_dis_threshold, 0.12, "");
-DEFINE_double(normal_angle_threshold, 45.0, "");
+DEFINE_double(point_plane_dis_threshold, 0.15, "");
+DEFINE_double(normal_angle_threshold, 30.0, "");
 DEFINE_double(center_normal_angle_threshold, 70.0, "");
 DEFINE_double(energy_increase_threshold, 0.1, "");
+DEFINE_double(island_cluster_border_ratio, 0.8, "");
 DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
 DEFINE_bool(run_post_processing, true, "");
 
-Partition::Partition() {}
+Partition::Partition()
+{
+    vertex_num_ = face_num_ = 0;
+    init_cluster_num_ = curr_cluster_num_ = target_cluster_num_ = 0;
+    flag_read_cluster_file_ = false;
+}
 
 Partition::~Partition()
 {
@@ -404,14 +410,63 @@ void Partition::writeClusterFile(const std::string& filename)
     fclose(fout);
 }
 
-void Partition::readClusterFile(const std::string& filename) {}
+//! Read cluster file. Note it can only be used when there are no existing clusters, like call this function
+//! just after reading PLY file and haven't run any other partition functions.
+bool Partition::readClusterFile(const std::string& filename)
+{
+    if (!clusters_.empty() || vertex_num_ == 0 || face_num_ == 0)
+    {
+        cout << "Can ONLY read the cluster file if already reading the mesh and NO existing clusters." << endl;
+        return false;
+    }
+    FILE* fin = fopen(filename.c_str(), "rb");
+    if (fin == NULL)
+    {
+        cout << "ERROR: cannot find cluster file" << filename << endl;
+        return false;
+    }
+    if (fread(&curr_cluster_num_, sizeof(int), 1, fin) != 1)
+    {
+        cout << "ERROR in reading cluster number in cluster file" << filename << endl;
+        return false;
+    }
+    if (curr_cluster_num_ < 1)
+    {
+        cout << "ERROR: cluster number is " << curr_cluster_num_ << endl;
+        return false;
+    }
+    clusters_.resize(curr_cluster_num_);
+    float color[3];
+    for (int i = 0; i < curr_cluster_num_; ++i)
+    {
+        int cidx = -1, cluster_size = -1;
+        if (fread(&cidx, sizeof(int), 1, fin) != 1)
+            return false;
+        if (fread(&cluster_size, sizeof(int), 1, fin) != 1)
+            return false;
+        assert(cidx >= 0 && cidx < face_num_ && cluster_size >= 0 && cluster_size <= face_num_);
+        vector<int> cluster_elems(cluster_size);
+        if (fread(&cluster_elems[0], sizeof(int), cluster_size, fin) != size_t(cluster_size))
+        {
+            cout << "ERROR in reading indices in cluster file " << filename << endl;
+            return false;
+        }
+        clusters_[i].faces.insert(cluster_elems.begin(), cluster_elems.end());
+        if (fread(&color[0], sizeof(float), 3, fin) != 3)
+        {
+            cout << "ERROR in reading colors in cluster file " << filename << endl;
+            return false;
+        }
+        for (int j = 0; j < 3; ++j)
+            clusters_[i].color[j] = color[j];
+    }
+    fclose(fin);
+    flag_read_cluster_file_ = true;  // a read-cluster flag to skip some steps later
+    return true;
+}
 
 bool Partition::runPartitionPipeline()
 {
-    init_cluster_num_ = face_num_;
-    curr_cluster_num_ = face_num_;
-    assert(target_cluster_num_ < curr_cluster_num_ && target_cluster_num_ > 0);
-
     printInGreen("Mesh partition by merging neighbor faces:");
     if (!runMerging())
         return false;
@@ -463,15 +518,11 @@ bool Partition::runMerging()
     return true;
 }
 
-void Partition::initMerging()
+void Partition::initVerticesAndFaces()
 {
-    clusters_.resize(curr_cluster_num_);
-
-    // One edge -> multiple faces, since the mesh may be non-manifold
+    cout << "Initialize vertices and faces ... " << endl;
     typedef std::pair<int, int> EdgePair;
-    // unordered_map<EdgePair, std::vector<int>, boost::hash<EdgePair>> edge_to_face;
     unordered_map<long long, vector<int>> edge_to_face;  // each long long int presents an edge with two int endpoints
-    cout << "Initialize neighbors ... " << endl;
     vector<int> fa(3);
     float progress = 0.0;  // used to print a progress bar
     const int kStep = (face_num_ < 100) ? 1 : (face_num_ / 100);
@@ -485,8 +536,6 @@ void Partition::initMerging()
         }
 
         Face& face = faces_[fidx];
-        face.cluster_id = fidx;  // initially each face is a single cluster
-
         // Initialize neighbors of vertices and faces
         for (int i = 0; i < 3; ++i)
             fa[i] = face.indices[i];
@@ -505,21 +554,26 @@ void Partition::initMerging()
             {
                 face.nbr_faces.insert(f);
                 faces_[f].nbr_faces.insert(fidx);
-                clusters_[fidx].nbr_clusters.insert(f);
-                clusters_[f].nbr_clusters.insert(fidx);
             }
             edge_to_face[edge].push_back(fidx);
         }
-
         // Initialize covariance quadratic objects
-        clusters_[fidx].faces.insert(fidx);  // initially each face is a cluster
-        CovObj Q(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
-        clusters_[fidx].cov = faces_[fidx].cov = Q;
+        face.cov = CovObj(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
     }
+}
+
+void Partition::initMerging()
+{
+    init_cluster_num_ = curr_cluster_num_ = face_num_;
+    assert(target_cluster_num_ < init_cluster_num_ && target_cluster_num_ > 0);
+    clusters_.resize(init_cluster_num_);
+
+    initVerticesAndFaces();
 
     // Initialize edges
     cout << "Initialize edges ... " << endl;
-    progress = 0;
+    float progress = 0.0;  // used to print a progress bar
+    const int kStep = (init_cluster_num_ < 100) ? 1 : (init_cluster_num_ / 100);
     for (int cidx = 0; cidx < init_cluster_num_; cidx++)
     {
         if (cidx % kStep == 0 || cidx == init_cluster_num_ - 1)
@@ -527,7 +581,15 @@ void Partition::initMerging()
             progress = (cidx == init_cluster_num_ - 1) ? 1.0f : static_cast<float>(cidx) / init_cluster_num_;
             printProgressBar(progress);
         }
+
+        // Initially each face is one single cluster itself, so set its relevant data
+        faces_[cidx].cluster_id = cidx;
         Cluster& cluster = clusters_[cidx];
+        cluster.nbr_clusters.insert(faces_[cidx].nbr_faces.begin(), faces_[cidx].nbr_faces.end());
+        cluster.cov = faces_[cidx].cov;
+        cluster.faces.insert(cidx);
+
+        // Create initial edges between neighbor faces
         for (int nbr : cluster.nbr_clusters)
         {
             if (cidx < nbr)
@@ -706,7 +768,7 @@ void Partition::runSwapping()
     }
     double last_energy = getTotalEnergy();
     double scale = 1e5;  // scale the energy since it is usually too small
-    cout << "Energy 0 (x " << scale << "): " << last_energy * scale << endl;
+    cout << "Energy 0: " << last_energy * scale << " (scaled by " << scale << ")" << endl;
     double curr_energy = 0;
     int iter = 0;
     while (iter++ < FLAGS_swapping_loop_num)
@@ -978,19 +1040,46 @@ void Partition::updateCurrentClusterNum()
 //! Merge adjacent planes together if satisfying merging criteria. This is usually some post process step.
 void Partition::mergeAdjacentPlanes()
 {
-    // Update cluster information at first
+    // If reading cluster data from input file, then need to initialize relevant cluster data at first
+    if (flag_read_cluster_file_)
+    {
+        initVerticesAndFaces();
+        init_cluster_num_ = curr_cluster_num_;  // no redundant empty clusters now
+        for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+        {
+            for (int fidx : clusters_[cidx].faces)
+            {
+                faces_[fidx].cluster_id = cidx;
+                CovObj Q(vertices_[faces_[fidx].indices[0]].pt, vertices_[faces_[fidx].indices[1]].pt,
+                    vertices_[faces_[fidx].indices[2]].pt);
+                faces_[fidx].cov = Q;
+                clusters_[cidx].cov += Q;
+            }
+            clusters_[cidx].energy = clusters_[cidx].cov.energy();
+        }
+    }
+
+    // Merge adjacent planes together by starting from one plane and spead to its neighbors as long as
+    // they satisfy the merging conditions.
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (!isClusterValid(cidx))
             continue;
         clusters_[cidx].cov.computePlaneNormal();
+        findClusterNeighbors(cidx);
     }
-
-    // Create candidate plane pairs to merge and put them into the min heap
     const double kNormalAngleThrsd = cos(kPI * FLAGS_normal_angle_threshold / 180);
     const double kCenterNormalAngleThrsd = cos(kPI * FLAGS_center_normal_angle_threshold / 180);
+    float progress = 0.0f;  // for printing a progress bar
+    const int kStep = (init_cluster_num_ < 100) ? 1 : (init_cluster_num_ / 100);
+    cout << "Start merging adjacent planes ... " << endl;
     for (int c1 = 0; c1 < init_cluster_num_; ++c1)
     {
+        if (c1 % kStep == 0 || c1 == init_cluster_num_ - 1)
+        {
+            progress = (c1 == init_cluster_num_ - 1) ? 1.0f : static_cast<float>(c1) / init_cluster_num_;
+            printProgressBar(progress);
+        }
         if (!isClusterValid(c1))
             continue;
         clusters_[c1].cov.computePlaneNormal();
@@ -999,28 +1088,110 @@ void Partition::mergeAdjacentPlanes()
         while (!clusters_[c1].nbr_clusters.empty())
         {
             int c2 = *clusters_[c1].nbr_clusters.begin();
-            clusters_[c1].nbr_clusters.erase(c2);
+            clusters_[c1].nbr_clusters.erase(c2);  // this ensures quitting the loop at last
             if (!isClusterValid(c2))
                 continue;
+            if (clusters_[c1].cov.area_ < clusters_[c2].cov.area_)
+                continue;  // always merge small plane c2 to large plane c1
             const Vector3d& n2 = clusters_[c2].cov.normal_;
             if (fabs(n1.dot(n2)) < kNormalAngleThrsd)
-                continue;  // skip pair of planes with large normal direction difference
+                continue;  // skip the neighbor plane with large normal direction difference
             Vector3d dir = clusters_[c1].cov.center_ - clusters_[c2].cov.center_;
             dir.normalize();
             if (fabs(dir.dot(n1)) > kCenterNormalAngleThrsd || fabs(dir.dot(n2)) > kCenterNormalAngleThrsd)
                 continue;  // skip plane pair if the direction of two centers is close to one plane normal
-            if (computeMaxDisBetweenTwoPlanes(c1, c2, true) > FLAGS_point_plane_dis_threshold ||
-                computeMaxDisBetweenTwoPlanes(c2, c1, true) > FLAGS_point_plane_dis_threshold)
-                continue;
+
+            // if (computeMaxDisBetweenTwoPlanes(c1, c2, true) > FLAGS_point_plane_dis_threshold ||
+            //     computeMaxDisBetweenTwoPlanes(c2, c1, true) > FLAGS_point_plane_dis_threshold)
+            //     continue;
             // if (computeAvgDisBtwTwoPlanes(c1, c2) > FLAGS_point_plane_dis_threshold ||
             //     computeAvgDisBtwTwoPlanes(c2, c1) > FLAGS_point_plane_dis_threshold)
             //     continue;  // skip plane pair if their distance is too far
+            if (computeMaxDisBetweenTwoPlanes(c1, c2, true) > FLAGS_point_plane_dis_threshold)
+                continue;
+
+            // If passing all the above checks, merge cluster/plane c2 to c1
             mergeClusters(c1, c2);
             clusters_[c1].cov += clusters_[c2].cov;
             clusters_[c2].cov.clearCov();
             clusters_[c1].cov.computePlaneNormal();
             findClusterNeighbors(c1);
+
+            // clusters_[c1].nbr_clusters.insert(clusters_[c2].nbr_clusters.begin(), clusters_[c2].nbr_clusters.end());
+            // for (int cidx : clusters_[c2].nbr_clusters)
+            // {
+            //     clusters_[cidx].nbr_clusters.erase(c2);
+            //     if (cidx != c1)
+            //         clusters_[cidx].nbr_clusters.insert(c1);
+            // }
+            // clusters_[c1].nbr_clusters.insert(poped_clusters.begin(), poped_clusters.end());
+            // poped_clusters.clear();
+            // clusters_[c1].nbr_clusters.erase(c2);
         }
     }
+
+    // Merge 'island' clusters. A cluster is an 'island' cluster if MOST of its cluster border faces
+    // have a same neighbor cluster. Usually this kind of cluster is entirely located inside some
+    // other larger cluster, such as some small part of a bumpy floor. We will merge these islands
+    // to their corresponding 'best' neighbor clusters.
+    cout << "Start merging island clusters ... " << endl;
+    progress = 0.0f;
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (cidx % kStep == 0 || cidx == init_cluster_num_ - 1)
+        {
+            progress = (cidx == init_cluster_num_ - 1) ? 1.0f : static_cast<float>(cidx) / init_cluster_num_;
+            printProgressBar(progress);
+        }
+        if (!isClusterValid(cidx))
+            continue;
+        unordered_map<int, int> plane_neighbor_clusters; // neighbor cluster id -> #border faces
+        int count_border_faces = 0, count_cluster_border_faces = 0;
+        for (int fidx : clusters_[cidx].faces)
+        {
+            bool flag_is_border = false, flag_is_cluster_border = false;
+            if (faces_[fidx].nbr_faces.size() < 3)
+                flag_is_border = true;
+            unordered_set<int> face_nbr_clusters;
+            for (int nbr : faces_[fidx].nbr_faces)
+            {
+                int ncidx = faces_[nbr].cluster_id;
+                if (ncidx != cidx)
+                    face_nbr_clusters.insert(ncidx);
+            }
+            if (face_nbr_clusters.size() > 0)
+            {
+                for (int ncidx : face_nbr_clusters)
+                    plane_neighbor_clusters[ncidx]++;
+                flag_is_cluster_border = true;
+            }
+            if (flag_is_cluster_border)
+                count_cluster_border_faces++; // cluster border faces only
+            if (flag_is_border || flag_is_cluster_border)
+                count_border_faces++; // mesh border and cluster border faces together
+        }
+        if (plane_neighbor_clusters.size() < 1 || plane_neighbor_clusters.size() > 3)
+            continue; // Experiential: only merge clusters with 1, 2 or 3 neighbor clusters
+        double cluster_border_ratio = static_cast<double>(count_cluster_border_faces) / count_border_faces;
+        if (cluster_border_ratio < FLAGS_island_cluster_border_ratio)
+            continue; // skip planes with a large part of mesh border faces
+        // Find the neighbor cluster corresponding to maximum border faces
+        int target_nbr = -1, max_faces = 0;
+        for (auto it : plane_neighbor_clusters)
+        {
+            if (it.second > max_faces)
+            {
+                max_faces = it.second; // # border faces
+                target_nbr = it.first; // neighbor cluster id
+            }
+        }
+        double prior_cluster_ratio = static_cast<double>(max_faces) / count_cluster_border_faces;
+        if (max_faces < FLAGS_island_cluster_border_ratio)
+            continue; // only merge island cluster while MOST of its border faces has a same neighbor cluster
+
+        mergeClusters(target_nbr, cidx);
+    }
+
+    // Final check
     updateCurrentClusterNum();
 }
