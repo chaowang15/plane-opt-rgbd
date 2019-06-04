@@ -8,7 +8,6 @@
 #include <unordered_set>
 #include <Eigen/Eigen>
 #include "covariance.h"
-// #include "myheap.h"
 #include "MxHeap.h"
 
 using namespace std;
@@ -62,8 +61,6 @@ public:
         unordered_set<int> faces;  // faces each cluster contains
         unordered_set<int> nbr_clusters;
         vector<SwapFace> faces_to_swap;
-        // vector<pair<int, int>> faces_to_swap; // first is face-id, second is cluter to be swapped to
-        vector<Edge*> edges;
         Vector3f color;
         CovObj cov;
         Cluster() : energy(0) {}
@@ -81,7 +78,7 @@ public:
     void setTargetClusterNum(int num) { target_cluster_num_ = num; }
     int getCurrentClusterNum() { return curr_cluster_num_; }
     void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }
-    void mergeAdjacentPlanes();
+    void runPostProcessing();
 
 private:
     /* Merging */
@@ -99,6 +96,7 @@ private:
     double getTotalEnergy();
     void createClusterColors();
     void updateCurrentClusterNum();
+    void releaseEdges();
 
     /* Swap */
     void runSwapping();
@@ -121,6 +119,7 @@ private:
     vector<Vertex> vertices_;
     vector<Face> faces_;
     vector<Cluster> clusters_;
+    vector<vector<Edge*>> global_edges_;
     MxHeap heap_;
     double total_energy_;
     unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;

@@ -26,20 +26,23 @@ Partition::Partition()
 
 Partition::~Partition()
 {
-    std::cout << "Releasing edges ... " << std::endl;
-    for (int i = 0; i < init_cluster_num_; ++i)
+    releaseEdges();
+}
+
+void Partition::releaseEdges()
+{
+    // Each edge pointer is stored in the global edge list twice and the heap once,
+    // but it can only be deleted once. Here simply delete each edge in the heap.
+    while(heap_.size() > 0)
     {
-        for (Edge* e : clusters_[i].edges)
-        {
-            int u = e->v1 == i ? e->v2 : e->v1;
-            removeEdgeFromCluster(u, e);
-            heap_.remove(e);
-            // Each edge pointer is stored twice in edge list, and MUST only delete it only once.
-            // So here for each edge, we delete it in the edge list of the other endpoint of this edge.
-            delete e;
-        }
-        clusters_[i].edges.clear();
+        Edge* edge = (Edge*)heap_.extract();
+        delete edge;
+        edge = nullptr;
     }
+    // Each edge pointer is already deleted, so simply clear global edge vectors.
+    for (size_t i = 0; i < global_edges_.size(); ++i)
+        global_edges_[i].clear();
+    global_edges_.clear();
 }
 
 //! Read PLY model
@@ -478,7 +481,7 @@ bool Partition::runPartitionPipeline()
     {
         printInGreen("Post processing: merge neighbor clusters:");
         printInCyan("#Clusters before merging: " + std::to_string(curr_cluster_num_));
-        mergeAdjacentPlanes();
+        runPostProcessing();
         printInCyan("#Clusters after merging: " + std::to_string(curr_cluster_num_));
     }
     createClusterColors();
@@ -564,6 +567,7 @@ void Partition::initMerging()
     init_cluster_num_ = curr_cluster_num_ = face_num_;
     assert(target_cluster_num_ < init_cluster_num_ && target_cluster_num_ > 0);
     clusters_.resize(init_cluster_num_);
+    global_edges_.resize(init_cluster_num_);
 
     initVerticesAndFaces();
 
@@ -594,8 +598,8 @@ void Partition::initMerging()
                 Edge* edge = new Edge(cidx, nbr);
                 computeEdgeEnergy(edge);
                 heap_.insert(edge);
-                cluster.edges.push_back(edge);
-                clusters_[nbr].edges.push_back(edge);
+                global_edges_[cidx].push_back(edge);
+                global_edges_[nbr].push_back(edge);
             }
         }
     }
@@ -620,13 +624,13 @@ bool Partition::removeEdgeFromCluster(int cidx, Edge* edge)
     if (edge == nullptr)
         return false;
     bool flag_found_edge = false;
-    auto iter = clusters_[cidx].edges.begin();
-    while (iter != clusters_[cidx].edges.end())
+    auto iter = global_edges_[cidx].begin();
+    while (iter != global_edges_[cidx].end())
     {
         Edge* e = *iter;
         if (e == nullptr || e == edge)
         {
-            iter = clusters_[cidx].edges.erase(iter);
+            iter = global_edges_[cidx].erase(iter);
             flag_found_edge = true;  // Not return here since there may be duplicate edges
         }
         else
@@ -671,7 +675,7 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
     findClusterNeighbors(c1);
 
     // Remove all old edges next to c1 and c2 from the heap and corresponding edge lists
-    for (Edge* e : clusters_[c1].edges)
+    for (Edge* e : global_edges_[c1])
     {
         // For each edge (c1, u) or (u, c1), delete this edge and remove it from cluster u's edge list,
         // since cluster c1 and c2's edge list will be cleared later. This is because, each edge pointer is
@@ -681,15 +685,15 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
         removeEdgeFromCluster(u, e);
         delete e;
     }
-    for (Edge* e : clusters_[c2].edges)
+    for (Edge* e : global_edges_[c2])
     {
         int u = (e->v1 == c2) ? e->v2 : e->v1;
         heap_.remove(e);
         removeEdgeFromCluster(u, e);
         delete e;
     }
-    clusters_[c1].edges.clear();
-    clusters_[c2].edges.clear();
+    global_edges_[c1].clear();
+    global_edges_[c2].clear();
 
     // Add new edges between v1 and all its new neighbors into edge list
     for (int cidx : clusters_[c1].nbr_clusters)
@@ -699,8 +703,8 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
         Edge* e = new Edge(c1, cidx);
         computeEdgeEnergy(e);
         heap_.insert(e);
-        clusters_[c1].edges.push_back(e);
-        clusters_[cidx].edges.push_back(e);
+        global_edges_[c1].push_back(e);
+        global_edges_[cidx].push_back(e);
     }
 }
 
@@ -793,8 +797,11 @@ int Partition::swapOnce()
         clusters_in_swap_.insert(cidx);
     }
     last_clusters_in_swap_.clear();
+
     // Find faces to be swapped. Such a face is a cluster border face and
     // must decrease the total energy after swapping to its neighbor cluster.
+    // NOTE: parallel computation can accelerate this process, since each face here is independent with
+    // the other faces.
     int count_swap_faces = 0;
     for (int cidx : clusters_in_swap_)
     {
@@ -1034,12 +1041,12 @@ void Partition::updateCurrentClusterNum()
             curr_cluster_num_++;
 }
 
-//! Merge adjacent planes together if satisfying merging criteria. This is usually some post process step.
+//! Post processing step, including merging adjacent planes together, and merging island planes to neighbors.
 /*!
     NOTE: You can read PLY mesh and cluster file, and then run this function without running the mesh partiton
     step which takes a very long time.
 */
-void Partition::mergeAdjacentPlanes()
+void Partition::runPostProcessing()
 {
     // If reading cluster data from input file, then need to initialize relevant cluster data at first
     if (flag_read_cluster_file_)

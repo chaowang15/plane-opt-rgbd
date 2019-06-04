@@ -145,7 +145,6 @@ downheap	plane-opt/mesh_partition/heap/MxHeap.cxx	/^void MxHeap::downheap(unsign
 downheap	plane-opt/mesh_partition/myheap.h	/^    void downheap(unsigned int i)$/;"	f	class:MxHeap
 drop	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    T& drop() { return (*this)[--fill]; }$/;"	f	class:MxDynBlock
 drop	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void drop(int d) { fill -= d; }$/;"	f	class:MxDynBlock
-edges	plane-opt/mesh_partition/partition.h	/^        vector<Edge*> edges;$/;"	m	struct:Partition::Cluster
 end	plane-opt/mesh_partition/heap/MxBlock.h	/^    const_iterator end() const { return begin() + size(); }$/;"	f	class:MxBlock
 end	plane-opt/mesh_partition/heap/MxBlock.h	/^    iterator end() { return begin() + size(); }$/;"	f	class:MxBlock
 end	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    typename MxBlock<T>::const_iterator end() const { return this->begin() + size(); }$/;"	f	class:MxDynBlock
@@ -171,6 +170,7 @@ getCurrentClusterNum	plane-opt/mesh_partition/partition.h	/^    int getCurrentCl
 getTotalEnergy	plane-opt/mesh_partition/partition.cpp	/^double Partition::getTotalEnergy()$/;"	f	class:Partition
 get_heap_pos	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
 get_heap_pos	plane-opt/mesh_partition/myheap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
+global_edges_	plane-opt/mesh_partition/partition.h	/^    vector<vector<Edge*>> global_edges_;$/;"	m	class:Partition
 heap_	plane-opt/mesh_partition/partition.h	/^    MxHeap heap_;$/;"	m	class:Partition
 heap_key	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline double heap_key() const { return import; }$/;"	f	class:MxHeapable
 heap_key	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline void heap_key(double k) { import = k; }$/;"	f	class:MxHeapable
@@ -210,7 +210,6 @@ length	plane-opt/mesh_partition/myheap.h	/^    unsigned int length() const {retu
 line	plane-opt/mesh_partition/heap/mixmsg.h	/^    int line;$/;"	m	class:MxMsgInfo
 main	plane-opt/mesh_partition/main.cpp	/^int main(int argc, char** argv)$/;"	f
 maxcoord_	plane-opt/mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
-mergeAdjacentPlanes	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeAdjacentPlanes()$/;"	f	class:Partition
 mergeClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeClusters(int c1, int c2)$/;"	f	class:Partition
 mergeIslandComponentsInCluster	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)$/;"	f	class:Partition
 mergeOnce	plane-opt/mesh_partition/partition.cpp	/^bool Partition::mergeOnce()$/;"	f	class:Partition
@@ -261,6 +260,7 @@ random_byte	plane-opt/mesh_partition/heap/gfx.h	/^  inline char   random_byte() 
 readClusterFile	plane-opt/mesh_partition/partition.cpp	/^bool Partition::readClusterFile(const std::string& filename)$/;"	f	class:Partition
 readPLY	plane-opt/mesh_partition/partition.cpp	/^bool Partition::readPLY(const std::string& filename)$/;"	f	class:Partition
 ref	plane-opt/mesh_partition/heap/MxHeap.cxx	14;"	d	file:
+releaseEdges	plane-opt/mesh_partition/partition.cpp	/^void Partition::releaseEdges()$/;"	f	class:Partition
 remove	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void remove(int i) { (*this)[i] = (*this)[--fill]; }$/;"	f	class:MxDynBlock
 remove	plane-opt/mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::remove(MxHeapable *t)$/;"	f	class:MxHeap
 remove	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *remove(MxHeapable *t)$/;"	f	class:MxHeap
@@ -275,6 +275,7 @@ rint	plane-opt/mesh_partition/heap/gfx.h	/^inline double rint(double x) { return
 room_for	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void room_for(int len)$/;"	f	class:MxDynBlock
 runMerging	plane-opt/mesh_partition/partition.cpp	/^bool Partition::runMerging()$/;"	f	class:Partition
 runPartitionPipeline	plane-opt/mesh_partition/partition.cpp	/^bool Partition::runPartitionPipeline()$/;"	f	class:Partition
+runPostProcessing	plane-opt/mesh_partition/partition.cpp	/^void Partition::runPostProcessing()$/;"	f	class:Partition
 runSwapping	plane-opt/mesh_partition/partition.cpp	/^void Partition::runSwapping()$/;"	f	class:Partition
 setTargetClusterNum	plane-opt/mesh_partition/partition.h	/^    void setTargetClusterNum(int num) { target_cluster_num_ = num; }$/;"	f	class:Partition
 set_heap_pos	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline void set_heap_pos(int t) { token = t; }$/;"	f	class:MxHeapable

@@ -53,8 +53,8 @@ int main(int argc, char** argv)
     bool flag_success = true;
     if (flag_read_cluster_file)
     {
-        printInGreen("Merge adjacent planes ...");
-        partition.mergeAdjacentPlanes();
+        printInGreen("Run post processing step ...");
+        partition.runPostProcessing();
     }
     else
     {
