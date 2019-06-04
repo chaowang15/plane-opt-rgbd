@@ -145,6 +145,7 @@ downheap	plane-opt/mesh_partition/heap/MxHeap.cxx	/^void MxHeap::downheap(unsign
 downheap	plane-opt/mesh_partition/myheap.h	/^    void downheap(unsigned int i)$/;"	f	class:MxHeap
 drop	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    T& drop() { return (*this)[--fill]; }$/;"	f	class:MxDynBlock
 drop	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void drop(int d) { fill -= d; }$/;"	f	class:MxDynBlock
+edge_to_face_	plane-opt/mesh_partition/partition.h	/^    unordered_map<long long, vector<int>> edge_to_face_;  \/\/ edge (two int32 endpoints) -> face id$/;"	m	class:Partition
 end	plane-opt/mesh_partition/heap/MxBlock.h	/^    const_iterator end() const { return begin() + size(); }$/;"	f	class:MxBlock
 end	plane-opt/mesh_partition/heap/MxBlock.h	/^    iterator end() { return begin() + size(); }$/;"	f	class:MxBlock
 end	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    typename MxBlock<T>::const_iterator end() const { return this->begin() + size(); }$/;"	f	class:MxDynBlock

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <unordered_map>
 #include <Eigen/Eigen>
 #include "covariance.h"
 #include "MxHeap.h"
@@ -123,6 +124,7 @@ private:
     MxHeap heap_;
     double total_energy_;
     unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;
+    unordered_map<long long, vector<int>> edge_to_face_;  // edge (two int32 endpoints) -> face id
 };
 
 #endif  // !PARTITION_H

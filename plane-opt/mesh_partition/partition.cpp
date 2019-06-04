@@ -1,7 +1,6 @@
 #include "partition.h"
 #include <stdlib.h>
 #include "../common/tools.h"
-#include <unordered_map>
 #include <random>
 #include <chrono>
 #include <queue>
@@ -393,7 +392,7 @@ void Partition::writeClusterFile(const std::string& filename)
     FILE* fout = fopen(filename.c_str(), "wb");
     fwrite(&curr_cluster_num_, sizeof(int), 1, fout);  // #clusters at first
     float color[3];
-    int new_cidx = 0;
+    int new_cidx = 0, count_faces = 0;
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (!isClusterValid(cidx))
@@ -407,8 +406,13 @@ void Partition::writeClusterFile(const std::string& filename)
             color[i] = clusters_[cidx].color[i];
         fwrite(&color[0], sizeof(float), 3, fout);  // cluster color
         new_cidx++;
+        count_faces += num;
     }
     fclose(fout);
+
+    // Sometimes some faces are missing and not in any cluster. This is bad.
+    // So here ensure the number of faces in clusters is exactly the same as original face number.
+    assert(count_faces == face_num_);
 }
 
 //! Read cluster file. Note it can only be used when there are no existing clusters, like call this function
@@ -521,8 +525,6 @@ bool Partition::runMerging()
 void Partition::initVerticesAndFaces()
 {
     cout << "Initialize vertices and faces ... " << endl;
-    typedef std::pair<int, int> EdgePair;
-    unordered_map<long long, vector<int>> edge_to_face;  // each long long int presents an edge with two int endpoints
     vector<int> fa(3);
     float progress = 0.0;  // used to print a progress bar
     const int kStep = (face_num_ < 100) ? 1 : (face_num_ / 100);
@@ -550,12 +552,12 @@ void Partition::initVerticesAndFaces()
             long long a = static_cast<long long>((i == 2) ? fa[0] : fa[i]);
             long long b = static_cast<long long>((i == 2) ? fa[i] : fa[i + 1]);
             long long edge = (a << 32) | b;  // fast bit operation
-            for (int f : edge_to_face[edge])
+            for (int f : edge_to_face_[edge])
             {
                 face.nbr_faces.insert(f);
                 faces_[f].nbr_faces.insert(fidx);
             }
-            edge_to_face[edge].push_back(fidx);
+            edge_to_face_[edge].push_back(fidx);
         }
         // Initialize covariance quadratic objects
         face.cov = CovObj(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
@@ -1124,17 +1126,6 @@ void Partition::runPostProcessing()
             clusters_[c2].cov.clearCov();
             clusters_[c1].cov.computePlaneNormal();
             findClusterNeighbors(c1);
-
-            // clusters_[c1].nbr_clusters.insert(clusters_[c2].nbr_clusters.begin(), clusters_[c2].nbr_clusters.end());
-            // for (int cidx : clusters_[c2].nbr_clusters)
-            // {
-            //     clusters_[cidx].nbr_clusters.erase(c2);
-            //     if (cidx != c1)
-            //         clusters_[cidx].nbr_clusters.insert(c1);
-            // }
-            // clusters_[c1].nbr_clusters.insert(poped_clusters.begin(), poped_clusters.end());
-            // poped_clusters.clear();
-            // clusters_[c1].nbr_clusters.erase(c2);
         }
     }
 
