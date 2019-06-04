@@ -11,7 +11,7 @@ AssertBound	plane-opt/mesh_partition/heap/stdmix.h	104;"	d
 Axis	plane-opt/mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	g
 CAREFUL	plane-opt/mesh_partition/heap/stdmix.h	86;"	d
 CAREFUL	plane-opt/mesh_partition/heap/stdmix.h	89;"	d
-COVARIANCE	plane-opt/mesh_partition/covariance.h	2;"	d
+COVARIANCE_H	plane-opt/mesh_partition/covariance.h	6;"	d
 Cluster	plane-opt/mesh_partition/partition.h	/^        Cluster() : energy(0) {}$/;"	f	struct:Partition::Cluster
 Cluster	plane-opt/mesh_partition/partition.h	/^    struct Cluster$/;"	s	class:Partition
 CovObj	plane-opt/mesh_partition/covariance.cpp	/^CovObj::CovObj()$/;"	f	class:CovObj

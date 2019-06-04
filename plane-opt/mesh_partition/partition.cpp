@@ -9,8 +9,8 @@
 
 const double kPI = 3.1415926;
 
-DEFINE_double(point_plane_dis_threshold, 0.15, "");
-DEFINE_double(normal_angle_threshold, 30.0, "");
+DEFINE_double(point_plane_dis_threshold, 0.2, "");
+DEFINE_double(normal_angle_threshold, 15.0, "");
 DEFINE_double(center_normal_angle_threshold, 70.0, "");
 DEFINE_double(energy_increase_threshold, 0.1, "");
 DEFINE_double(island_cluster_border_ratio, 0.8, "");
@@ -388,8 +388,6 @@ bool Partition::writePLY(const std::string& filename)
 void Partition::writeClusterFile(const std::string& filename)
 {
     FILE* fout = fopen(filename.c_str(), "wb");
-    // NOTE: here assume the current cluster number is the latest
-    // (call updateCurrentClusterNum() before this function)
     fwrite(&curr_cluster_num_, sizeof(int), 1, fout);  // #clusters at first
     float color[3];
     int new_cidx = 0;
@@ -478,12 +476,11 @@ bool Partition::runPartitionPipeline()
     }
     if (FLAGS_run_post_processing)
     {
-        printInGreen("(Optional) Post processing: merge neighbor clusters:");
+        printInGreen("Post processing: merge neighbor clusters:");
         printInCyan("#Clusters before merging: " + std::to_string(curr_cluster_num_));
         mergeAdjacentPlanes();
         printInCyan("#Clusters after merging: " + std::to_string(curr_cluster_num_));
     }
-
     createClusterColors();
     return true;
 }
@@ -1038,6 +1035,10 @@ void Partition::updateCurrentClusterNum()
 }
 
 //! Merge adjacent planes together if satisfying merging criteria. This is usually some post process step.
+/*!
+    NOTE: You can read PLY mesh and cluster file, and then run this function without running the mesh partiton
+    step which takes a very long time.
+*/
 void Partition::mergeAdjacentPlanes()
 {
     // If reading cluster data from input file, then need to initialize relevant cluster data at first

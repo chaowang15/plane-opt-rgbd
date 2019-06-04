@@ -1,5 +1,9 @@
-#ifndef COVARIANCE
-#define COVARIANCE
+/*!
+    Covariance Object defined in this file is for merging neighbor faces in mesh partition.
+*/
+
+#ifndef COVARIANCE_H
+#define COVARIANCE_H
 
 #include <Eigen/Eigen>
 #include <iostream>
@@ -30,4 +34,4 @@ public:
     void clearCov();
 };
 
-#endif  // COVARIANCE
+#endif  // COVARIANCE_H
