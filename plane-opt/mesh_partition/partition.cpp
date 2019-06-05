@@ -50,18 +50,20 @@ void Partition::releaseEdges()
 
 //! Read PLY model
 /*!
-    NOTE about this function:
-    - Supports both binary and ASCII PLY model;
-    -
+    This function supports PLY model with:
+    - both binary and ASCII format;
+    - 3 RGB channel vertex color and face color;
+    - 3-dim vertex normal (even though doesn't save it);
+    - 1-dim vertex quality (even though doesn't save it);
 */
 bool Partition::readPLY(const std::string& filename)
 {
     FILE* fin;
     if (!(fin = fopen(filename.c_str(), "rb")))
     {
-        cerr << "ERROR: Unable to open file" << filename << endl;
+        cout << "ERROR: Unable to open file" << filename << endl;
         return false;
-    }
+    };
 
     /************************************************************************/
     /* Read headers */
@@ -70,22 +72,18 @@ bool Partition::readPLY(const std::string& filename)
     // 1 for vertex (no faces), 2 for vertex and faces,
     // 3 for vertex, vertex colors (no faces), 4 for vertex, vertex colors and faces
     int vertex_mode = 1;
-    int ply_mode = 0;  // 0 for ascii, 1 for little-endian
-    int color_channel_num = 0;
-    int vertex_quality_dim = 0;  // vertex quality, such as vertex normal or other data per vertex defined by user
-    int vertex_normal_dim = 0;   // vertex normal dimension
-    char seps[] = " ,\t\n\r ";   // separators
+    int ply_mode = 0;  // 0 for ascii, 1 for little-endian (binary)
+    size_t vertex_color_channel = 0, face_color_channel = 0;
+    size_t vertex_quality_dim = 0;  // vertex quality, any kind of float value per vertex defined by user
+    size_t vertex_normal_dim = 0;   // vertex normal dimension
+    char seps[] = " ,\t\n\r ";      // separators
     seps[5] = 10;
     int property_num = 0;
     char line[1024];
-    maxcoord_[0] = maxcoord_[1] = maxcoord_[2] = std::numeric_limits<double>::min();
-    mincoord_[0] = mincoord_[1] = mincoord_[2] = std::numeric_limits<double>::max();
-    center_[0] = center_[1] = center_[2] = 0;
-
     while (true)
     {
         if (fgets(line, 1024, fin) == NULL)
-            return false;
+            continue;
         char* token = strtok(line, seps);
         if (!strcmp(token, "end_header"))
             break;
@@ -98,7 +96,7 @@ bool Partition::readPLY(const std::string& filename)
                 ply_mode = 1;
             else
             {
-                cout << "WARNING: can not read this type of PLY model: " << std::string(token) << endl;
+                cout << "ERROR in Reading PLY model: can not read this type of PLY model: " << string(token) << endl;
                 return false;
             }
         }
@@ -130,9 +128,15 @@ bool Partition::readPLY(const std::string& filename)
                     if (!strcmp(token, "uchar"))  // color
                     {
                         token = strtok(NULL, seps);
-                        color_channel_num++;
-                        if (color_channel_num >= 3)  // color channel number must be 3 (RGB) or 4 (RGBA)
-                            vertex_mode = 3;
+                        if (!strcmp(token, "red") || !strcmp(token, "green") || !strcmp(token, "blue") ||
+                            !strcmp(token, "alpha"))
+                            vertex_color_channel++;
+                        else
+                        {
+                            cout << "ERROR in Reading PLY model: cannot read this vertex color type -- " << string(token)
+                                 << endl;
+                            return false;
+                        }
                     }
                     else if (!strcmp(token, "float"))  // vertex quality data
                     {
@@ -150,7 +154,7 @@ bool Partition::readPLY(const std::string& filename)
             {
                 token = strtok(NULL, seps);
                 bool face_flag = false;
-                if (!strcmp(token, "list"))
+                if (!strcmp(token, "list"))  // face component
                 {
                     token = strtok(NULL, seps);
                     if (!strcmp(token, "uint8") || !strcmp(token, "uchar"))
@@ -167,12 +171,28 @@ bool Partition::readPLY(const std::string& filename)
                         return false;
                     }
                 }
+                else if (!strcmp(token, "uchar"))  // face color
+                {
+                    token = strtok(NULL, seps);
+                    if (!strcmp(token, "red") || !strcmp(token, "green") || !strcmp(token, "blue") || !strcmp(token, "alpha"))
+                        face_color_channel++;
+                    else
+                    {
+                        cout << "ERROR in Reading PLY model: cannot read this face color type -- " << string(token) << endl;
+                        return false;
+                    }
+                }
             }
         }
     }
-    if (color_channel_num != 0 && color_channel_num != 3 && color_channel_num != 4)
+    if (vertex_color_channel != 0 && vertex_color_channel != 3 && vertex_color_channel != 4)
     {
-        cout << "ERROR: Color channel number is " << color_channel_num << " but it has to be 0, 3, or 4." << endl;
+        cout << "ERROR: Vertex color channel is " << vertex_color_channel << " but it has to be 0, 3, or 4." << endl;
+        return false;
+    }
+    if (face_color_channel != 0 && face_color_channel != 3 && face_color_channel != 4)
+    {
+        cout << "ERROR: Face color channel is " << face_color_channel << " but it has to be 0, 3, or 4." << endl;
         return false;
     }
     if (vertex_normal_dim != 0 && vertex_normal_dim != 3)
@@ -189,7 +209,8 @@ bool Partition::readPLY(const std::string& filename)
     {
         for (int i = 0; i < vertex_num_; i++)
         {
-            // The vertex data order is: coordinates -> normal -> color -> others (qualities, radius, curvatures, etc)
+            // Vertex data order must be:
+            // coordinates -> normal -> color -> others (qualities, radius, curvatures, etc)
             size_t haveread = 0;
             Vertex vtx;
             float vert[3];
@@ -206,17 +227,17 @@ bool Partition::readPLY(const std::string& filename)
                     cout << "ERROR in reading PLY vertex normals in position " << ftell(fin) << endl;
                     return false;
                 }
-                // Currently we just abandon the vertex normal
-                // vtx.normal = Vector3d(nor[0], nor[1], nor[2]);
+                // NOTE: currently we just abandon the vertex normal
             }
-            if (color_channel_num)
+            if (vertex_color_channel)
             {
                 unsigned char color[4];
-                if ((haveread = fread(color, sizeof(unsigned char), color_channel_num, fin)) != color_channel_num)
+                if ((haveread = fread(color, sizeof(unsigned char), vertex_color_channel, fin)) != vertex_color_channel)
                 {
                     cout << "ERROR in reading PLY vertex colors in position " << ftell(fin) << endl;
                     return false;
                 }
+                // NOTE: comment this if you think the input vertex color data is useless.
                 vtx.color = Vector3f(color[0], color[1], color[2]) / 255;
             }
             if (vertex_quality_dim)
@@ -227,8 +248,11 @@ bool Partition::readPLY(const std::string& filename)
                     cout << "ERROR in reading PLY vertex qualities in position " << ftell(fin) << endl;
                     return false;
                 }
-                // Currently we just abandon the vertex normal
+                // NOTE: currently abandon the vertex quality data
             }
+            // You can still read other types of data here
+
+            // Save vertex
             vtx.pt = Vector3d(vert[0], vert[1], vert[2]);
             vertices_.push_back(vtx);
             for (int j = 0; j < 3; ++j)
@@ -245,27 +269,43 @@ bool Partition::readPLY(const std::string& filename)
             unsigned char channel_num;
             size_t haveread = fread(&channel_num, 1, 1, fin);  // channel number for each face
             Face fa;
+            // Face data order must be: face indices -> face color -> others
             if ((haveread = fread(fa.indices, sizeof(int), 3, fin)) != 3)  // currently only support triangular face
             {
-                cout << "ERROR in reading PLY face indices in position " << ftell(fin) << endl;
+                cout << "ERROR in reading PLY face indices: reader position " << ftell(fin) << endl;
                 return false;
             }
+            if (face_color_channel)
+            {
+                unsigned char color[4];
+                if ((haveread = fread(color, sizeof(unsigned char), face_color_channel, fin)) != face_color_channel)
+                {
+                    cout << "ERROR in reading PLY face colors: reader position " << ftell(fin) << endl;
+                    return false;
+                }
+                // NOTE: currently we only read face color data but don't save them, since in this program, face color
+                // is the same as the corresponding cluster color which is stored and read in the cluster file.
+            }
+            // Read other types of face data here.
+
+            //
             faces_.push_back(fa);
         }
     }
     else  // ASCII mode (face reader is still unfinished)
     {
-        // Read vertices
+        // Read vertices (with C functions)
         for (int i = 0; i < vertex_num_; i++)
         {
-            // The vertex data order is: coordinates -> normal -> color -> others (qualities, radius, curvatures, etc)
+            // Vertex data order must be:
+            // coordinates -> normal -> color -> others (qualities, radius, curvatures, etc)
             if (fgets(line, 1024, fin) == NULL)
-                return false;
+                continue;
             char* token = strtok(line, seps);
             // Read 3D point
             Vertex vtx;
             float vert[3];
-            for (int j = 0; j < 3; ++j)
+            for (size_t j = 0; j < 3; ++j)
             {
                 token = strtok(NULL, seps);
                 sscanf(token, "%f", &(vert[j]));
@@ -274,18 +314,17 @@ bool Partition::readPLY(const std::string& filename)
             if (vertex_normal_dim)
             {
                 float nor[3];
-                for (int j = 0; j < vertex_normal_dim; ++j)
+                for (size_t j = 0; j < vertex_normal_dim; ++j)
                 {
                     token = strtok(NULL, seps);
                     sscanf(token, "%f", &(nor[j]));
                 }
                 // Currently we just abandon the vertex normal data
-                // vtx.normal = Vector3d(nor[0], nor[1], nor[2]);
             }
-            if (color_channel_num)
+            if (vertex_color_channel)
             {
                 unsigned char color[4];
-                for (int j = 0; j < vertex_quality_dim; ++j)
+                for (size_t j = 0; j < vertex_quality_dim; ++j)
                 {
                     token = strtok(NULL, seps);
                     sscanf(token, "%c", &(color[j]));
@@ -295,13 +334,16 @@ bool Partition::readPLY(const std::string& filename)
             if (vertex_quality_dim)
             {
                 float qual;
-                for (int j = 0; j < vertex_quality_dim; ++j)
+                for (size_t j = 0; j < vertex_quality_dim; ++j)
                 {
                     token = strtok(NULL, seps);
                     sscanf(token, "%f", &qual);
                 }
-                // Currently we just abandon the vertex quality data
+                // Currently abandon the vertex quality data
             }
+            // Read other types of vertex data here.
+
+            // Save vertex
             vtx.pt = Vector3d(vert[0], vert[1], vert[2]);
             vertices_.push_back(vtx);
             for (size_t j = 0; j < 3; ++j)
@@ -315,17 +357,30 @@ bool Partition::readPLY(const std::string& filename)
         for (int i = 0; i < face_num_; i++)
         {
             if (fgets(line, 1024, fin) == NULL)
-                return false;
+                continue;
             char* token = strtok(line, seps);
             token = strtok(NULL, seps);
+            Face fa;
             for (int j = 0; j < 3; ++j)
             {
                 token = strtok(NULL, seps);
-                sscanf(token, "%d", &(faces_[i].indices[j]));
+                sscanf(token, "%d", &(fa.indices[j]));
             }
+            if (face_color_channel)
+            {
+                unsigned char color[4];
+                for (int j = 0; j < 4; ++j)
+                {
+                    token = strtok(NULL, seps);
+                    sscanf(token, "%c", &(color[j]));
+                }
+                // Currently abandon the face color data
+            }
+            faces_.push_back(fa);
         }
     }
-    /* Note to compute center after reading all data */
+    /************************************************************************/
+    /* Others */
     for (int j = 0; j < 3; ++j)
     {
         center_[j] /= vertex_num_;
@@ -1111,15 +1166,13 @@ void Partition::runPostProcessing()
     mergeAdjacentPlanes();
 
     // Remove some small island clusters totally located inside other clusters.
-    removeIslandClusters();
+    mergeIslandClusters();
 
     // (Optional) Clean small clusters which are independent connected components (like small floating pieces).
     removeSmallClusters();
-
+    // Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
     if (flag_new_mesh_)
-    {// Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
         updateNewMeshIndices();
-    }
 
     // Do NOT forgot this
     updateCurrentClusterNum();
@@ -1129,6 +1182,10 @@ void Partition::runPostProcessing()
 //! they satisfy the merging conditions.
 void Partition::mergeAdjacentPlanes()
 {
+    cout << "Start merging adjacent planes ... " << endl;
+    updateCurrentClusterNum();
+    cout << "Cluster number (before merging): " << curr_cluster_num_ << endl;
+
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (!isClusterValid(cidx))
@@ -1140,7 +1197,6 @@ void Partition::mergeAdjacentPlanes()
     const double kCenterNormalAngleThrsd = cos(kPI * FLAGS_center_normal_angle_threshold / 180);
     float progress = 0.0f;  // for printing a progress bar
     const int kStep = (init_cluster_num_ < 100) ? 1 : (init_cluster_num_ / 100);
-    cout << "Start merging adjacent planes ... " << endl;
     for (int c1 = 0; c1 < init_cluster_num_; ++c1)
     {
         if (c1 % kStep == 0 || c1 == init_cluster_num_ - 1)
@@ -1186,13 +1242,16 @@ void Partition::mergeAdjacentPlanes()
             findClusterNeighbors(c1);
         }
     }
+
+    updateCurrentClusterNum();
+    cout << "Cluster number (after merging): " << curr_cluster_num_ << endl;
 }
 
-//! Merge 'island' clusters. A cluster is an 'island' cluster if MOST of its cluster border faces
-//! have a same neighbor cluster. Usually this kind of cluster is entirely located inside some
-//! other larger cluster, such as some small part of a bumpy floor. We will merge these islands
-//! to their corresponding 'best' neighbor clusters.
-void Partition::removeIslandClusters()
+/*! A cluster is an 'island' cluster if MOST of its cluster border faces have a same neighbor cluster.
+    Usually this kind of cluster is entirely located inside some other larger cluster, such as some
+    small parts of a bumpy floor. We will merge these islands to their 'best' neighbor clusters.
+*/
+void Partition::mergeIslandClusters()
 {
     cout << "Remove island clusters ... " << endl;
     float progress = 0.0f;
@@ -1254,6 +1313,9 @@ void Partition::removeIslandClusters()
 
         mergeClusters(target_nbr, cidx);
     }
+
+    updateCurrentClusterNum();
+    cout << "Cluster number (after removing islands): " << curr_cluster_num_ << endl;
 }
 
 //! Remove clusters which are small connected components. They are usually some floating pieces in the mesh.
@@ -1339,7 +1401,9 @@ void Partition::removeSmallClusters()
         }
         flag_new_mesh_ = true;  // Remember to set a flag for creating a new mesh
     }
-    cout << "#Island clusters removed: " << small_clusters.size() << endl;
+    cout << "Small clusters removed: " << small_clusters.size() << endl;
+    updateCurrentClusterNum();
+    cout << "Cluster number (after removing): " << curr_cluster_num_ << endl;
 }
 
 //! If removing some faces or vertices, vertex/face indices and cluster data in the new mesh

@@ -216,6 +216,7 @@ main	plane-opt/mesh_partition/main.cpp	/^int main(int argc, char** argv)$/;"	f
 maxcoord_	plane-opt/mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
 mergeAdjacentPlanes	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeAdjacentPlanes()$/;"	f	class:Partition
 mergeClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeClusters(int c1, int c2)$/;"	f	class:Partition
+mergeIslandClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeIslandClusters()$/;"	f	class:Partition
 mergeIslandComponentsInCluster	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)$/;"	f	class:Partition
 mergeOnce	plane-opt/mesh_partition/partition.cpp	/^bool Partition::mergeOnce()$/;"	f	class:Partition
 message	plane-opt/mesh_partition/heap/mixmsg.h	/^    const char *message;$/;"	m	class:MxMsgInfo
@@ -272,7 +273,6 @@ remove	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void remove(int i) { (*t
 remove	plane-opt/mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::remove(MxHeapable *t)$/;"	f	class:MxHeap
 remove	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *remove(MxHeapable *t)$/;"	f	class:MxHeap
 removeEdgeFromCluster	plane-opt/mesh_partition/partition.cpp	/^bool Partition::removeEdgeFromCluster(int cidx, Edge* edge)$/;"	f	class:Partition
-removeIslandClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::removeIslandClusters()$/;"	f	class:Partition
 removeSmallClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::removeSmallClusters()$/;"	f	class:Partition
 remove_inorder	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void remove_inorder(int i) { memmove(&(*this)[i], &(*this)[i + 1], (--fill - i) * sizeof(T)); }$/;"	f	class:MxDynBlock
 reset	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void reset() { fill = 0; }$/;"	f	class:MxDynBlock

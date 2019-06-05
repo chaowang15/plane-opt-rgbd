@@ -115,7 +115,7 @@ private:
     void removeSmallClusters();
     void updateNewMeshIndices();
     void mergeAdjacentPlanes();
-    void removeIslandClusters();
+    void mergeIslandClusters();
 
 private:
     int vertex_num_, face_num_;
