@@ -19,22 +19,23 @@ class Partition
 public:
     struct Vertex
     {
-        bool is_valid;
+        bool is_valid; // false if it is removed (all its adjacent faces are removed)
         int cluster_id;
         Vector3d pt;
         Vector3f color;
         unordered_set<int> nbr_vertices, nbr_faces;  // neighbors
-        Vertex() : is_valid(true), cluster_id(-1) {}
+        Vertex() : is_valid(false), cluster_id(-1) {}
     };
 
     struct Face
     {
         int cluster_id;
         bool is_visited;  // used in Breath-first search to get connected components in clusters
+        bool is_valid;    // false if this face is removed.
         int indices[3];
         CovObj cov;
         unordered_set<int> nbr_faces;
-        Face() : cluster_id(-1), is_visited(false) {}
+        Face() : cluster_id(-1), is_visited(false), is_valid(true) {}
     };
 
     struct Edge : public MxHeapable
@@ -111,6 +112,10 @@ private:
     void mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components);
     double computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection = false);
     double computeAvgDisBtwTwoPlanes(int c1, int c2);
+    void removeSmallClusters();
+    void updateNewMeshIndices();
+    void mergeAdjacentPlanes();
+    void removeIslandClusters();
 
 private:
     int vertex_num_, face_num_;
@@ -125,6 +130,11 @@ private:
     double total_energy_;
     unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;
     unordered_map<long long, vector<int>> edge_to_face_;  // edge (two int32 endpoints) -> face id
+
+    /* Used for the new mesh after removing some faces/vertices/clusters */
+    unordered_map<int, int> vidx_old2new_, fidx_old2new_; // original vertex/face indices -> indices after removing some faces/vertices
+    int new_vertex_num_, new_face_num_;
+    bool flag_new_mesh_; // true if removing some faces/vertices/clusters; false by default
 };
 
 #endif  // !PARTITION_H

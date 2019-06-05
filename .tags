@@ -23,7 +23,7 @@ FEQ	plane-opt/mesh_partition/heap/gfx.h	/^inline bool  FEQ(double a, double b, d
 FEQ2	plane-opt/mesh_partition/heap/gfx.h	/^inline bool FEQ2(double a, double b, double e=FEQ_EPS2) {return fabs(a-b)<e;}$/;"	f
 FEQ_EPS	plane-opt/mesh_partition/heap/gfx.h	/^const double FEQ_EPS = 1e-6;$/;"	v
 FEQ_EPS2	plane-opt/mesh_partition/heap/gfx.h	/^const double FEQ_EPS2 = 1e-12;$/;"	v
-Face	plane-opt/mesh_partition/partition.h	/^        Face() : cluster_id(-1), is_visited(false) {}$/;"	f	struct:Partition::Face
+Face	plane-opt/mesh_partition/partition.h	/^        Face() : cluster_id(-1), is_visited(false), is_valid(true) {}$/;"	f	struct:Partition::Face
 Face	plane-opt/mesh_partition/partition.h	/^    struct Face$/;"	s	class:Partition
 GFX_INCLUDED	plane-opt/mesh_partition/heap/gfx.h	2;"	d
 HAVE_BOOL	plane-opt/mesh_partition/heap/config-vc.h	9;"	d
@@ -97,7 +97,7 @@ SwapFace	plane-opt/mesh_partition/partition.h	/^        SwapFace(int v, int f, i
 SwapFace	plane-opt/mesh_partition/partition.h	/^    struct SwapFace$/;"	s	class:Partition
 TIMING	plane-opt/mesh_partition/heap/gfx.h	88;"	d
 TOOLS_H	plane-opt/common/tools.h	2;"	d
-Vertex	plane-opt/mesh_partition/partition.h	/^        Vertex() : is_valid(true), cluster_id(-1) {}$/;"	f	struct:Partition::Vertex
+Vertex	plane-opt/mesh_partition/partition.h	/^        Vertex() : is_valid(false), cluster_id(-1) {}$/;"	f	struct:Partition::Vertex
 Vertex	plane-opt/mesh_partition/partition.h	/^    struct Vertex$/;"	s	class:Partition
 W	plane-opt/mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
 X	plane-opt/mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
@@ -160,10 +160,12 @@ faces	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> faces;  
 faces_	plane-opt/mesh_partition/partition.h	/^    vector<Face> faces_;$/;"	m	class:Partition
 faces_to_swap	plane-opt/mesh_partition/partition.h	/^        vector<SwapFace> faces_to_swap;$/;"	m	struct:Partition::Cluster
 fatal_error	plane-opt/mesh_partition/heap/stdmix.h	77;"	d
+fidx_old2new_	plane-opt/mesh_partition/partition.h	/^    unordered_map<int, int> vidx_old2new_, fidx_old2new_; \/\/ original vertex\/face indices -> indices after removing some faces\/vertices$/;"	m	class:Partition
 filename	plane-opt/mesh_partition/heap/mixmsg.h	/^    const char *filename;$/;"	m	class:MxMsgInfo
 fill	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    int fill;$/;"	m	class:MxDynBlock
 findClusterNeighbors	plane-opt/mesh_partition/partition.cpp	/^int Partition::findClusterNeighbors(int cidx)$/;"	f	class:Partition
 findClusterNeighbors	plane-opt/mesh_partition/partition.cpp	/^int Partition::findClusterNeighbors(int cidx, unordered_set<int>& cluster_faces, unordered_set<int>& neighbor_clusters)$/;"	f	class:Partition
+flag_new_mesh_	plane-opt/mesh_partition/partition.h	/^    bool flag_new_mesh_; \/\/ true if removing some faces\/vertices\/clusters; false by default$/;"	m	class:Partition
 flag_read_cluster_file_	plane-opt/mesh_partition/partition.h	/^    bool flag_read_cluster_file_;$/;"	m	class:Partition
 free_block	plane-opt/mesh_partition/heap/MxBlock.h	/^    void free_block()$/;"	f	class:MxBlock
 from	plane-opt/mesh_partition/partition.h	/^        int from;$/;"	m	struct:Partition::SwapFace
@@ -191,7 +193,8 @@ insert	plane-opt/mesh_partition/myheap.h	/^    void insert(MxHeapable *t, double
 isClusterValid	plane-opt/mesh_partition/partition.h	/^    bool isClusterValid(int cidx) { return !clusters_[cidx].faces.empty(); }$/;"	f	class:Partition
 is_in_heap	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline bool is_in_heap() { return token != -47; }$/;"	f	class:MxHeapable
 is_in_heap	plane-opt/mesh_partition/myheap.h	/^    inline bool is_in_heap() { return token != -47; }$/;"	f	class:MxHeapable
-is_valid	plane-opt/mesh_partition/partition.h	/^        bool is_valid;$/;"	m	struct:Partition::Vertex
+is_valid	plane-opt/mesh_partition/partition.h	/^        bool is_valid;    \/\/ false if this face is removed.$/;"	m	struct:Partition::Face
+is_valid	plane-opt/mesh_partition/partition.h	/^        bool is_valid; \/\/ false if it is removed (all its adjacent faces are removed)$/;"	m	struct:Partition::Vertex
 is_visited	plane-opt/mesh_partition/partition.h	/^        bool is_visited;  \/\/ used in Breath-first search to get connected components in clusters$/;"	m	struct:Partition::Face
 item	plane-opt/mesh_partition/heap/MxHeap.h	/^    MxHeapable *item(uint i) { return (*this)[i]; }$/;"	f	class:MxHeap
 item	plane-opt/mesh_partition/heap/MxHeap.h	/^    const MxHeapable *item(uint i) const { return (*this)[i]; }$/;"	f	class:MxHeap
@@ -211,6 +214,7 @@ length	plane-opt/mesh_partition/myheap.h	/^    unsigned int length() const {retu
 line	plane-opt/mesh_partition/heap/mixmsg.h	/^    int line;$/;"	m	class:MxMsgInfo
 main	plane-opt/mesh_partition/main.cpp	/^int main(int argc, char** argv)$/;"	f
 maxcoord_	plane-opt/mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
+mergeAdjacentPlanes	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeAdjacentPlanes()$/;"	f	class:Partition
 mergeClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeClusters(int c1, int c2)$/;"	f	class:Partition
 mergeIslandComponentsInCluster	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)$/;"	f	class:Partition
 mergeOnce	plane-opt/mesh_partition/partition.cpp	/^bool Partition::mergeOnce()$/;"	f	class:Partition
@@ -221,6 +225,8 @@ nbr_clusters	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> n
 nbr_faces	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> nbr_faces;$/;"	m	struct:Partition::Face
 nbr_faces	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> nbr_vertices, nbr_faces;  \/\/ neighbors$/;"	m	struct:Partition::Vertex
 nbr_vertices	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> nbr_vertices, nbr_faces;  \/\/ neighbors$/;"	m	struct:Partition::Vertex
+new_face_num_	plane-opt/mesh_partition/partition.h	/^    int new_vertex_num_, new_face_num_;$/;"	m	class:Partition
+new_vertex_num_	plane-opt/mesh_partition/partition.h	/^    int new_vertex_num_, new_face_num_;$/;"	m	class:Partition
 normal_	plane-opt/mesh_partition/covariance.h	/^    Vector3d normal_;$/;"	m	class:CovObj
 not_in_heap	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline void not_in_heap() { token = -47; }$/;"	f	class:MxHeapable
 not_in_heap	plane-opt/mesh_partition/myheap.h	/^    inline void not_in_heap() { token = -47; }$/;"	f	class:MxHeapable
@@ -266,6 +272,8 @@ remove	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void remove(int i) { (*t
 remove	plane-opt/mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::remove(MxHeapable *t)$/;"	f	class:MxHeap
 remove	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *remove(MxHeapable *t)$/;"	f	class:MxHeap
 removeEdgeFromCluster	plane-opt/mesh_partition/partition.cpp	/^bool Partition::removeEdgeFromCluster(int cidx, Edge* edge)$/;"	f	class:Partition
+removeIslandClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::removeIslandClusters()$/;"	f	class:Partition
+removeSmallClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::removeSmallClusters()$/;"	f	class:Partition
 remove_inorder	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void remove_inorder(int i) { memmove(&(*this)[i], &(*this)[i + 1], (--fill - i) * sizeof(T)); }$/;"	f	class:MxDynBlock
 reset	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void reset() { fill = 0; }$/;"	f	class:MxDynBlock
 resize	plane-opt/mesh_partition/heap/MxBlock.h	/^    void resize(int n) { resize_block(n); }$/;"	f	class:MxBlock
@@ -308,6 +316,7 @@ update	plane-opt/mesh_partition/heap/MxHeap.h	/^    void update(MxHeapable *t) {
 update	plane-opt/mesh_partition/myheap.h	/^    bool update(MxHeapable *t) { return update(t, t->heap_key()); }$/;"	f	class:MxHeap
 update	plane-opt/mesh_partition/myheap.h	/^    bool update(MxHeapable *t, double v)$/;"	f	class:MxHeap
 updateCurrentClusterNum	plane-opt/mesh_partition/partition.cpp	/^void Partition::updateCurrentClusterNum()$/;"	f	class:Partition
+updateNewMeshIndices	plane-opt/mesh_partition/partition.cpp	/^void Partition::updateNewMeshIndices()$/;"	f	class:Partition
 upheap	plane-opt/mesh_partition/heap/MxHeap.cxx	/^void MxHeap::upheap(unsigned int i)$/;"	f	class:MxHeap
 upheap	plane-opt/mesh_partition/myheap.h	/^    void upheap(unsigned int i)$/;"	f	class:MxHeap
 ushort	plane-opt/mesh_partition/heap/stdmix.h	/^typedef unsigned short ushort;$/;"	t
@@ -317,6 +326,7 @@ value_type	plane-opt/mesh_partition/heap/MxBlock.h	/^    typedef T value_type;$/
 varray_find	plane-opt/mesh_partition/heap/MxDynBlock.h	/^inline bool varray_find(const MxDynBlock<T>& A, const T& t, uint* index = NULL)$/;"	f
 vertex_num_	plane-opt/mesh_partition/partition.h	/^    int vertex_num_, face_num_;$/;"	m	class:Partition
 vertices_	plane-opt/mesh_partition/partition.h	/^    vector<Vertex> vertices_;$/;"	m	class:Partition
+vidx_old2new_	plane-opt/mesh_partition/partition.h	/^    unordered_map<int, int> vidx_old2new_, fidx_old2new_; \/\/ original vertex\/face indices -> indices after removing some faces\/vertices$/;"	m	class:Partition
 writeClusterFile	plane-opt/mesh_partition/partition.cpp	/^void Partition::writeClusterFile(const std::string& filename)$/;"	f	class:Partition
 writePLY	plane-opt/mesh_partition/partition.cpp	/^bool Partition::writePLY(const std::string& filename)$/;"	f	class:Partition
 ~MxBlock	plane-opt/mesh_partition/heap/MxBlock.h	/^    ~MxBlock() { free_block(); }$/;"	f	class:MxBlock

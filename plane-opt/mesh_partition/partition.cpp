@@ -14,6 +14,7 @@ DEFINE_double(center_normal_angle_threshold, 70.0, "");
 DEFINE_double(energy_increase_threshold, 0.1, "");
 DEFINE_double(island_cluster_border_ratio, 0.8, "");
 DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
+DEFINE_int32(smallest_connected_component_size, 500, "#faces in smallest connected components");
 DEFINE_bool(run_post_processing, true, "");
 
 Partition::Partition()
@@ -21,6 +22,7 @@ Partition::Partition()
     vertex_num_ = face_num_ = 0;
     init_cluster_num_ = curr_cluster_num_ = target_cluster_num_ = 0;
     flag_read_cluster_file_ = false;
+    flag_new_mesh_ = false;
 }
 
 Partition::~Partition()
@@ -30,9 +32,11 @@ Partition::~Partition()
 
 void Partition::releaseEdges()
 {
+    cout << "Release edges in heap ... " << endl;
+
     // Each edge pointer is stored in the global edge list twice and the heap once,
     // but it can only be deleted once. Here simply delete each edge in the heap.
-    while(heap_.size() > 0)
+    while (heap_.size() > 0)
     {
         Edge* edge = (Edge*)heap_.extract();
         delete edge;
@@ -336,6 +340,7 @@ bool Partition::readPLY(const std::string& filename)
 //! Write PLY file
 bool Partition::writePLY(const std::string& filename)
 {
+    // Write PLY
     FILE* fout = NULL;
     fout = fopen(filename.c_str(), "wb");  // write in binary mode
     if (fout == NULL)
@@ -346,11 +351,13 @@ bool Partition::writePLY(const std::string& filename)
     // Write headers
     fprintf(fout, "ply\n");
     fprintf(fout, "format binary_little_endian 1.0\n");
-    fprintf(fout, "element vertex %d\n", vertex_num_);
+    int vnum = flag_new_mesh_ ? new_vertex_num_ : vertex_num_;
+    fprintf(fout, "element vertex %d\n", vnum);
     fprintf(fout, "property float x\n");
     fprintf(fout, "property float y\n");
     fprintf(fout, "property float z\n");
-    fprintf(fout, "element face %d\n", face_num_);
+    int fnum = flag_new_mesh_ ? new_face_num_ : face_num_;
+    fprintf(fout, "element face %d\n", fnum);
     fprintf(fout, "property list uchar int vertex_indices\n");
     fprintf(fout, "property uchar red\n");  // face color
     fprintf(fout, "property uchar green\n");
@@ -362,25 +369,40 @@ bool Partition::writePLY(const std::string& filename)
     unsigned char rgba[4] = {255};
     for (int i = 0; i != vertex_num_; ++i)
     {
-        for (int j = 0; j < 3; ++j)
-            pt3[j] = float(vertices_[i].pt[j]);
-        fwrite(pt3, sizeof(float), 3, fout);
+        if (!flag_new_mesh_ || vertices_[i].is_valid)
+        {
+            for (int j = 0; j < 3; ++j)
+                pt3[j] = float(vertices_[i].pt[j]);
+            fwrite(pt3, sizeof(float), 3, fout);
+        }
     }
     for (int i = 0; i != face_num_; ++i)
     {
-        fwrite(&kFaceVtxNum, sizeof(unsigned char), 1, fout);
-        fwrite(faces_[i].indices, sizeof(int), 3, fout);
-        int cidx = faces_[i].cluster_id;
-        if (cidx == -1)
+        if (!flag_new_mesh_ || faces_[i].is_valid)
         {
-            cout << "ERROR: face " << i << " doesn't belong to any cluster!" << endl;
+            fwrite(&kFaceVtxNum, sizeof(unsigned char), 1, fout);
+            if (flag_new_mesh_)
+            {
+                for (int j = 0; j < 3; ++j)
+                {
+                    int vidx = vidx_old2new_[faces_[i].indices[j]];
+                    fwrite(&vidx, sizeof(int), 1, fout);
+                }
+            }
+            else
+                fwrite(faces_[i].indices, sizeof(int), 3, fout);
+            int cidx = faces_[i].cluster_id;
+            if (cidx == -1)
+            {
+                cout << "ERROR: face " << i << " doesn't belong to any cluster!" << endl;
+            }
+            else
+            {
+                for (int j = 0; j < 3; ++j)
+                    rgba[j] = static_cast<unsigned char>(clusters_[cidx].color[j] * 255);
+            }
+            fwrite(rgba, sizeof(unsigned char), 4, fout);
         }
-        else
-        {
-            for (int j = 0; j < 3; ++j)
-                rgba[j] = static_cast<unsigned char>(clusters_[cidx].color[j] * 255);
-        }
-        fwrite(rgba, sizeof(unsigned char), 4, fout);
     }
     fclose(fout);
     return true;
@@ -400,8 +422,19 @@ void Partition::writeClusterFile(const std::string& filename)
         int num = int(clusters_[cidx].faces.size());
         fwrite(&new_cidx, sizeof(int), 1, fout);  // cluster index
         fwrite(&num, sizeof(int), 1, fout);       // #faces in this cluster
-        vector<int> indices(clusters_[cidx].faces.begin(), clusters_[cidx].faces.end());
-        fwrite(&indices[0], sizeof(int), num, fout);  // face indices
+        if (flag_new_mesh_)
+        {  // New mesh means some vertices/faces are removed.
+            for (int f : clusters_[cidx].faces)
+            {
+                int fidx = fidx_old2new_[f];          // a mapping between old face index to new index
+                fwrite(&fidx, sizeof(int), 1, fout);  // write face one by one
+            }
+        }
+        else
+        {
+            vector<int> indices(clusters_[cidx].faces.begin(), clusters_[cidx].faces.end());
+            fwrite(&indices[0], sizeof(int), num, fout);  // write all face indices at once, this saves time
+        }
         for (int i = 0; i < 3; ++i)
             color[i] = clusters_[cidx].color[i];
         fwrite(&color[0], sizeof(float), 3, fout);  // cluster color
@@ -410,9 +443,12 @@ void Partition::writeClusterFile(const std::string& filename)
     }
     fclose(fout);
 
-    // Sometimes some faces are missing and not in any cluster. This is bad.
-    // So here ensure the number of faces in clusters is exactly the same as original face number.
-    assert(count_faces == face_num_);
+    if (!flag_new_mesh_)
+    {
+        // Sometimes some faces are missing and not in any cluster. This is bad.
+        // So here ensure the number of faces in clusters is exactly the same as original face number.
+        assert(count_faces == face_num_);
+    }
 }
 
 //! Read cluster file. Note it can only be used when there are no existing clusters, like call this function
@@ -870,11 +906,10 @@ double Partition::computeSwapDeltaEnergy(int fidx, int from, int to)
     return energy0 - energy1;
 }
 
-/*! After swapping step, some clusters may be split into unconnected 'component islands' (like
-    one component totally located inside another cluster). This is not good. Here we split each
-    of these 'island' clusters into different connected components and merge the island components
-    to their neighbor clusters.
-*/
+//! After swapping step, some clusters may be split into unconnected component 'islands' (like
+//! one component totally located inside another cluster). This is not good. Here we split each
+//! of these 'island' clusters into different connected components based on cluster distribution,
+//! and merge these island components to their neighbor clusters.
 void Partition::processIslandClusters()
 {
     for (int i = 0; i < face_num_; ++i)
@@ -895,13 +930,13 @@ void Partition::processIslandClusters()
             if (connected_components.size() > 1)
             {
                 // Create a new cluster for each unmerged component
-                for (size_t i = 1; i < connected_components.size();
-                     ++i)  // leave the largest component in origial cluster position
+                // NOTE: leave the largest (first) component where it is
+                for (size_t i = 1; i < connected_components.size(); ++i)
                 {
-                    // Find a valid cluster index to 'hold' the component as a new cluster
+                    // Find a valid cluster index to 'hold' the component as a new cluster and create new cluster there
                     int pos = last_valid_cidx;
                     while (pos < init_cluster_num_ && isClusterValid(pos))
-                        pos++;  // get next available position
+                        pos++;
                     assert(pos < init_cluster_num_);
                     last_valid_cidx = pos;
                     clusters_[pos].faces.clear();
@@ -920,7 +955,7 @@ void Partition::processIslandClusters()
     cout << "#Split clusters: " << count_split_clusters << endl;
 }
 
-//! Split faces in one cluster into connected components by breath-first search. Return the component number.
+//! Split one cluster into separate connected components by breath-first search. Return the component number.
 int Partition::splitCluster(int cidx, vector<unordered_set<int>>& connected_components)
 {
     int count_left_faces = int(clusters_[cidx].faces.size());
@@ -962,8 +997,9 @@ int Partition::traverseFaceBFS(int start_fidx, int start_cidx, unordered_set<int
     return int(component.size());
 }
 
-//! Merge each island component from one cluster to its neighbor cluster.
+//! Merge island components from one cluster to its neighbor cluster.
 /*!
+    \param connected_components are separate connected components split from one cluster.
     NOTE: 'island' component is a connected component with only 1 neighbor cluster.
 */
 void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)
@@ -976,11 +1012,11 @@ void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unorder
         unordered_set<int>& component = *iter;
         int neighbor_num = findClusterNeighbors(original_cidx, component, neighbors);
         if (neighbor_num != 1)
-        {
+        {  // Only merge component with 1 neighbor cluster (means this is an island cluster)
             ++iter;
             continue;
         }
-        // Merge this component into its neighbor cluster
+        // Merge this component into its neighbor cluster by fault without additional check.
         int target_cidx = *neighbors.begin();
         for (int fidx : component)
         {
@@ -1022,6 +1058,7 @@ double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_pr
     return max_dis;
 }
 
+//! Average distance between points in cluster c2 and plane c1
 double Partition::computeAvgDisBtwTwoPlanes(int c1, int c2)
 {
     double dis = 0;
@@ -1069,8 +1106,29 @@ void Partition::runPostProcessing()
         }
     }
 
-    // Merge adjacent planes together by starting from one plane and spead to its neighbors as long as
-    // they satisfy the merging conditions.
+    // Faces are not merged well enough because of noisy data. So some adjacent planes can be
+    // further merged together.
+    mergeAdjacentPlanes();
+
+    // Remove some small island clusters totally located inside other clusters.
+    removeIslandClusters();
+
+    // (Optional) Clean small clusters which are independent connected components (like small floating pieces).
+    removeSmallClusters();
+
+    if (flag_new_mesh_)
+    {// Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
+        updateNewMeshIndices();
+    }
+
+    // Do NOT forgot this
+    updateCurrentClusterNum();
+}
+
+//! Merge adjacent planes together by starting from one plane and spead to its neighbors as long as
+//! they satisfy the merging conditions.
+void Partition::mergeAdjacentPlanes()
+{
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (!isClusterValid(cidx))
@@ -1128,13 +1186,17 @@ void Partition::runPostProcessing()
             findClusterNeighbors(c1);
         }
     }
+}
 
-    // Merge 'island' clusters. A cluster is an 'island' cluster if MOST of its cluster border faces
-    // have a same neighbor cluster. Usually this kind of cluster is entirely located inside some
-    // other larger cluster, such as some small part of a bumpy floor. We will merge these islands
-    // to their corresponding 'best' neighbor clusters.
-    cout << "Start merging island clusters ... " << endl;
-    progress = 0.0f;
+//! Merge 'island' clusters. A cluster is an 'island' cluster if MOST of its cluster border faces
+//! have a same neighbor cluster. Usually this kind of cluster is entirely located inside some
+//! other larger cluster, such as some small part of a bumpy floor. We will merge these islands
+//! to their corresponding 'best' neighbor clusters.
+void Partition::removeIslandClusters()
+{
+    cout << "Remove island clusters ... " << endl;
+    float progress = 0.0f;
+    const int kStep = (init_cluster_num_ < 100) ? 1 : (init_cluster_num_ / 100);
     for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
     {
         if (cidx % kStep == 0 || cidx == init_cluster_num_ - 1)
@@ -1144,7 +1206,7 @@ void Partition::runPostProcessing()
         }
         if (!isClusterValid(cidx))
             continue;
-        unordered_map<int, int> plane_neighbor_clusters; // neighbor cluster id -> #border faces
+        unordered_map<int, int> plane_neighbor_clusters;  // neighbor cluster id -> #border faces
         int count_border_faces = 0, count_cluster_border_faces = 0;
         for (int fidx : clusters_[cidx].faces)
         {
@@ -1165,32 +1227,144 @@ void Partition::runPostProcessing()
                 flag_is_cluster_border = true;
             }
             if (flag_is_cluster_border)
-                count_cluster_border_faces++; // cluster border faces only
+                count_cluster_border_faces++;  // cluster border faces only
             if (flag_is_border || flag_is_cluster_border)
-                count_border_faces++; // mesh border and cluster border faces together
+                count_border_faces++;  // mesh border and cluster border faces together
         }
+        // Experiential only: merge clusters with 1, 2 or 3 neighbor clusters
         if (plane_neighbor_clusters.size() < 1 || plane_neighbor_clusters.size() > 3)
-            continue; // Experiential: only merge clusters with 1, 2 or 3 neighbor clusters
+            continue;
+
         double cluster_border_ratio = static_cast<double>(count_cluster_border_faces) / count_border_faces;
         if (cluster_border_ratio < FLAGS_island_cluster_border_ratio)
-            continue; // skip planes with a large part of mesh border faces
+            continue;  // skip planes with a large part of mesh border faces
         // Find the neighbor cluster corresponding to maximum border faces
         int target_nbr = -1, max_faces = 0;
         for (auto it : plane_neighbor_clusters)
         {
             if (it.second > max_faces)
             {
-                max_faces = it.second; // # border faces
-                target_nbr = it.first; // neighbor cluster id
+                max_faces = it.second;  // # border faces
+                target_nbr = it.first;  // neighbor cluster id
             }
         }
         double prior_cluster_ratio = static_cast<double>(max_faces) / count_cluster_border_faces;
         if (max_faces < FLAGS_island_cluster_border_ratio)
-            continue; // only merge island cluster while MOST of its border faces has a same neighbor cluster
+            continue;  // only merge island cluster while MOST of its border faces has a same neighbor cluster
 
         mergeClusters(target_nbr, cidx);
     }
+}
 
-    // Final check
-    updateCurrentClusterNum();
+//! Remove clusters which are small connected components. They are usually some floating pieces in the mesh.
+void Partition::removeSmallClusters()
+{
+    cout << "Remove small independent clusters ... " << endl;
+    for (int i = 0; i < face_num_; ++i)
+    {  // Reset flags just in case they are used before
+        faces_[i].is_valid = true;
+        faces_[i].is_visited = false;
+    }
+
+    unordered_set<int> small_clusters;
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (!isClusterValid(cidx) || clusters_[cidx].faces.size() > FLAGS_smallest_connected_component_size ||
+            small_clusters.find(cidx) != small_clusters.end())
+            continue;  // skip invalid or large or visited clusters
+
+        // A cluster is always one connected component (since we create each cluster by spreading
+        // one face to its neighbors). So we only need to check if each cluster is a small connected
+        // component not adjacent to other clusters.
+        // Start from one face and spread to neighbors until no new neighbors, or the number of visited
+        // faces is large enough.
+        int fidx = *clusters_[cidx].faces.begin();
+        queue<int> qu;
+        qu.push(fidx);
+        faces_[fidx].is_visited = true;
+        bool flag_small_component = true;
+        unordered_set<int> visited_clusters;
+        visited_clusters.insert(cidx);
+        vector<int> fset;
+        while (!qu.empty())
+        {
+            int f = qu.front();
+            qu.pop();
+            fset.push_back(f);
+            // Sometimes a small cluster is adjacent to another cluster, but their total size
+            // is still small. Save them both and remove them later.
+            if (faces_[f].cluster_id != cidx)
+                visited_clusters.insert(faces_[f].cluster_id);
+            if (fset.size() > FLAGS_smallest_connected_component_size)
+            {
+                // Here we use the number of faces as the criteria to determine a small component.
+                // Obviously this only works on the initial mesh which is usually created by some 3D
+                // reconstruction system that each face has almost the same area.
+                flag_small_component = false;
+                break;
+            }
+            for (int nf : faces_[f].nbr_faces)
+            {
+                if (!faces_[nf].is_visited)
+                {
+                    faces_[nf].is_visited = true;
+                    qu.push(nf);
+                }
+            }
+        }
+        if (flag_small_component)
+        {
+            small_clusters.insert(visited_clusters.begin(), visited_clusters.end());
+            // Reset 'visited' flags of all relevant faces
+            for (int fidx : fset)
+                faces_[fidx].is_visited = false;
+            while (!qu.empty())
+            {
+                int f = qu.front();
+                qu.pop();
+                faces_[f].is_visited = false;
+            }
+        }
+    }
+
+    if (!small_clusters.empty())
+    {
+        // By removing these small clusters, we set the flags of all their faces as invalid for now
+        // and skip them in output
+        for (int cidx : small_clusters)
+        {
+            for (int fidx : clusters_[cidx].faces)
+                faces_[fidx].is_valid = false;
+            clusters_[cidx].faces.clear();
+        }
+        flag_new_mesh_ = true;  // Remember to set a flag for creating a new mesh
+    }
+    cout << "#Island clusters removed: " << small_clusters.size() << endl;
+}
+
+//! If removing some faces or vertices, vertex/face indices and cluster data in the new mesh
+//! will be different from original mesh. So here we update the indices for the new mesh.
+//! This function is usually called in the last step before writing PLY mesh and cluster
+//! file.
+void Partition::updateNewMeshIndices()
+{
+    for (int i = 0; i < vertex_num_; ++i)
+        vertices_[i].is_valid = false;
+    new_face_num_ = 0;
+    for (int fidx = 0; fidx < face_num_; ++fidx)
+    {
+        if (faces_[fidx].is_valid)
+        {
+            fidx_old2new_[fidx] = new_face_num_++;
+            for (int j = 0; j < 3; ++j)
+                vertices_[faces_[fidx].indices[j]].is_valid = true;
+        }
+    }
+    new_vertex_num_ = 0;
+    for (int i = 0; i < vertex_num_; ++i)
+    {
+        if (vertices_[i].is_valid)
+            vidx_old2new_[i] = new_vertex_num_++;
+    }
+    flag_new_mesh_ = true;  // just in case forgot to set this flag before
 }
