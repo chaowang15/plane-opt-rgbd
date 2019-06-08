@@ -4,6 +4,9 @@
 #include <chrono>
 #include <gflags/gflags.h>
 
+DECLARE_bool(run_post_processing);
+DECLARE_bool(run_mesh_simplification);
+
 int main(int argc, char** argv)
 {
     gflags::ParseCommandLineFlags(&argc, &argv, true);
@@ -53,14 +56,22 @@ int main(int argc, char** argv)
     bool flag_success = true;
     if (flag_read_cluster_file)
     {
-        printInGreen("Run post processing step ...");
-        partition.runPostProcessing();
+        if (FLAGS_run_post_processing)
+        {
+            printInGreen("Run post processing step ...");
+            partition.runPostProcessing();
+        }
     }
     else
     {
         partition.setTargetClusterNum(target_cluster_num);
         flag_success = partition.runPartitionPipeline();
     }
+    if (FLAGS_run_mesh_simplification)
+    {
+        partition.runSimplification();
+    }
+
     printInGreen("Final cluster number: " + std::to_string(partition.getCurrentClusterNum()));
 
     auto end = std::chrono::steady_clock::now();

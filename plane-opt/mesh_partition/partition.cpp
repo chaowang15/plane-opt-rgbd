@@ -1,3 +1,8 @@
+/*!
+    Mesh simplification code refers this paper:
+    Garland, Michael. Quadric-based polygonal surface simplification. PhD thesis, 1999.
+*/
+
 #include "partition.h"
 #include <stdlib.h>
 #include "../common/tools.h"
@@ -13,9 +18,11 @@ DEFINE_double(normal_angle_threshold, 15.0, "");
 DEFINE_double(center_normal_angle_threshold, 70.0, "");
 DEFINE_double(energy_increase_threshold, 0.1, "");
 DEFINE_double(island_cluster_border_ratio, 0.8, "");
+DEFINE_double(simplification_border_edge_ratio, 0.05, "");
 DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
 DEFINE_int32(smallest_connected_component_size, 500, "#faces in smallest connected components");
 DEFINE_bool(run_post_processing, true, "");
+DEFINE_bool(run_mesh_simplification, true, "");
 
 Partition::Partition()
 {
@@ -27,13 +34,12 @@ Partition::Partition()
 
 Partition::~Partition()
 {
-    releaseEdges();
+    cout << "Release edges in heap ... " << endl;
+    releaseHeap();
 }
 
-void Partition::releaseEdges()
+void Partition::releaseHeap()
 {
-    cout << "Release edges in heap ... " << endl;
-
     // Each edge pointer is stored in the global edge list twice and the heap once,
     // but it can only be deleted once. Here simply delete each edge in the heap.
     while (heap_.size() > 0)
@@ -42,10 +48,6 @@ void Partition::releaseEdges()
         delete edge;
         edge = nullptr;
     }
-    // Each edge pointer is already deleted, so simply clear global edge vectors.
-    for (size_t i = 0; i < global_edges_.size(); ++i)
-        global_edges_[i].clear();
-    global_edges_.clear();
 }
 
 //! Read PLY model
@@ -558,6 +560,7 @@ bool Partition::readClusterFile(const std::string& filename)
     }
     fclose(fin);
     flag_read_cluster_file_ = true;  // a read-cluster flag to skip some steps later
+    init_cluster_num_ = curr_cluster_num_;
     return true;
 }
 
@@ -613,8 +616,10 @@ bool Partition::runMerging()
     return true;
 }
 
-void Partition::initVerticesAndFaces()
+void Partition::initMeshConnectivity()
 {
+    if (!edge_to_face_.empty())
+        return;
     cout << "Initialize vertices and faces ... " << endl;
     vector<int> fa(3);
     float progress = 0.0;  // used to print a progress bar
@@ -629,11 +634,17 @@ void Partition::initVerticesAndFaces()
         }
 
         Face& face = faces_[fidx];
+        if (!face.is_valid)
+        {
+            // Sometimes we remove some faces at first and then recompute mesh connectivity,
+            // so it's necessary to skip invalid faces since we dont care about them any more.
+            continue;
+        }
         // Initialize neighbors of vertices and faces
         for (int i = 0; i < 3; ++i)
             fa[i] = face.indices[i];
-        // One directed edge may be shared by more than one face in a non-manifold edges. So we
-        // sort vertices here to use undirected edge to determine face neighbors.
+        // We use UNDIRECTED edges, so sort the 3 vertices to avoid edge duplication.
+        // So each edge now may be included in 1, 2 or even 3 or more (non-manifold mesh) faces.
         std::sort(fa.begin(), fa.end());
         for (int i = 0; i < 3; ++i)
         {
@@ -650,8 +661,6 @@ void Partition::initVerticesAndFaces()
             }
             edge_to_face_[edge].push_back(fidx);
         }
-        // Initialize covariance quadratic objects
-        face.cov = CovObj(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
     }
 }
 
@@ -662,10 +671,17 @@ void Partition::initMerging()
     clusters_.resize(init_cluster_num_);
     global_edges_.resize(init_cluster_num_);
 
-    initVerticesAndFaces();
+    initMeshConnectivity();
 
-    // Initialize edges
-    cout << "Initialize edges ... " << endl;
+    // Initialize face quadratic objects
+    for (int fidx = 0; fidx < face_num_; fidx++)
+    {
+        Face& face = faces_[fidx];
+        face.cov = CovObj(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
+    }
+
+    // Initialize clusters and edges
+    cout << "Initialize clusters and edges ... " << endl;
     float progress = 0.0;  // used to print a progress bar
     const int kStep = (init_cluster_num_ < 100) ? 1 : (init_cluster_num_ / 100);
     for (int cidx = 0; cidx < init_cluster_num_; cidx++)
@@ -676,7 +692,7 @@ void Partition::initMerging()
             printProgressBar(progress);
         }
 
-        // Initially each face is one single cluster itself, so set its relevant data
+        // Initially each face is one single cluster itself
         faces_[cidx].cluster_id = cidx;
         Cluster& cluster = clusters_[cidx];
         cluster.nbr_clusters.insert(faces_[cidx].nbr_faces.begin(), faces_[cidx].nbr_faces.end());
@@ -711,20 +727,20 @@ void Partition::computeEdgeEnergy(Edge* edge)
     edge->heap_key(-energy);  // it's a max heap by default but we need a min heap
 }
 
-//! Remove one edge pointer from a cluster. Note that it doesn't delete/release the pointer.
-bool Partition::removeEdgeFromCluster(int cidx, Edge* edge)
+//! Remove one edge pointer from an Edge list. Note that it doesn't delete/release the pointer.
+bool Partition::removeEdgeFromList(Edge* edge, vector<Edge*>& edgelist)
 {
     if (edge == nullptr)
         return false;
     bool flag_found_edge = false;
-    auto iter = global_edges_[cidx].begin();
-    while (iter != global_edges_[cidx].end())
+    auto iter = edgelist.begin();
+    while (iter != edgelist.end())
     {
         Edge* e = *iter;
         if (e == nullptr || e == edge)
         {
-            iter = global_edges_[cidx].erase(iter);
-            flag_found_edge = true;  // Not return here since there may be duplicate edges
+            iter = edgelist.erase(iter); // iter will be the next position after erasion
+            flag_found_edge = true;
         }
         else
         {
@@ -775,14 +791,14 @@ void Partition::applyFaceEdgeContraction(Edge* edge)
         // included twice in two clusters, but can only be released once.
         int u = (e->v1 == c1) ? e->v2 : e->v1;
         heap_.remove(e);
-        removeEdgeFromCluster(u, e);
+        removeEdgeFromList(e, global_edges_[u]);
         delete e;
     }
     for (Edge* e : global_edges_[c2])
     {
         int u = (e->v1 == c2) ? e->v2 : e->v1;
         heap_.remove(e);
-        removeEdgeFromCluster(u, e);
+        removeEdgeFromList(e, global_edges_[u]);
         delete e;
     }
     global_edges_[c1].clear();
@@ -1145,7 +1161,14 @@ void Partition::runPostProcessing()
     // If reading cluster data from input file, then need to initialize relevant cluster data at first
     if (flag_read_cluster_file_)
     {
-        initVerticesAndFaces();
+        initMeshConnectivity();
+        // Initialize face quadratic objects
+        for (int fidx = 0; fidx < face_num_; fidx++)
+        {
+            Face& face = faces_[fidx];
+            face.cov = CovObj(vertices_[face.indices[0]].pt, vertices_[face.indices[1]].pt, vertices_[face.indices[2]].pt);
+        }
+        // Initialize clusters
         init_cluster_num_ = curr_cluster_num_;  // no redundant empty clusters now
         for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
         {
@@ -1170,11 +1193,11 @@ void Partition::runPostProcessing()
 
     // (Optional) Clean small clusters which are independent connected components (like small floating pieces).
     removeSmallClusters();
+
     // Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
-    if (flag_new_mesh_)
+    if (flag_new_mesh_ && !FLAGS_run_mesh_simplification)
         updateNewMeshIndices();
 
-    // Do NOT forgot this
     updateCurrentClusterNum();
 }
 
@@ -1220,8 +1243,7 @@ void Partition::mergeAdjacentPlanes()
             const Vector3d& n2 = clusters_[c2].cov.normal_;
             if (fabs(n1.dot(n2)) < kNormalAngleThrsd)
                 continue;  // skip the neighbor plane with large normal direction difference
-            Vector3d dir = clusters_[c1].cov.center_ - clusters_[c2].cov.center_;
-            dir.normalize();
+            Vector3d dir = (clusters_[c1].cov.center_ - clusters_[c2].cov.center_).normalized();
             if (fabs(dir.dot(n1)) > kCenterNormalAngleThrsd || fabs(dir.dot(n2)) > kCenterNormalAngleThrsd)
                 continue;  // skip plane pair if the direction of two centers is close to one plane normal
 
@@ -1318,7 +1340,8 @@ void Partition::mergeIslandClusters()
     cout << "Cluster number (after removing islands): " << curr_cluster_num_ << endl;
 }
 
-//! Remove clusters which are small connected components. They are usually some floating pieces in the mesh.
+//! Remove clusters which are small connected components. These clusters are independent components in the mesh,
+//! like small floating pieces. Therefore, the removal will not influence other processing.
 void Partition::removeSmallClusters()
 {
     cout << "Remove small independent clusters ... " << endl;
@@ -1388,11 +1411,10 @@ void Partition::removeSmallClusters()
             }
         }
     }
-
+    // By removing these small clusters, we set the flags of all their faces as invalid for now
+    // and skip them in other steps.
     if (!small_clusters.empty())
     {
-        // By removing these small clusters, we set the flags of all their faces as invalid for now
-        // and skip them in output
         for (int cidx : small_clusters)
         {
             for (int fidx : clusters_[cidx].faces)
@@ -1412,6 +1434,7 @@ void Partition::removeSmallClusters()
 //! file.
 void Partition::updateNewMeshIndices()
 {
+    cout << "Original #Vertices: " << vertex_num_ << ", #Faces: " << face_num_ << endl;
     for (int i = 0; i < vertex_num_; ++i)
         vertices_[i].is_valid = false;
     new_face_num_ = 0;
@@ -1431,4 +1454,491 @@ void Partition::updateNewMeshIndices()
             vidx_old2new_[i] = new_vertex_num_++;
     }
     flag_new_mesh_ = true;  // just in case forgot to set this flag before
+    cout << "New #Vertices: " << new_vertex_num_ << ", #Faces: " << new_face_num_ << endl;
+}
+
+void Partition::runSimplification()
+{
+    initSimplification();
+
+    // Two-step simplification
+    simplifyInnerEdges();
+    simplifyBorderEdges();
+
+    updateNewMeshIndices();
+}
+
+void Partition::initSimplification()
+{
+    cout << "Initialize simplification ... " << endl;
+    // Reset each face's cluster-id just in case not set before
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (isClusterValid(cidx))
+        {
+            for (int fidx : clusters_[cidx].faces)
+                faces_[fidx].cluster_id = cidx;
+        }
+    }
+    // This function will skip if it is already called before
+    initMeshConnectivity();
+
+    // Can only call this after calling 'initMeshConnectivity()'
+    findInnerAndBorderEdges();
+
+    // Must release the heap before
+    initInnerEdgeQuadrics();
+}
+
+//! Find cluster border edges and vertices
+void Partition::findInnerAndBorderEdges()
+{
+    // Get all cluster border and mesh border edges
+    for (auto it : edge_to_face_)  // edge -> face list contains only valid faces
+    {
+        long long edge = it.first;
+        int v1, v2;
+        getEdge(edge, v1, v2);
+        int edge_fnum = static_cast<int>(it.second.size());
+        bool flag_border_edge = false;
+        if (edge_fnum == 0)
+        {
+            printInRed(
+                "Edge (" + std::to_string(v1) + "," + std::to_string(v2) + ") is not in any face. This shouldn't happen.");
+        }
+        else if (edge_fnum == 1)
+            flag_border_edge = true;  // mesh border
+        else
+        {
+            int init_cluster_id = faces_[it.second[0]].cluster_id;
+            assert(init_cluster_id != -1);
+            bool flag_same_cluster = true;
+            for (size_t i = 1; i < it.second.size(); ++i)
+            {
+                if (faces_[it.second[i]].cluster_id != init_cluster_id)
+                {
+                    flag_same_cluster = false;
+                    break;
+                }
+            }
+            if (flag_same_cluster)  // all faces of this edge are in the same cluster
+                vertices_[v1].cluster_id = vertices_[v2].cluster_id = init_cluster_id;
+            else
+                flag_border_edge = true;  // cluster border
+        }
+        if (flag_border_edge)  // border edges include both mesh border and cluster border edges
+            border_edges_.insert(edge);
+    }
+    // Reset border vertices' flags
+    for (long long edge : border_edges_)
+    {
+        int v1, v2;
+        getEdge(edge, v1, v2);
+        vertices_[v1].cluster_id = vertices_[v2].cluster_id = -1;  // border vertices' cluster-id is always -1
+    }
+    // Get inner-cluster edges. An inner-cluster edge is an edge whose two endpoints' ALL adjacent
+    // faces belong to a same cluster (i.e., the edge is surrounded by one cluster faces).
+    int count_inner_edges = 0;
+    for (auto it : edge_to_face_)
+    {
+        long long edge = it.first;
+        int v1, v2;
+        getEdge(edge, v1, v2);
+        if (vertices_[v1].cluster_id == -1 || vertices_[v2].cluster_id == -1 ||
+            vertices_[v1].cluster_id != vertices_[v2].cluster_id)
+            continue;
+        cluster_inner_edges_[vertices_[v1].cluster_id].push_back(edge);
+        count_inner_edges++;
+    }
+    cout << "#Border edges: " << border_edges_.size() << ", #Inner Edges: " << count_inner_edges << endl;
+}
+
+//! Initialize quadratic objects for inner vertices. See QEM reference for details.
+void Partition::initInnerEdgeQuadrics()
+{
+    // face quadrics for all vertices
+    const double kConstCoeff = 4.0 * sqrt(3.0);  // coefficient for triangle compactness (from the QEM paper)
+    for (int i = 0; i < face_num_; ++i)
+    {
+        if (!faces_[i].is_valid)
+            continue;
+        int v0 = faces_[i].indices[0], v1 = faces_[i].indices[1], v2 = faces_[i].indices[2];
+
+        // Initial triangle quadratic
+        QEMQuadrics Q(vertices_[v0].pt, vertices_[v1].pt, vertices_[v2].pt);
+        Q *= kFaceCoefficient;
+
+        // Compute a measure of triangle compactness to give large weight to a triangle close
+        // to equilateral, and small weight to a triangle whose vertices are close to colinear.
+        // From Eq. (3.20) in QEM reference paper "Quadric-based polygonal surface simplification"
+        // by M. Garland.
+        Vector3d e0 = vertices_[v1].pt - vertices_[v0].pt;
+        Vector3d e1 = vertices_[v2].pt - vertices_[v1].pt;
+        Vector3d e2 = vertices_[v2].pt - vertices_[v0].pt;
+        double area = (e0.cross(e2)).norm() / 2;
+        double coef = kConstCoeff * area / (e0.squaredNorm() + e1.squaredNorm() + e2.squaredNorm());
+        Q *= coef;
+
+        vertices_[v0].Q += Q;
+        vertices_[v1].Q += Q;
+        vertices_[v2].Q += Q;
+    }
+    // Scale triangle quadrics for each vertex
+    const double kFaceFactor = 1.0 / 3;  // normalizing factor (from the paper)
+    for (int i = 0; i < vertex_num_; ++i)
+        vertices_[i].Q *= 1.0 / (3.0 * vertices_[i].nbr_faces.size());
+
+    // Point quadrics for all vertices
+    for (int i = 0; i < vertex_num_; ++i)
+    {
+        QEMQuadrics Q(vertices_[i].pt);
+        Q *= kPointCoefficient;
+        vertices_[i].Q += Q;
+    }
+    // Line quadrics for border edges
+    for (long long key : border_edges_)
+    {
+        int v1, v2;
+        getEdge(key, v1, v2);
+        QEMQuadrics Q(vertices_[v1].pt, vertices_[v2].pt);
+        vertices_[v1].Q += Q;
+        vertices_[v2].Q += Q;
+    }
+}
+
+void Partition::simplifyInnerEdges()
+{
+    cout << "Simplify inner edges ... " << endl;
+
+    // Simplify inner edges in each cluster.
+    // Note: this step can be run in parallel, since inner-edge simplification in each cluster
+    // is independent with others. Here is simple serial step cluster by cluster.
+    float progress = 0.0;  // used to print a progress bar
+    const int kStep = (init_cluster_num_ < 100) ? 1 : (init_cluster_num_ / 100);
+    for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+    {
+        if (cidx % kStep == 0 || cidx == init_cluster_num_ - 1)
+        {
+            progress = (cidx == init_cluster_num_ - 1) ? 1.0f : static_cast<float>(cidx) / init_cluster_num_;
+            printProgressBar(progress);
+        }
+        if (!isClusterValid(cidx) || cluster_inner_edges_.find(cidx) == cluster_inner_edges_.end() ||
+            cluster_inner_edges_[cidx].size() < kMinInnerEdgeNum)
+            continue;
+
+        releaseHeap();
+
+        // Add candidate inner-cluster edges into the heap
+        for (long long key : cluster_inner_edges_[cidx])
+        {
+            int v1, v2;
+            getEdge(key, v1, v2);
+            Edge* e = new Edge(v1, v2);
+            if (checkEdgeContraction(e))
+            {
+                heap_.insert(e);
+                vertices_[v1].nbr_edges.push_back(e);
+                vertices_[v2].nbr_edges.push_back(e);
+            }
+            else
+            {
+                delete e;
+                e = nullptr;
+            }
+        }
+
+        // Simplify inner edges
+        curr_edge_num_ = heap_.size();
+        while (curr_edge_num_ > kMinInnerEdgeNum)
+        {
+            Edge* edge = (Edge*)heap_.extract();
+            if (!edge)
+            {
+                cout << "WARNING: No edges in the heap. " << endl;
+                break;
+            }
+            // NOTE: Even though we have already checked the validness of each edge's contraction
+            // before adding it into the heap, we still need to check it again before contracting
+            // it. The reason is that, we may change the connectivity of the edge's neighborhood
+            // after inserting it into the heap. Therefore, a valid edge in the heap may become
+            // invalid again.
+            if (checkEdgeContraction(edge))
+                applyVtxEdgeContraction(edge, cidx);
+            else
+            {
+                // If this edge cannot be contracted, we still remove it from the heap to ensure
+                // the loop will end at last.
+                curr_edge_num_--;
+                removeEdgeFromList(edge, vertices_[edge->v1].nbr_edges);
+                removeEdgeFromList(edge, vertices_[edge->v2].nbr_edges);
+                delete edge;
+                edge = nullptr;
+            }
+        }
+        assert(curr_edge_num_ <= kMinInnerEdgeNum);
+    }
+}
+
+//! Apply edge contraction for all types of edges including inner-cluster edge, border-cluster edge,
+//! and mesh border edge. These cases are very similar except some details.
+void Partition::applyVtxEdgeContraction(Edge* edge, int cluster_idx)
+{
+    int v1 = edge->v1, v2 = edge->v2;
+    vertices_[v1].Q += vertices_[v2].Q;
+    vertices_[v2].Q.reset();
+    vertices_[v2].is_valid = false;
+    double energy = 0;
+
+    // After edge contraction, v1 will hold the new vertex position and also
+    // inherit the connectivity of both original v1 and v2.
+    if (!vertices_[v1].Q.optimize(vertices_[v1].pt, energy))
+    {
+        // If cannot find optimized vertex position, still use the endpoint with
+        // lower energy result. This is the same as done in checkEdgeContraction().
+        double energy1 = vertices_[v1].Q(vertices_[v1].pt);
+        double energy2 = vertices_[v1].Q(vertices_[v2].pt);
+        if (energy1 > energy2)
+            vertices_[v1].pt = vertices_[v2].pt;
+    }
+
+    // Merge adjacent vertices of v2 to v1
+    for (int vidx : vertices_[v2].nbr_vertices)
+    {
+        vertices_[vidx].nbr_vertices.erase(v2);
+        if (vidx != v1)
+        {
+            vertices_[v1].nbr_vertices.insert(vidx);
+            vertices_[vidx].nbr_vertices.insert(v1);
+        }
+    }
+    // Update adjacent faces of v2 by v1
+    for (int fidx : vertices_[v2].nbr_faces)
+    {
+        if (checkFaceContainsVertices(fidx, v1, v2))
+        {  // remove faces containing both v1 and v2
+            faces_[fidx].is_valid = false;
+            for (int i = 0; i < 3; ++i)
+            {
+                int vidx = faces_[fidx].indices[i];
+                if (vidx != v2)
+                    vertices_[vidx].nbr_faces.erase(fidx);
+            }
+        }
+        else
+        {  // replace v2 in v2's adjacent face by v1
+            for (int i = 0; i < 3; ++i)
+            {
+                if (faces_[fidx].indices[i] == v2)
+                {
+                    faces_[fidx].indices[i] = v1;
+                    break;
+                }
+            }
+            vertices_[v1].nbr_faces.insert(fidx);
+        }
+    }
+
+    // Remove all old edges of v1 and v2
+    // NOTE: the input edge is also deleted here, since v1 is one of its endpoint.
+    // cout << "     Edges for v1" << endl;
+    for (Edge* e : vertices_[v1].nbr_edges)
+    {
+        int u = (e->v1 == v1) ? e->v2 : e->v1;
+        heap_.remove(e);
+        // Like before, remove this edge in the list of the other endpoint than v1,
+        // since each edge pointer is stored twice but can only be deleted once.
+        removeEdgeFromList(e, vertices_[u].nbr_edges);
+        delete e;
+        e = nullptr;
+        curr_edge_num_--;
+    }
+    // cout << "     Edges for v2" << endl;
+    for (Edge* e : vertices_[v2].nbr_edges)
+    {
+        int u = (e->v1 == v2) ? e->v2 : e->v1;
+        heap_.remove(e);
+        removeEdgeFromList(e, vertices_[u].nbr_edges);
+        delete e;
+        e = nullptr;
+        curr_edge_num_--;
+    }
+    vertices_[v1].nbr_edges.clear();
+    vertices_[v2].nbr_edges.clear();
+
+    // cout << "7777777777777777" << endl;
+
+    // Add new edges for v1
+    for (int vidx : vertices_[v1].nbr_vertices)
+    {
+        // NOTE: Border vertex's cluster id is -1.
+        if (vertices_[vidx].cluster_id != cluster_idx)
+            continue;
+        Edge* e = (v1 < vidx) ? (new Edge(v1, vidx)) : (new Edge(vidx, v1));
+        if (checkEdgeContraction(e))
+        {
+            heap_.insert(e);
+            vertices_[v1].nbr_edges.push_back(e);
+            vertices_[vidx].nbr_edges.push_back(e);
+            curr_edge_num_++;
+        }
+        else
+        {
+            delete e;
+            e = nullptr;
+        }
+    }
+}
+
+// If edge can be contracted, return true and update the edge energy, otherwise return false.
+bool Partition::checkEdgeContraction(Edge* edge)
+{
+    int v1 = edge->v1, v2 = edge->v2;
+
+    // Preserve non-manifold topology or not? Your choice.
+    // if (getCommonNeighborNum(v1, v2) > 2)
+    //     return false;
+
+    QEMQuadrics Q = vertices_[v1].Q;
+    Q += vertices_[v2].Q;
+    double energy = 0;
+    Vector3d vtx;
+    if (!Q.optimize(vtx, energy))
+    {
+        // If the planes represented by the two endpoints of the edge is nearly parallel, then
+        // this optimize() will fail and we cannot find the optimal contracted vertex.
+        // If so, use two simple strategies to determine the vertex. They are both intuitive.
+
+        // Strategy 1: Use edge center as the target vertex
+        // vtx = (vertices_[v1].pt + vertices_[v2].pt) / 2;
+        // energy = Q.evaluate(vtx);
+
+        // Strategy 2: Use endpoint with smaller energy as the target vertex.
+        // Since energy actually is the distance between a point to the plane represented by the quadrics,
+        // so these two energies are usually very close here. So it's like selecting an arbitrary one
+        // endpoint from the two.
+        double energy1 = Q(vertices_[v1].pt);
+        double energy2 = Q(vertices_[v2].pt);
+        if (energy1 < energy2)
+        {
+            energy = energy1;
+            vtx = vertices_[v1].pt;
+        }
+        else
+        {
+            energy = energy2;
+            vtx = vertices_[v2].pt;
+        }
+    }
+    // Skip an edge which may cause face flipping/inversion. This is very important.
+    if (!checkFlippedFaces(edge, v1, vtx) || !checkFlippedFaces(edge, v2, vtx))
+        return false;
+
+    edge->heap_key(-energy);  // Still, it is a max-heap by default but we need a min-heap
+    return true;
+}
+
+//! Check if the contracted vertex after edge contraction causes flipped faces (simplex inversion)
+//! around a vertex's adjacent faces.
+//! Ref: Chapter 3.7 'Consistency check' in QEM reference paper
+bool Partition::checkFlippedFaces(Edge* edge, int endpoint, const Vector3d& contracted_vtx)
+{
+    assert(endpoint == edge->v1 || endpoint == edge->v2);
+    int v1 = endpoint, v2 = (edge->v1 == endpoint) ? edge->v2 : edge->v1;
+    int p1 = v1;
+    for (int fidx : vertices_[v1].nbr_faces)
+    {
+        if (vertices_[v2].nbr_faces.find(fidx) != vertices_[v2].nbr_faces.end())
+            continue;  // skip faces shared by this edge, since they will be removed later
+
+        // Find v1's index inside this face
+        int vidx = -1;
+        for (int i = 0; i < 3; ++i)
+        {
+            if (faces_[fidx].indices[i] == v1)
+            {
+                vidx = i;
+                break;
+            }
+        }
+        assert(vidx != -1);  // v1's adjacent face MUST contain v1
+
+        // See Figure 3.15 in QEM paper for details about meaning of variables in this check
+        int p2 = faces_[fidx].indices[(vidx + 1) % 3], p3 = faces_[fidx].indices[(vidx + 2) % 3];  // other two vertices
+        Vector3d e1 = vertices_[p1].pt - vertices_[p2].pt;
+        Vector3d e2 = (vertices_[p3].pt - vertices_[p2].pt).normalized();
+        // This is the normal of the plane perpendicular to this face and going through edge (p2, p3)
+        Vector3d n = (e1 - (e1.dot(e2)) * e2).normalized();
+        // Ensure the distance between contracted vertex and this plane (with normal n and points
+        // p2, p3 on it) is >= 0.
+        if (n.dot(contracted_vtx - vertices_[p2].pt) <= 1e-5)
+            return false;
+    }
+    return true;
+}
+
+int Partition::getCommonNeighborNum(int v1, int v2)
+{
+    int count = 0;
+    for (int vidx : vertices_[v1].nbr_vertices)
+    {
+        if (vertices_[v2].nbr_vertices.find(vidx) != vertices_[v2].nbr_vertices.end())
+            count++;
+    }
+    return count;
+}
+
+void Partition::simplifyBorderEdges()
+{
+    cout << "Simplify border edges ... " << endl;
+
+    releaseHeap();
+
+    // Add all border edges into heap.
+    // NOTE: here we add all border edges including both mesh border and cluster border.
+    // However, in some situation, you may want to keep the topology of mesh border. So
+    // you can separate mesh border and cluster border edges during initialization, and
+    // simplify them separately.
+    for (long long key : border_edges_)
+    {
+        int v1, v2;
+        getEdge(key, v1, v2);
+        Edge* e = new Edge(v1, v2);
+        if (checkEdgeContraction(e))
+        {
+            heap_.insert(e);
+            vertices_[v1].nbr_edges.push_back(e);
+            vertices_[v2].nbr_edges.push_back(e);
+        }
+        else
+        {
+            delete e;
+            e = nullptr;
+        }
+    }
+
+    // Simplify all border edges. This step is the same as simplifying inner-cluster edges.
+    curr_edge_num_ = heap_.size();
+    const int kTargetEdgeNum = max(static_cast<int>(FLAGS_simplification_border_edge_ratio * curr_edge_num_), kMinInnerEdgeNum);
+    while (curr_edge_num_ > kTargetEdgeNum)
+    {
+        Edge* edge = (Edge*)heap_.extract();
+        if (!edge)
+        {
+            cout << "WARNING: No edges in the heap. " << endl;
+            break;
+        }
+        if (checkEdgeContraction(edge))
+            applyVtxEdgeContraction(edge, -1);  // border vertex's cluster id is -1
+        else
+        {
+            // If this edge cannot be contracted, we still remove it from the heap to ensure
+            // the loop will end at last.
+            curr_edge_num_--;
+            removeEdgeFromList(edge, vertices_[edge->v1].nbr_edges);
+            removeEdgeFromList(edge, vertices_[edge->v2].nbr_edges);
+            delete edge;
+            edge = nullptr;
+        }
+    }
+    assert(curr_edge_num_ <= kTargetEdgeNum);
 }
