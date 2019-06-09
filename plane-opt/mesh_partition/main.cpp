@@ -58,17 +58,19 @@ int main(int argc, char** argv)
     {
         if (FLAGS_run_post_processing)
         {
-            printInGreen("Run post processing step ...");
+            printInGreen("Run post processing ...");
             partition.runPostProcessing();
         }
     }
     else
     {
         partition.setTargetClusterNum(target_cluster_num);
+        printInGreen("Run mesh partition ...");
         flag_success = partition.runPartitionPipeline();
     }
     if (FLAGS_run_mesh_simplification)
     {
+        printInGreen("Run mesh simplification...");
         partition.runSimplification();
     }
 

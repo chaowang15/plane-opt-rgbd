@@ -1,0 +1,779 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ABS	mesh_partition/heap/stdmix.h	47;"	d
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	416;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	419;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	422;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	425;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	429;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	431;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	433;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	437;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	440;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	443;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	448;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	451;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	454;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	459;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	462;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	465;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	468;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	401;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	404;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	407;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	410;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	414;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	416;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	418;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	422;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	425;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	428;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	433;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	436;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	439;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	444;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	447;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	450;"	d	file:
+ARCHITECTURE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	453;"	d	file:
+ARRAY_ALLOC_INPLACE	mesh_partition/heap/MxBlock.h	/^    ARRAY_ALLOC_INPLACE$/;"	e	enum:_array_alloc_policy
+A_	mesh_partition/qemquadrics.h	/^    Matrix3d A_;$/;"	m	class:QEMQuadrics
+AssertBound	mesh_partition/heap/stdmix.h	101;"	d
+AssertBound	mesh_partition/heap/stdmix.h	104;"	d
+Axis	mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	g
+CAREFUL	mesh_partition/heap/stdmix.h	86;"	d
+CAREFUL	mesh_partition/heap/stdmix.h	89;"	d
+CMAKE_BINARY_DIR	mesh_partition/build/Makefile	/^CMAKE_BINARY_DIR = \/home\/chao\/dev\/plane-opt-rgbd\/plane-opt\/mesh_partition\/build$/;"	m
+CMAKE_COMMAND	mesh_partition/build/Makefile	/^CMAKE_COMMAND = \/usr\/bin\/cmake$/;"	m
+CMAKE_SOURCE_DIR	mesh_partition/build/Makefile	/^CMAKE_SOURCE_DIR = \/home\/chao\/dev\/plane-opt-rgbd\/plane-opt\/mesh_partition$/;"	m
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	101;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	108;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	115;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	122;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	129;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	137;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	142;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	149;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	152;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	155;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	158;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	161;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	176;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	190;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	19;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	200;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	218;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	227;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	236;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	251;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	264;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	282;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	285;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	288;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	42;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	50;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	56;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	62;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	71;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	80;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	94;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	101;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	108;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	115;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	122;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	129;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	137;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	13;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	142;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	149;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	152;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	155;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	170;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	184;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	198;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	19;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	216;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	225;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	234;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	249;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	267;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	270;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	273;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	42;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	50;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	56;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	62;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	71;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	80;"	d	file:
+COMPILER_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	94;"	d	file:
+COMPILER_VERSION_INTERNAL	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	232;"	d	file:
+COMPILER_VERSION_INTERNAL	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	230;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	103;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	110;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	117;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	124;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	130;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	138;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	144;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	165;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	180;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	191;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	202;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	221;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	229;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	239;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	244;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	24;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	253;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	258;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	267;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	272;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	43;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	51;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	58;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	64;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	73;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	83;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	88;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	96;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	103;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	110;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	117;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	124;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	130;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	138;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	144;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	159;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	15;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	174;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	186;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	188;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	200;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	219;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	227;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	237;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	242;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	24;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	252;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	257;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	43;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	51;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	58;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	64;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	73;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	83;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	88;"	d	file:
+COMPILER_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	96;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	104;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	111;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	118;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	125;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	131;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	139;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	145;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	166;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	181;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	193;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	203;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	222;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	230;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	240;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	245;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	254;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	259;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	25;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	268;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	273;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	44;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	52;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	59;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	65;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	74;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	84;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	89;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	97;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	104;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	111;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	118;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	125;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	131;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	139;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	145;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	160;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	16;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	175;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	191;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	201;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	220;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	228;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	238;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	243;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	253;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	258;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	25;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	44;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	52;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	59;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	65;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	74;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	84;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	89;"	d	file:
+COMPILER_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	97;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	105;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	112;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	119;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	126;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	133;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	146;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	167;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	182;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	196;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	207;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	210;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	223;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	231;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	241;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	246;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	255;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	260;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	269;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	274;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	27;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	29;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	46;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	53;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	67;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	76;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	85;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	90;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	98;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	105;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	112;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	119;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	126;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	133;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	146;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	161;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	176;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	194;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	205;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	208;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	221;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	229;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	239;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	244;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	254;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	259;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	27;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	29;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	46;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	53;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	67;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	76;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	85;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	90;"	d	file:
+COMPILER_VERSION_PATCH	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	98;"	d	file:
+COMPILER_VERSION_TWEAK	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	173;"	d	file:
+COMPILER_VERSION_TWEAK	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	214;"	d	file:
+COMPILER_VERSION_TWEAK	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	33;"	d	file:
+COMPILER_VERSION_TWEAK	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	167;"	d	file:
+COMPILER_VERSION_TWEAK	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	212;"	d	file:
+COMPILER_VERSION_TWEAK	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	33;"	d	file:
+COVARIANCE_H	mesh_partition/covariance.h	6;"	d
+CXX_STD	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	534;"	d	file:
+CXX_STD	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	536;"	d	file:
+C_DIALECT	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	550;"	d	file:
+C_DIALECT	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	552;"	d	file:
+C_DIALECT	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	555;"	d	file:
+C_DIALECT	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	557;"	d	file:
+C_DIALECT	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	559;"	d	file:
+Cluster	mesh_partition/partition.h	/^        Cluster() : energy(0) {}$/;"	f	struct:Partition::Cluster
+Cluster	mesh_partition/partition.h	/^    struct Cluster$/;"	s	class:Partition
+CovObj	mesh_partition/covariance.cpp	/^CovObj::CovObj()$/;"	f	class:CovObj
+CovObj	mesh_partition/covariance.cpp	/^CovObj::CovObj(const Vector3d &v1, const Vector3d &v2, const Vector3d &v3)$/;"	f	class:CovObj
+CovObj	mesh_partition/covariance.h	/^class CovObj$/;"	c
+DEC	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	472;"	d	file:
+DEC	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	457;"	d	file:
+EQUALS	mesh_partition/build/Makefile	/^EQUALS = =$/;"	m
+Edge	mesh_partition/partition.h	/^        Edge(int a, int b) : v1(a), v2(b) {}$/;"	f	struct:Partition::Edge
+Edge	mesh_partition/partition.h	/^    struct Edge : public MxHeapable$/;"	s	class:Partition
+FEQ	mesh_partition/heap/gfx.h	/^inline bool  FEQ(double a, double b, double e=FEQ_EPS)  {return fabs(a-b)<e;}$/;"	f
+FEQ2	mesh_partition/heap/gfx.h	/^inline bool FEQ2(double a, double b, double e=FEQ_EPS2) {return fabs(a-b)<e;}$/;"	f
+FEQ_EPS	mesh_partition/heap/gfx.h	/^const double FEQ_EPS = 1e-6;$/;"	v
+FEQ_EPS2	mesh_partition/heap/gfx.h	/^const double FEQ_EPS2 = 1e-12;$/;"	v
+Face	mesh_partition/partition.h	/^        Face() : cluster_id(-1), is_visited(false), is_valid(true) {}$/;"	f	struct:Partition::Face
+Face	mesh_partition/partition.h	/^    struct Face$/;"	s	class:Partition
+GFX_INCLUDED	mesh_partition/heap/gfx.h	2;"	d
+HAVE_BOOL	mesh_partition/heap/config-vc.h	9;"	d
+HAVE_CASTING_LIMITS	mesh_partition/heap/config-vc.h	78;"	d
+HAVE_FLTK	mesh_partition/heap/config-vc.h	43;"	d
+HAVE_FLTK_GL	mesh_partition/heap/config-vc.h	46;"	d
+HAVE_GL_GLEXT_H	mesh_partition/heap/config-vc.h	69;"	d
+HAVE_GL_WGLEXT_H	mesh_partition/heap/config-vc.h	75;"	d
+HAVE_LIBJPEG	mesh_partition/heap/config-vc.h	55;"	d
+HAVE_LIBPNG	mesh_partition/heap/config-vc.h	52;"	d
+HAVE_LIBTIFF	mesh_partition/heap/config-vc.h	49;"	d
+HAVE_OPENGL	mesh_partition/heap/config-vc.h	60;"	d
+HAVE_POLYOFFSET	mesh_partition/heap/config-vc.h	66;"	d
+HAVE_SSTREAM	mesh_partition/heap/config-vc.h	37;"	d
+HAVE_VALARRAY	mesh_partition/heap/config-vc.h	34;"	d
+HEX	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	483;"	d	file:
+HEX	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	468;"	d	file:
+HUGE	mesh_partition/heap/gfx.h	56;"	d
+ID_VOID_MAIN	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	6;"	d	file:
+MAX	mesh_partition/heap/gfx.h	45;"	d
+MAX	mesh_partition/heap/gfx.h	48;"	d
+MAX	mesh_partition/heap/stdmix.h	40;"	d
+MAX	mesh_partition/heap/stdmix.h	44;"	d
+MIN	mesh_partition/heap/gfx.h	44;"	d
+MIN	mesh_partition/heap/gfx.h	47;"	d
+MIN	mesh_partition/heap/stdmix.h	37;"	d
+MIN	mesh_partition/heap/stdmix.h	43;"	d
+MIXMSG_INCLUDED	mesh_partition/heap/mixmsg.h	2;"	d
+MXBLOCK_INCLUDED	mesh_partition/heap/MxBlock.h	2;"	d
+MXDYNBLOCK_INCLUDED	mesh_partition/heap/MxDynBlock.h	2;"	d
+MXHEAP_H	mesh_partition/myheap.h	35;"	d
+MXHEAP_INCLUDED	mesh_partition/heap/MxHeap.h	2;"	d
+MXID_NIL	mesh_partition/heap/stdmix.h	23;"	d
+MXMSG_ASSERT	mesh_partition/heap/mixmsg.h	/^    MXMSG_ASSERT,$/;"	e	enum:MxSeverityLevel
+MXMSG_DEBUG	mesh_partition/heap/mixmsg.h	/^    MXMSG_DEBUG,$/;"	e	enum:MxSeverityLevel
+MXMSG_ERROR	mesh_partition/heap/mixmsg.h	/^    MXMSG_ERROR,$/;"	e	enum:MxSeverityLevel
+MXMSG_FATAL	mesh_partition/heap/mixmsg.h	/^    MXMSG_FATAL = 0,$/;"	e	enum:MxSeverityLevel
+MXMSG_NOTE	mesh_partition/heap/mixmsg.h	/^    MXMSG_NOTE,$/;"	e	enum:MxSeverityLevel
+MXMSG_TRACE	mesh_partition/heap/mixmsg.h	/^    MXMSG_TRACE$/;"	e	enum:MxSeverityLevel
+MXMSG_WARN	mesh_partition/heap/mixmsg.h	/^    MXMSG_WARN,$/;"	e	enum:MxSeverityLevel
+M_PI	mesh_partition/heap/gfx.h	52;"	d
+MxBlock	mesh_partition/heap/MxBlock.h	/^    MxBlock() {}$/;"	f	class:MxBlock
+MxBlock	mesh_partition/heap/MxBlock.h	/^    MxBlock(int n) { init_block(n); }$/;"	f	class:MxBlock
+MxBlock	mesh_partition/heap/MxBlock.h	/^class MxBlock$/;"	c
+MxDynBlock	mesh_partition/heap/MxDynBlock.h	/^    MxDynBlock(int n = 2) : MxBlock<T>(n) { fill = 0; }$/;"	f	class:MxDynBlock
+MxDynBlock	mesh_partition/heap/MxDynBlock.h	/^class MxDynBlock : public MxBlock<T>$/;"	c
+MxHeap	mesh_partition/heap/MxHeap.h	/^    MxHeap() : MxDynBlock<MxHeapable *>(8) {}$/;"	f	class:MxHeap
+MxHeap	mesh_partition/heap/MxHeap.h	/^    MxHeap(unsigned int n) : MxDynBlock<MxHeapable *>(n) {}$/;"	f	class:MxHeap
+MxHeap	mesh_partition/heap/MxHeap.h	/^class MxHeap : private MxDynBlock<MxHeapable *>$/;"	c
+MxHeap	mesh_partition/myheap.h	/^    MxHeap() { data.reserve(8); }$/;"	f	class:MxHeap
+MxHeap	mesh_partition/myheap.h	/^    MxHeap(unsigned int n) { data.resize(n); }$/;"	f	class:MxHeap
+MxHeap	mesh_partition/myheap.h	/^class MxHeap$/;"	c
+MxHeapable	mesh_partition/heap/MxHeap.h	/^    MxHeapable()$/;"	f	class:MxHeapable
+MxHeapable	mesh_partition/heap/MxHeap.h	/^class MxHeapable$/;"	c
+MxHeapable	mesh_partition/myheap.h	/^    MxHeapable()$/;"	f	class:MxHeapable
+MxHeapable	mesh_partition/myheap.h	/^class MxHeapable$/;"	c
+MxMsgInfo	mesh_partition/heap/mixmsg.h	/^class MxMsgInfo$/;"	c
+MxSeverityLevel	mesh_partition/heap/mixmsg.h	/^enum MxSeverityLevel$/;"	g
+MxSizedDynBlock	mesh_partition/heap/MxDynBlock.h	/^    MxSizedDynBlock(uint n = T_SIZE) : MxDynBlock<T>(n) {}$/;"	f	class:MxSizedDynBlock
+MxSizedDynBlock	mesh_partition/heap/MxDynBlock.h	/^class MxSizedDynBlock : public MxDynBlock<T>$/;"	c
+N	mesh_partition/heap/MxBlock.h	/^    int N;$/;"	m	class:MxBlock
+PARANOID	mesh_partition/heap/stdmix.h	94;"	d
+PARANOID	mesh_partition/heap/stdmix.h	97;"	d
+PARTITION_H	mesh_partition/partition.h	2;"	d
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	313;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	316;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	319;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	322;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	325;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	328;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	331;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	334;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	337;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	340;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	343;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	346;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	349;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	352;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	355;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	358;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	361;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	364;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	367;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	370;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	373;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	376;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	379;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	382;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	385;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	389;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	392;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	395;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	398;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	401;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	405;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	298;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	301;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	304;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	307;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	310;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	313;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	316;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	319;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	322;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	325;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	328;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	331;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	334;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	337;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	340;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	343;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	346;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	349;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	352;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	355;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	358;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	361;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	364;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	367;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	370;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	374;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	377;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	380;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	383;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	386;"	d	file:
+PLATFORM_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	390;"	d	file:
+PRECAUTION	mesh_partition/heap/stdmix.h	102;"	d
+PRECAUTION	mesh_partition/heap/stdmix.h	105;"	d
+Partition	mesh_partition/partition.cpp	/^Partition::Partition()$/;"	f	class:Partition
+Partition	mesh_partition/partition.h	/^class Partition$/;"	c
+Q	mesh_partition/partition.h	/^        QEMQuadrics Q;$/;"	m	struct:Partition::Vertex
+QEMQUADRICS_H	mesh_partition/qemquadrics.h	9;"	d
+QEMQuadrics	mesh_partition/qemquadrics.cpp	/^QEMQuadrics::QEMQuadrics()$/;"	f	class:QEMQuadrics
+QEMQuadrics	mesh_partition/qemquadrics.cpp	/^QEMQuadrics::QEMQuadrics(const Vector3d& v1)$/;"	f	class:QEMQuadrics
+QEMQuadrics	mesh_partition/qemquadrics.cpp	/^QEMQuadrics::QEMQuadrics(const Vector3d& v1, const Vector3d& v2)$/;"	f	class:QEMQuadrics
+QEMQuadrics	mesh_partition/qemquadrics.cpp	/^QEMQuadrics::QEMQuadrics(const Vector3d& v1, const Vector3d& v2, const Vector3d& v3)$/;"	f	class:QEMQuadrics
+QEMQuadrics	mesh_partition/qemquadrics.h	/^class QEMQuadrics$/;"	c
+RM	mesh_partition/build/Makefile	/^RM = \/usr\/bin\/cmake -E remove -f$/;"	m
+SAFETY	mesh_partition/heap/stdmix.h	72;"	d
+SHELL	mesh_partition/build/Makefile	/^SHELL = \/bin\/sh$/;"	m
+SIMULATE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	163;"	d	file:
+SIMULATE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	178;"	d	file:
+SIMULATE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	21;"	d	file:
+SIMULATE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	157;"	d	file:
+SIMULATE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	172;"	d	file:
+SIMULATE_ID	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	21;"	d	file:
+SIMULATE_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	170;"	d	file:
+SIMULATE_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	185;"	d	file:
+SIMULATE_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	37;"	d	file:
+SIMULATE_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	164;"	d	file:
+SIMULATE_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	179;"	d	file:
+SIMULATE_VERSION_MAJOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	37;"	d	file:
+SIMULATE_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	171;"	d	file:
+SIMULATE_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	186;"	d	file:
+SIMULATE_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	38;"	d	file:
+SIMULATE_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	165;"	d	file:
+SIMULATE_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	180;"	d	file:
+SIMULATE_VERSION_MINOR	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	38;"	d	file:
+STDMIX_INCLUDED	mesh_partition/heap/stdmix.h	2;"	d
+STRINGIFY	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	309;"	d	file:
+STRINGIFY	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	294;"	d	file:
+STRINGIFY_HELPER	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	308;"	d	file:
+STRINGIFY_HELPER	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	293;"	d	file:
+SUFFIXES	mesh_partition/build/Makefile	/^SUFFIXES =$/;"	m
+SanityCheck	mesh_partition/heap/stdmix.h	93;"	d
+SanityCheck	mesh_partition/heap/stdmix.h	96;"	d
+SwapFace	mesh_partition/partition.h	/^        SwapFace(int v, int f, int t)$/;"	f	struct:Partition::SwapFace
+SwapFace	mesh_partition/partition.h	/^    struct SwapFace$/;"	s	class:Partition
+TIMING	mesh_partition/heap/gfx.h	88;"	d
+TOOLS_H	common/tools.h	2;"	d
+Vertex	mesh_partition/partition.h	/^        Vertex() : is_valid(false), cluster_id(-1) {}$/;"	f	struct:Partition::Vertex
+Vertex	mesh_partition/partition.h	/^    struct Vertex$/;"	s	class:Partition
+W	mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
+X	mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
+Y	mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
+Z	mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
+_array_alloc_policy	mesh_partition/heap/MxBlock.h	/^enum _array_alloc_policy$/;"	g
+add	mesh_partition/heap/MxDynBlock.h	/^    T& add()$/;"	f	class:MxDynBlock
+add	mesh_partition/heap/MxDynBlock.h	/^    void add(const T& t) { add() = t; }$/;"	f	class:MxDynBlock
+applyFaceEdgeContraction	mesh_partition/partition.cpp	/^void Partition::applyFaceEdgeContraction(Edge* edge)$/;"	f	class:Partition
+applyVtxEdgeContraction	mesh_partition/partition.cpp	/^void Partition::applyVtxEdgeContraction(Edge* edge, int cluster_idx)$/;"	f	class:Partition
+area_	mesh_partition/covariance.h	/^    double area_;$/;"	m	class:CovObj
+assert	mesh_partition/heap/stdmix.h	80;"	d
+assert	mesh_partition/heap/stdmix.h	84;"	d
+assert	mesh_partition/heap/stdmix.h	88;"	d
+b_	mesh_partition/qemquadrics.h	/^    Vector3d b_;$/;"	m	class:QEMQuadrics
+begin	mesh_partition/heap/MxBlock.h	/^    const_iterator begin() const { return block; }$/;"	f	class:MxBlock
+begin	mesh_partition/heap/MxBlock.h	/^    iterator begin() { return block; }$/;"	f	class:MxBlock
+bitcopy	mesh_partition/heap/MxBlock.h	/^    void bitcopy(const MxBlock<T> &b) { bitcopy(b, b.length()); }$/;"	f	class:MxBlock
+bitcopy	mesh_partition/heap/MxBlock.h	/^    void bitcopy(const T *a, int n)  \/\/ copy bits directly$/;"	f	class:MxBlock
+block	mesh_partition/heap/MxBlock.h	/^    T *block;$/;"	m	class:MxBlock
+border_edges_	mesh_partition/partition.h	/^    unordered_set<long long> border_edges_; \/\/ mesh border and cluster border edges$/;"	m	class:Partition
+c_	mesh_partition/qemquadrics.h	/^    double c_;$/;"	m	class:QEMQuadrics
+center_	mesh_partition/covariance.h	/^    Vector3d center_;$/;"	m	class:CovObj
+center_	mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
+checkEdgeContraction	mesh_partition/partition.cpp	/^bool Partition::checkEdgeContraction(Edge* edge)$/;"	f	class:Partition
+checkFaceContainsVertices	mesh_partition/partition.h	/^    inline bool checkFaceContainsVertices(int fidx, int v1){$/;"	f	class:Partition
+checkFaceContainsVertices	mesh_partition/partition.h	/^    inline bool checkFaceContainsVertices(int fidx, int v1, int v2){$/;"	f	class:Partition
+checkFlippedFaces	mesh_partition/partition.cpp	/^bool Partition::checkFlippedFaces(Edge* edge, int endpoint, const Vector3d& contracted_vtx)$/;"	f	class:Partition
+clearCov	mesh_partition/covariance.cpp	/^void CovObj::clearCov()$/;"	f	class:CovObj
+cluster_id	mesh_partition/partition.h	/^        int cluster_id;$/;"	m	struct:Partition::Face
+cluster_id	mesh_partition/partition.h	/^        int cluster_id;$/;"	m	struct:Partition::Vertex
+cluster_inner_edges_	mesh_partition/partition.h	/^    unordered_map<int, vector<long long>> cluster_inner_edges_; \/\/ edges inside each cluster$/;"	m	class:Partition
+clusters_	mesh_partition/partition.h	/^    vector<Cluster> clusters_;$/;"	m	class:Partition
+clusters_in_swap_	mesh_partition/partition.h	/^    unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;$/;"	m	class:Partition
+color	mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Cluster
+color	mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Vertex
+computeAvgDisBtwTwoPlanes	mesh_partition/partition.cpp	/^double Partition::computeAvgDisBtwTwoPlanes(int c1, int c2)$/;"	f	class:Partition
+computeEdgeEnergy	mesh_partition/partition.cpp	/^void Partition::computeEdgeEnergy(Edge* edge)$/;"	f	class:Partition
+computeMaxDisBetweenTwoPlanes	mesh_partition/partition.cpp	/^double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection)$/;"	f	class:Partition
+computePlaneNormal	mesh_partition/covariance.cpp	/^void CovObj::computePlaneNormal()$/;"	f	class:CovObj
+computeSwapDeltaEnergy	mesh_partition/partition.cpp	/^double Partition::computeSwapDeltaEnergy(int fidx, int from, int to)$/;"	f	class:Partition
+const	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	10;"	d	file:
+const_iterator	mesh_partition/heap/MxBlock.h	/^    typedef value_type *const_iterator;$/;"	t	class:MxBlock
+context	mesh_partition/heap/mixmsg.h	/^    const char *context;$/;"	m	class:MxMsgInfo
+copy	mesh_partition/heap/MxBlock.h	/^    void copy(const MxBlock<T> &b) { copy(b, b.length()); }$/;"	f	class:MxBlock
+copy	mesh_partition/heap/MxBlock.h	/^    void copy(const T *a, const int n)  \/\/ copy using assignment operator$/;"	f	class:MxBlock
+cov	mesh_partition/partition.h	/^        CovObj cov;$/;"	m	struct:Partition::Cluster
+cov	mesh_partition/partition.h	/^        CovObj cov;$/;"	m	struct:Partition::Face
+cov_	mesh_partition/covariance.h	/^    Matrix3d cov_;$/;"	m	class:CovObj
+createClusterColors	mesh_partition/partition.cpp	/^void Partition::createClusterColors()$/;"	f	class:Partition
+curr_cluster_num_	mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
+curr_edge_num_	mesh_partition/partition.h	/^    int curr_edge_num_;$/;"	m	class:Partition
+data	mesh_partition/myheap.h	/^    std::vector<MxHeapable *> data;  \/\/ we keep the pointers in the heap$/;"	m	class:MxHeap
+destroy	mesh_partition/myheap.h	/^    void destroy()$/;"	f	class:MxHeap
+downheap	mesh_partition/heap/MxHeap.cxx	/^void MxHeap::downheap(unsigned int i)$/;"	f	class:MxHeap
+downheap	mesh_partition/myheap.h	/^    void downheap(unsigned int i)$/;"	f	class:MxHeap
+drop	mesh_partition/heap/MxDynBlock.h	/^    T& drop() { return (*this)[--fill]; }$/;"	f	class:MxDynBlock
+drop	mesh_partition/heap/MxDynBlock.h	/^    void drop(int d) { fill -= d; }$/;"	f	class:MxDynBlock
+edge_to_face_	mesh_partition/partition.h	/^    unordered_map<long long, vector<int>> edge_to_face_;  \/\/ edge (represented by two int32 endpoints) -> face id$/;"	m	class:Partition
+end	mesh_partition/heap/MxBlock.h	/^    const_iterator end() const { return begin() + size(); }$/;"	f	class:MxBlock
+end	mesh_partition/heap/MxBlock.h	/^    iterator end() { return begin() + size(); }$/;"	f	class:MxBlock
+end	mesh_partition/heap/MxDynBlock.h	/^    typename MxBlock<T>::const_iterator end() const { return this->begin() + size(); }$/;"	f	class:MxDynBlock
+end	mesh_partition/heap/MxDynBlock.h	/^    typename MxBlock<T>::iterator end() { return this->begin() + size(); }$/;"	f	class:MxDynBlock
+energy	mesh_partition/covariance.cpp	/^double CovObj::energy()$/;"	f	class:CovObj
+energy	mesh_partition/partition.h	/^        double energy;             \/\/ to save some computation time of calling CovObj::energy() too frequently$/;"	m	struct:Partition::Cluster
+evaluate	mesh_partition/qemquadrics.cpp	/^double QEMQuadrics::evaluate(const Vector3d& v) const$/;"	f	class:QEMQuadrics
+extract	mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::extract()$/;"	f	class:MxHeap
+extract	mesh_partition/myheap.h	/^    MxHeapable *extract()$/;"	f	class:MxHeap
+face_id	mesh_partition/partition.h	/^        int face_id, from, to;$/;"	m	struct:Partition::SwapFace
+face_num_	mesh_partition/partition.h	/^    int vertex_num_, face_num_;$/;"	m	class:Partition
+faces	mesh_partition/partition.h	/^        unordered_set<int> faces;  \/\/ faces each cluster contains$/;"	m	struct:Partition::Cluster
+faces_	mesh_partition/partition.h	/^    vector<Face> faces_;$/;"	m	class:Partition
+faces_to_swap	mesh_partition/partition.h	/^        vector<SwapFace> faces_to_swap;$/;"	m	struct:Partition::Cluster
+fatal_error	mesh_partition/heap/stdmix.h	77;"	d
+features	mesh_partition/build/CMakeFiles/feature_tests.c	/^  const char features[] = {"\\n"$/;"	v
+features	mesh_partition/build/CMakeFiles/feature_tests.cxx	/^  const char features[] = {"\\n"$/;"	v
+fidx_old2new_	mesh_partition/partition.h	/^    unordered_map<int, int> fidx_old2new_; \/\/ original vertex indices -> new mesh indices (after removing some faces)$/;"	m	class:Partition
+filename	mesh_partition/heap/mixmsg.h	/^    const char *filename;$/;"	m	class:MxMsgInfo
+fill	mesh_partition/heap/MxDynBlock.h	/^    int fill;$/;"	m	class:MxDynBlock
+findClusterNeighbors	mesh_partition/partition.cpp	/^int Partition::findClusterNeighbors(int cidx)$/;"	f	class:Partition
+findClusterNeighbors	mesh_partition/partition.cpp	/^int Partition::findClusterNeighbors(int cidx, unordered_set<int>& cluster_faces, unordered_set<int>& neighbor_clusters)$/;"	f	class:Partition
+findInnerAndBorderEdges	mesh_partition/partition.cpp	/^void Partition::findInnerAndBorderEdges()$/;"	f	class:Partition
+flag_new_mesh_	mesh_partition/partition.h	/^    bool flag_new_mesh_;  \/\/ true if removing some faces\/vertices\/clusters; false by default$/;"	m	class:Partition
+flag_read_cluster_file_	mesh_partition/partition.h	/^    bool flag_read_cluster_file_;$/;"	m	class:Partition
+free_block	mesh_partition/heap/MxBlock.h	/^    void free_block()$/;"	f	class:MxBlock
+from	mesh_partition/partition.h	/^        int face_id, from, to;$/;"	m	struct:Partition::SwapFace
+getCommonNeighborNum	mesh_partition/partition.cpp	/^int Partition::getCommonNeighborNum(int v1, int v2)$/;"	f	class:Partition
+getCurrentClusterNum	mesh_partition/partition.h	/^    int getCurrentClusterNum() { return curr_cluster_num_; }$/;"	f	class:Partition
+getEdge	mesh_partition/partition.h	/^    inline void getEdge(const long long& key, int& v1, int& v2)$/;"	f	class:Partition
+getTotalEnergy	mesh_partition/partition.cpp	/^double Partition::getTotalEnergy()$/;"	f	class:Partition
+get_heap_pos	mesh_partition/heap/MxHeap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
+get_heap_pos	mesh_partition/myheap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
+global_edges_	mesh_partition/partition.h	/^    vector<vector<Edge*>> global_edges_;$/;"	m	class:Partition
+heap_	mesh_partition/partition.h	/^    MxHeap heap_;$/;"	m	class:Partition
+heap_key	mesh_partition/heap/MxHeap.h	/^    inline double heap_key() const { return import; }$/;"	f	class:MxHeapable
+heap_key	mesh_partition/heap/MxHeap.h	/^    inline void heap_key(double k) { import = k; }$/;"	f	class:MxHeapable
+heap_key	mesh_partition/myheap.h	/^    inline double heap_key() const { return import; }$/;"	f	class:MxHeapable
+heap_key	mesh_partition/myheap.h	/^    inline void heap_key(double k) { import = k; }$/;"	f	class:MxHeapable
+import	mesh_partition/heap/MxHeap.h	/^    double import;$/;"	m	class:MxHeapable
+import	mesh_partition/myheap.h	/^    double import;  \/\/ key (sorted by this value in the heap)$/;"	m	class:MxHeapable
+indices	mesh_partition/partition.h	/^        int indices[3];$/;"	m	struct:Partition::Face
+info_arch	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
+info_arch	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_arch = "INFO" ":" "arch[" ARCHITECTURE_ID "]";$/;"	v
+info_compiler	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
+info_compiler	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_compiler = "INFO" ":" "compiler[" COMPILER_ID "]";$/;"	v
+info_cray	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const *info_cray = "INFO" ":" "compiler_wrapper[CrayPrgEnv]";$/;"	v
+info_cray	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const *info_cray = "INFO" ":" "compiler_wrapper[CrayPrgEnv]";$/;"	v
+info_language_dialect_default	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^const char* info_language_dialect_default =$/;"	v
+info_language_dialect_default	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^const char* info_language_dialect_default = "INFO" ":" "dialect_default["$/;"	v
+info_platform	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
+info_platform	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_platform = "INFO" ":" "platform[" PLATFORM_ID "]";$/;"	v
+info_simulate	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const* info_simulate = "INFO" ":" "simulate[" SIMULATE_ID "]";$/;"	v
+info_simulate	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* info_simulate = "INFO" ":" "simulate[" SIMULATE_ID "]";$/;"	v
+info_simulate_version	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const info_simulate_version[] = {$/;"	v
+info_simulate_version	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_simulate_version[] = {$/;"	v
+info_version	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const info_version[] = {$/;"	v
+info_version	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version[] = {$/;"	v
+info_version_internal	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const info_version_internal[] = {$/;"	v
+info_version_internal	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const info_version_internal[] = {$/;"	v
+initInnerEdgeQuadrics	mesh_partition/partition.cpp	/^void Partition::initInnerEdgeQuadrics()$/;"	f	class:Partition
+initMerging	mesh_partition/partition.cpp	/^void Partition::initMerging()$/;"	f	class:Partition
+initMeshConnectivity	mesh_partition/partition.cpp	/^void Partition::initMeshConnectivity()$/;"	f	class:Partition
+initSimplification	mesh_partition/partition.cpp	/^void Partition::initSimplification()$/;"	f	class:Partition
+init_block	mesh_partition/heap/MxBlock.h	/^    void init_block(int n)$/;"	f	class:MxBlock
+init_cluster_num_	mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
+insert	mesh_partition/heap/MxHeap.cxx	/^void MxHeap::insert(MxHeapable *t, double v)$/;"	f	class:MxHeap
+insert	mesh_partition/heap/MxHeap.h	/^    void insert(MxHeapable *t) { insert(t, t->heap_key()); }$/;"	f	class:MxHeap
+insert	mesh_partition/myheap.h	/^    void insert(MxHeapable *t) { insert(t, t->heap_key()); }$/;"	f	class:MxHeap
+insert	mesh_partition/myheap.h	/^    void insert(MxHeapable *t, double v)$/;"	f	class:MxHeap
+isClusterValid	mesh_partition/partition.h	/^    bool isClusterValid(int cidx) { return !clusters_[cidx].faces.empty(); }$/;"	f	class:Partition
+is_in_heap	mesh_partition/heap/MxHeap.h	/^    inline bool is_in_heap() { return token != -47; }$/;"	f	class:MxHeapable
+is_in_heap	mesh_partition/myheap.h	/^    inline bool is_in_heap() { return token != -47; }$/;"	f	class:MxHeapable
+is_valid	mesh_partition/partition.h	/^        bool is_valid;    \/\/ false if this face is removed.$/;"	m	struct:Partition::Face
+is_valid	mesh_partition/partition.h	/^        bool is_valid;  \/\/ false if it is removed (all its adjacent faces are removed)$/;"	m	struct:Partition::Vertex
+is_visited	mesh_partition/partition.h	/^        bool is_visited;  \/\/ used in Breath-first search to get connected components in clusters$/;"	m	struct:Partition::Face
+item	mesh_partition/heap/MxHeap.h	/^    MxHeapable *item(uint i) { return (*this)[i]; }$/;"	f	class:MxHeap
+item	mesh_partition/heap/MxHeap.h	/^    const MxHeapable *item(uint i) const { return (*this)[i]; }$/;"	f	class:MxHeap
+item	mesh_partition/myheap.h	/^    MxHeapable *item(unsigned int i) { return data[i]; }$/;"	f	class:MxHeap
+item	mesh_partition/myheap.h	/^    const MxHeapable *item(unsigned int i) const { return data[i]; }$/;"	f	class:MxHeap
+iterator	mesh_partition/heap/MxBlock.h	/^    typedef value_type *iterator;$/;"	t	class:MxBlock
+kFaceCoefficient	mesh_partition/partition.h	/^    const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;$/;"	m	class:Partition
+kMinInnerEdgeNum	mesh_partition/partition.h	/^    const int kMinInnerEdgeNum = 10; \/\/ minimum inner edge number in a cluster after simplification$/;"	m	class:Partition
+kPI	mesh_partition/partition.cpp	/^const double kPI = 3.1415926;$/;"	v
+kPointCoefficient	mesh_partition/partition.h	/^    const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;$/;"	m	class:Partition
+last	mesh_partition/heap/MxDynBlock.h	/^    T& last() { return (*this)[last_id()]; }$/;"	f	class:MxDynBlock
+last	mesh_partition/heap/MxDynBlock.h	/^    const T& last() const { return (*this)[last_id()]; }$/;"	f	class:MxDynBlock
+last_clusters_in_swap_	mesh_partition/partition.h	/^    unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;$/;"	m	class:Partition
+last_id	mesh_partition/heap/MxDynBlock.h	/^    int last_id() const { return fill - 1; }$/;"	f	class:MxDynBlock
+left	mesh_partition/heap/MxHeap.h	/^    unsigned int left(unsigned int i) { return 2 * i + 1; }$/;"	f	class:MxHeap
+left	mesh_partition/myheap.h	/^    unsigned int left(unsigned int i) { return 2 * i + 1; }$/;"	f	class:MxHeap
+length	mesh_partition/heap/MxBlock.h	/^    int length() const { return N; }$/;"	f	class:MxBlock
+length	mesh_partition/heap/MxDynBlock.h	/^    int length() const { return fill; }$/;"	f	class:MxDynBlock
+length	mesh_partition/myheap.h	/^    unsigned int length() const {return static_cast<unsigned int>(data.size()); }$/;"	f	class:MxHeap
+line	mesh_partition/heap/mixmsg.h	/^    int line;$/;"	m	class:MxMsgInfo
+main	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^int main(argc, argv) int argc; char *argv[];$/;"	f
+main	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^void main() {}$/;"	f
+main	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^int main(int argc, char* argv[])$/;"	f
+main	mesh_partition/build/CMakeFiles/FindOpenMP/OpenMPCheckVersion.c	/^int main()$/;"	f
+main	mesh_partition/build/CMakeFiles/FindOpenMP/OpenMPCheckVersion.cpp	/^int main()$/;"	f
+main	mesh_partition/build/CMakeFiles/FindOpenMP/OpenMPTryFlag.c	/^int main() {$/;"	f
+main	mesh_partition/build/CMakeFiles/FindOpenMP/OpenMPTryFlag.cpp	/^int main() {$/;"	f
+main	mesh_partition/build/CMakeFiles/feature_tests.c	/^int main(int argc, char** argv) { (void)argv; return features[argc]; }$/;"	f
+main	mesh_partition/build/CMakeFiles/feature_tests.cxx	/^int main(int argc, char** argv) { (void)argv; return features[argc]; }$/;"	f
+main	mesh_partition/main.cpp	/^int main(int argc, char** argv)$/;"	f
+maxcoord_	mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
+mergeAdjacentPlanes	mesh_partition/partition.cpp	/^void Partition::mergeAdjacentPlanes()$/;"	f	class:Partition
+mergeClusters	mesh_partition/partition.cpp	/^void Partition::mergeClusters(int c1, int c2)$/;"	f	class:Partition
+mergeIslandClusters	mesh_partition/partition.cpp	/^void Partition::mergeIslandClusters()$/;"	f	class:Partition
+mergeIslandComponentsInCluster	mesh_partition/partition.cpp	/^void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)$/;"	f	class:Partition
+mergeOnce	mesh_partition/partition.cpp	/^bool Partition::mergeOnce()$/;"	f	class:Partition
+message	mesh_partition/heap/mixmsg.h	/^    const char *message;$/;"	m	class:MxMsgInfo
+mincoord_	mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
+mxmsg_handler	mesh_partition/heap/mixmsg.h	/^typedef bool (*mxmsg_handler)(MxMsgInfo *);$/;"	t
+n_	mesh_partition/qemquadrics.h	/^    int n_;  \/\/ not-in-use currently$/;"	m	class:QEMQuadrics
+nbr_clusters	mesh_partition/partition.h	/^        unordered_set<int> nbr_clusters;$/;"	m	struct:Partition::Cluster
+nbr_edges	mesh_partition/partition.h	/^        vector<Edge*> nbr_edges;$/;"	m	struct:Partition::Vertex
+nbr_faces	mesh_partition/partition.h	/^        unordered_set<int> nbr_faces;$/;"	m	struct:Partition::Face
+nbr_faces	mesh_partition/partition.h	/^        unordered_set<int> nbr_vertices, nbr_faces;$/;"	m	struct:Partition::Vertex
+nbr_vertices	mesh_partition/partition.h	/^        unordered_set<int> nbr_vertices, nbr_faces;$/;"	m	struct:Partition::Vertex
+new_face_num_	mesh_partition/partition.h	/^    int new_vertex_num_, new_face_num_;$/;"	m	class:Partition
+new_vertex_num_	mesh_partition/partition.h	/^    int new_vertex_num_, new_face_num_;$/;"	m	class:Partition
+normal_	mesh_partition/covariance.h	/^    Vector3d normal_;$/;"	m	class:CovObj
+not_in_heap	mesh_partition/heap/MxHeap.h	/^    inline void not_in_heap() { token = -47; }$/;"	f	class:MxHeapable
+not_in_heap	mesh_partition/myheap.h	/^    inline void not_in_heap() { token = -47; }$/;"	f	class:MxHeapable
+ompver_str	mesh_partition/build/CMakeFiles/FindOpenMP/OpenMPCheckVersion.c	/^const char ompver_str[] = { 'I', 'N', 'F', 'O', ':', 'O', 'p', 'e', 'n', 'M',$/;"	v
+ompver_str	mesh_partition/build/CMakeFiles/FindOpenMP/OpenMPCheckVersion.cpp	/^const char ompver_str[] = { 'I', 'N', 'F', 'O', ':', 'O', 'p', 'e', 'n', 'M',$/;"	v
+operator ()	mesh_partition/heap/MxBlock.h	/^    T &operator()(int i) { return (*this)[i]; }$/;"	f	class:MxBlock
+operator ()	mesh_partition/heap/MxBlock.h	/^    const T &operator()(int i) const { return (*this)[i]; }$/;"	f	class:MxBlock
+operator ()	mesh_partition/qemquadrics.h	/^    double operator()(const Vector3d& v) const { return evaluate(v); }$/;"	f	class:QEMQuadrics
+operator *=	mesh_partition/qemquadrics.h	/^    QEMQuadrics& operator*=(const double s)$/;"	f	class:QEMQuadrics
+operator +=	mesh_partition/covariance.cpp	/^CovObj &CovObj::operator+=(const CovObj &Q)$/;"	f	class:CovObj
+operator +=	mesh_partition/qemquadrics.h	/^    QEMQuadrics& operator+=(const QEMQuadrics& Q)$/;"	f	class:QEMQuadrics
+operator -=	mesh_partition/covariance.cpp	/^CovObj &CovObj::operator-=(const CovObj &Q)$/;"	f	class:CovObj
+operator -=	mesh_partition/qemquadrics.h	/^    QEMQuadrics& operator-=(const QEMQuadrics& Q)$/;"	f	class:QEMQuadrics
+operator =	mesh_partition/covariance.cpp	/^CovObj &CovObj::operator=(const CovObj &Q)$/;"	f	class:CovObj
+operator =	mesh_partition/qemquadrics.h	/^    QEMQuadrics& operator=(const QEMQuadrics& Q)$/;"	f	class:QEMQuadrics
+operator ==	mesh_partition/covariance.cpp	/^bool CovObj::operator==(const CovObj &Q)$/;"	f	class:CovObj
+operator T *	mesh_partition/heap/MxBlock.h	/^    operator T *() { return block; }$/;"	f	class:MxBlock
+operator []	mesh_partition/heap/MxBlock.h	/^    T &operator[](int i) { return block[i]; }$/;"	f	class:MxBlock
+operator []	mesh_partition/heap/MxBlock.h	/^    const T &operator[](int i) const { return block[i]; }$/;"	f	class:MxBlock
+operator const T *	mesh_partition/heap/MxBlock.h	/^    operator const T *() const { return block; }$/;"	f	class:MxBlock
+operator const T *	mesh_partition/heap/MxBlock.h	/^    operator const T *() { return block; }$/;"	f	class:MxBlock
+operator delete	mesh_partition/heap/MxBlock.h	/^inline void operator delete(void *mem, void *spot, _array_alloc_policy) {}$/;"	f
+operator new	mesh_partition/heap/MxBlock.h	/^inline void *operator new(size_t, void *p, _array_alloc_policy)$/;"	f
+optimize	mesh_partition/qemquadrics.cpp	/^bool QEMQuadrics::optimize(Vector3d& v, double& energy)$/;"	f	class:QEMQuadrics
+parent	mesh_partition/heap/MxHeap.h	/^    unsigned int parent(unsigned int i) { return (i - 1) \/ 2; }$/;"	f	class:MxHeap
+parent	mesh_partition/myheap.h	/^    unsigned int parent(unsigned int i) { return (i - 1) \/ 2; }$/;"	f	class:MxHeap
+place	mesh_partition/heap/MxHeap.cxx	/^inline void MxHeap::place(MxHeapable *x, unsigned int i)$/;"	f	class:MxHeap
+place	mesh_partition/myheap.h	/^    void place(MxHeapable *x, unsigned int i)$/;"	f	class:MxHeap
+pop	mesh_partition/myheap.h	/^    MxHeapable *pop() { return extract(); }$/;"	f	class:MxHeap
+printInBlue	common/tools.h	/^inline void printInBlue(const std::string& str)$/;"	f
+printInColor	common/tools.h	/^inline void printInColor(const std::string& str, const std::string& color)$/;"	f
+printInCyan	common/tools.h	/^inline void printInCyan(const std::string& str)$/;"	f
+printInGreen	common/tools.h	/^inline void printInGreen(const std::string& str)$/;"	f
+printInMagenta	common/tools.h	/^inline void printInMagenta(const std::string& str)$/;"	f
+printInRed	common/tools.h	/^inline void printInRed(const std::string& str)$/;"	f
+printInYellow	common/tools.h	/^inline void printInYellow(const std::string& str)$/;"	f
+printModelInfo	mesh_partition/partition.h	/^    void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }$/;"	f	class:Partition
+printProgressBar	common/tools.h	/^inline void printProgressBar(float progress)$/;"	f
+processIslandClusters	mesh_partition/partition.cpp	/^void Partition::processIslandClusters()$/;"	f	class:Partition
+pt	mesh_partition/partition.h	/^        Vector3d pt;$/;"	m	struct:Partition::Vertex
+push_back	mesh_partition/heap/MxDynBlock.h	/^    void push_back(const T& t) { add(t); }$/;"	f	class:MxDynBlock
+qnxnto	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
+qnxnto	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
+random1	mesh_partition/heap/gfx.h	/^  inline double random1() { return (double)rand() \/ (double)RAND_MAX; }$/;"	f
+random1	mesh_partition/heap/gfx.h	/^  inline double random1() { return (double)random() \/ (double)LONG_MAX; }$/;"	f
+random_byte	mesh_partition/heap/gfx.h	/^  inline char   random_byte() { return (char)(rand() & 0xff); }$/;"	f
+random_byte	mesh_partition/heap/gfx.h	/^  inline char   random_byte() { return (char)(random() & 0xff); }$/;"	f
+readClusterFile	mesh_partition/partition.cpp	/^bool Partition::readClusterFile(const std::string& filename)$/;"	f	class:Partition
+readPLY	mesh_partition/partition.cpp	/^bool Partition::readPLY(const std::string& filename)$/;"	f	class:Partition
+ref	mesh_partition/heap/MxHeap.cxx	14;"	d	file:
+releaseHeap	mesh_partition/partition.cpp	/^void Partition::releaseHeap()$/;"	f	class:Partition
+remove	mesh_partition/heap/MxDynBlock.h	/^    void remove(int i) { (*this)[i] = (*this)[--fill]; }$/;"	f	class:MxDynBlock
+remove	mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::remove(MxHeapable *t)$/;"	f	class:MxHeap
+remove	mesh_partition/myheap.h	/^    MxHeapable *remove(MxHeapable *t)$/;"	f	class:MxHeap
+removeEdgeFromList	mesh_partition/partition.cpp	/^bool Partition::removeEdgeFromList(Edge* edge, vector<Edge*>& edgelist)$/;"	f	class:Partition
+removeSmallClusters	mesh_partition/partition.cpp	/^void Partition::removeSmallClusters()$/;"	f	class:Partition
+remove_inorder	mesh_partition/heap/MxDynBlock.h	/^    void remove_inorder(int i) { memmove(&(*this)[i], &(*this)[i + 1], (--fill - i) * sizeof(T)); }$/;"	f	class:MxDynBlock
+reset	mesh_partition/heap/MxDynBlock.h	/^    void reset() { fill = 0; }$/;"	f	class:MxDynBlock
+reset	mesh_partition/qemquadrics.h	/^    void reset()$/;"	f	class:QEMQuadrics
+resize	mesh_partition/heap/MxBlock.h	/^    void resize(int n) { resize_block(n); }$/;"	f	class:MxBlock
+resize_block	mesh_partition/heap/MxBlock.h	/^    void resize_block(int n)$/;"	f	class:MxBlock
+right	mesh_partition/heap/MxHeap.h	/^    unsigned int right(unsigned int i) { return 2 * i + 2; }$/;"	f	class:MxHeap
+right	mesh_partition/myheap.h	/^    unsigned int right(unsigned int i) { return 2 * i + 2; }$/;"	f	class:MxHeap
+rint	mesh_partition/heap/gfx.h	/^inline double rint(double x) { return floor(x + 0.5); }$/;"	f
+room_for	mesh_partition/heap/MxDynBlock.h	/^    void room_for(int len)$/;"	f	class:MxDynBlock
+runMerging	mesh_partition/partition.cpp	/^bool Partition::runMerging()$/;"	f	class:Partition
+runPartitionPipeline	mesh_partition/partition.cpp	/^bool Partition::runPartitionPipeline()$/;"	f	class:Partition
+runPostProcessing	mesh_partition/partition.cpp	/^void Partition::runPostProcessing()$/;"	f	class:Partition
+runSimplification	mesh_partition/partition.cpp	/^void Partition::runSimplification()$/;"	f	class:Partition
+runSwapping	mesh_partition/partition.cpp	/^void Partition::runSwapping()$/;"	f	class:Partition
+run_mesh_simplification	mesh_partition/main.cpp	/^DECLARE_bool(run_mesh_simplification);$/;"	v
+run_post_processing	mesh_partition/main.cpp	/^DECLARE_bool(run_post_processing);$/;"	v
+setTargetClusterNum	mesh_partition/partition.h	/^    void setTargetClusterNum(int num) { target_cluster_num_ = num; }$/;"	f	class:Partition
+set_heap_pos	mesh_partition/heap/MxHeap.h	/^    inline void set_heap_pos(int t) { token = t; }$/;"	f	class:MxHeapable
+set_heap_pos	mesh_partition/myheap.h	/^    inline void set_heap_pos(int t) { token = t; }$/;"	f	class:MxHeapable
+severity	mesh_partition/heap/mixmsg.h	/^    MxSeverityLevel severity;$/;"	m	class:MxMsgInfo
+simplifyBorderEdges	mesh_partition/partition.cpp	/^void Partition::simplifyBorderEdges()$/;"	f	class:Partition
+simplifyInnerEdges	mesh_partition/partition.cpp	/^void Partition::simplifyInnerEdges()$/;"	f	class:Partition
+size	mesh_partition/heap/MxBlock.h	/^    int size() const { return length(); }$/;"	f	class:MxBlock
+size	mesh_partition/heap/MxDynBlock.h	/^    int size() const { return length(); }$/;"	f	class:MxDynBlock
+size	mesh_partition/heap/MxHeap.h	/^    unsigned int size() const { return length(); }$/;"	f	class:MxHeap
+size	mesh_partition/myheap.h	/^    unsigned int size() const { return static_cast<unsigned int>(data.size()); }$/;"	f	class:MxHeap
+size_	mesh_partition/covariance.h	/^    int size_;$/;"	m	class:CovObj
+splitCluster	mesh_partition/partition.cpp	/^int Partition::splitCluster(int cidx, vector<unordered_set<int>>& connected_components)$/;"	f	class:Partition
+streq	mesh_partition/heap/stdmix.h	/^inline bool streq(const char *a, const char *b) { return !strcmp(a,b); }$/;"	f
+swap	mesh_partition/heap/MxHeap.cxx	/^void MxHeap::swap(unsigned int i, unsigned int j)$/;"	f	class:MxHeap
+swap	mesh_partition/myheap.h	/^    void swap(unsigned int i, unsigned int j)$/;"	f	class:MxHeap
+swapOnce	mesh_partition/partition.cpp	/^int Partition::swapOnce()$/;"	f	class:Partition
+target_cluster_num_	mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
+to	mesh_partition/partition.h	/^        int face_id, from, to;$/;"	m	struct:Partition::SwapFace
+token	mesh_partition/heap/MxHeap.h	/^    int token;$/;"	m	class:MxHeapable
+token	mesh_partition/myheap.h	/^    int token;      \/\/ position in the heap$/;"	m	class:MxHeapable
+top	mesh_partition/heap/MxHeap.h	/^    MxHeapable *top() { return (length() < 1 ? (MxHeapable *)NULL : item(0)); }$/;"	f	class:MxHeap
+top	mesh_partition/myheap.h	/^    MxHeapable *top() { return (length() < 1 ? nullptr : data[0]); }$/;"	f	class:MxHeap
+total_energy_	mesh_partition/partition.h	/^    double total_energy_;$/;"	m	class:Partition
+total_space	mesh_partition/heap/MxDynBlock.h	/^    int total_space() const { return MxBlock<T>::length(); }$/;"	f	class:MxDynBlock
+traverseFaceBFS	mesh_partition/partition.cpp	/^int Partition::traverseFaceBFS(int start_fidx, int start_cidx, unordered_set<int>& component)$/;"	f	class:Partition
+uint	mesh_partition/heap/MxBlock.h	/^typedef unsigned int uint;$/;"	t
+uint	mesh_partition/heap/stdmix.h	/^typedef unsigned int uint;$/;"	t
+update	mesh_partition/heap/MxHeap.cxx	/^void MxHeap::update(MxHeapable *t, double v)$/;"	f	class:MxHeap
+update	mesh_partition/heap/MxHeap.h	/^    void update(MxHeapable *t) { update(t, t->heap_key()); }$/;"	f	class:MxHeap
+update	mesh_partition/myheap.h	/^    bool update(MxHeapable *t) { return update(t, t->heap_key()); }$/;"	f	class:MxHeap
+update	mesh_partition/myheap.h	/^    bool update(MxHeapable *t, double v)$/;"	f	class:MxHeap
+updateCurrentClusterNum	mesh_partition/partition.cpp	/^void Partition::updateCurrentClusterNum()$/;"	f	class:Partition
+updateNewMeshIndices	mesh_partition/partition.cpp	/^void Partition::updateNewMeshIndices()$/;"	f	class:Partition
+upheap	mesh_partition/heap/MxHeap.cxx	/^void MxHeap::upheap(unsigned int i)$/;"	f	class:MxHeap
+upheap	mesh_partition/myheap.h	/^    void upheap(unsigned int i)$/;"	f	class:MxHeap
+ushort	mesh_partition/heap/stdmix.h	/^typedef unsigned short ushort;$/;"	t
+v1	mesh_partition/partition.h	/^        int v1, v2;$/;"	m	struct:Partition::Edge
+v2	mesh_partition/partition.h	/^        int v1, v2;$/;"	m	struct:Partition::Edge
+value_type	mesh_partition/heap/MxBlock.h	/^    typedef T value_type;$/;"	t	class:MxBlock
+varray_find	mesh_partition/heap/MxDynBlock.h	/^inline bool varray_find(const MxDynBlock<T>& A, const T& t, uint* index = NULL)$/;"	f
+vertex_num_	mesh_partition/partition.h	/^    int vertex_num_, face_num_;$/;"	m	class:Partition
+vertices_	mesh_partition/partition.h	/^    vector<Vertex> vertices_;$/;"	m	class:Partition
+vidx_old2new_	mesh_partition/partition.h	/^    unordered_map<int, int> vidx_old2new_; \/\/ original vertex indices -> new mesh indices (after removing some faces)$/;"	m	class:Partition
+volatile	mesh_partition/build/CMakeFiles/3.10.2/CompilerIdC/CMakeCCompilerId.c	11;"	d	file:
+writeClusterFile	mesh_partition/partition.cpp	/^void Partition::writeClusterFile(const std::string& filename)$/;"	f	class:Partition
+writePLY	mesh_partition/partition.cpp	/^bool Partition::writePLY(const std::string& filename)$/;"	f	class:Partition
+~MxBlock	mesh_partition/heap/MxBlock.h	/^    ~MxBlock() { free_block(); }$/;"	f	class:MxBlock
+~Partition	mesh_partition/partition.cpp	/^Partition::~Partition()$/;"	f	class:Partition
