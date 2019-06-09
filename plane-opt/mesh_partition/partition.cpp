@@ -566,18 +566,17 @@ bool Partition::readClusterFile(const std::string& filename)
 
 bool Partition::runPartitionPipeline()
 {
-    printInGreen("Mesh partition by merging neighbor faces:");
     if (!runMerging())
         return false;
 
     if (FLAGS_swapping_loop_num > 0)
     {
-        printInGreen("(Optional) A further optimization by swapping border faces between clusters:");
+        printInCyan("(Optional) A further optimization by swapping border faces between clusters:");
         runSwapping();
     }
     if (FLAGS_run_post_processing)
     {
-        printInGreen("Post processing: merge neighbor clusters:");
+        printInCyan("Post processing: merge neighbor clusters:");
         printInCyan("#Clusters before merging: " + std::to_string(curr_cluster_num_));
         runPostProcessing();
         printInCyan("#Clusters after merging: " + std::to_string(curr_cluster_num_));
@@ -607,7 +606,7 @@ bool Partition::runMerging()
         // Special case: sometimes all existing clusters have no neighbors (like floating faces)
         if (heap_.size() == 0)
         {
-            printInMagenta("WARNING: Now heap is empty, but still not reaching the target cluster number. ");
+            printInRed("WARNING: Now heap is empty, but still not reaching the target cluster number. ");
             break;
         }
         count++;
@@ -739,7 +738,7 @@ bool Partition::removeEdgeFromList(Edge* edge, vector<Edge*>& edgelist)
         Edge* e = *iter;
         if (e == nullptr || e == edge)
         {
-            iter = edgelist.erase(iter); // iter will be the next position after erasion
+            iter = edgelist.erase(iter);  // iter will be the next position after erasion
             flag_found_edge = true;
         }
         else
@@ -885,8 +884,12 @@ void Partition::runSwapping()
     {
         int count_swap_faces = swapOnce();
         curr_energy = getTotalEnergy();
-        cout << "Energy " << iter << ": " << curr_energy * scale << ", #Swapped faces: " << count_swap_faces << endl;
+        bool flag_quit_loop = false;
         if ((last_energy - curr_energy) / last_energy < 1e-10 || count_swap_faces == 0)
+            flag_quit_loop = true;
+        if (flag_quit_loop || iter % 10 == 0)
+            cout << "Energy " << iter << ": " << curr_energy * scale << ", #Swapped faces: " << count_swap_faces << endl;
+        if (flag_quit_loop)
             break;
         last_energy = curr_energy;
     }
@@ -1196,9 +1199,11 @@ void Partition::runPostProcessing()
 
     // Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
     if (flag_new_mesh_ && !FLAGS_run_mesh_simplification)
+    {
+        // If running mesh simplification later, the following two steps will also be run later.
         updateNewMeshIndices();
-
-    updateCurrentClusterNum();
+        updateCurrentClusterNum();
+    }
 }
 
 //! Merge adjacent planes together by starting from one plane and spead to its neighbors as long as
