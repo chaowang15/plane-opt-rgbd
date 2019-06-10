@@ -73,15 +73,10 @@ int main(int argc, char** argv)
         printInGreen("Run mesh simplification...");
         partition.runSimplification();
     }
-
     printInGreen("Final cluster number: " + std::to_string(partition.getCurrentClusterNum()));
-
     auto end = std::chrono::steady_clock::now();
     double delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
     printInRed("Time: " + std::to_string(delta));
-
-
-
     if (flag_success)
     {
         cout << "Write ply file: " << out_ply_fname << endl;

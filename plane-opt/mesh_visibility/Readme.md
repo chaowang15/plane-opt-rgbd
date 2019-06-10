@@ -43,9 +43,9 @@ mesh_visibility -r ~/dev/mesh.ply ~/dev/poses/ ~/dev/output/ 0 1000
 
 ## Data
 - Color and depth images are saved in PNG format. The depth image is 16UC1 image, and each depth value in millimeter is scaled by 5.0 for better rendering. For instance, a depth value 1000mm is saved as 5000 in the image.
-- Vertex visibility data is saved **in binary** in a `frame-XXXXXX.visibility.txt` file. Data in each visibility file contains N+1 32-bit integers, where the first integer is the number of visible vertices, while the following N integers are indices of visible vertices. See `RGBDMesh::saveVisibleVertices2Binary()` in `rgbdmesh.cpp` for details.
+- Vertex visibility data is saved **in binary** in a `frame-XXXXXX.visibility.txt` file. Data in each visibility file contains N+1 32-bit integers, where the first integer is the number of visible vertices, while the following N integers are indices of visible vertices. See `MeshVisibility::saveVisibleVertices2Binary()` in `mesh_visibility.cpp` for details.
 
 ## Note
 - A typical input data for this code can be found from [BundleFusion](http://graphics.stanford.edu/projects/bundlefusion/) or [3DLite](http://graphics.stanford.edu/projects/3dlite/) data, which contains reconstructed PLY model and camera pose files for each RGB-D sequence.
-- Default image size is 640x480 and set as constants. You can change it in `rgbdmesh.h`.
+- Default image size is 640x480 and set as constants. You can change it in `mesh_visibility.h`.
 - If you find the code cannot render face textures (from OBJ model) into images, one possible reason is that graphics memory is not enough to save large texture images.

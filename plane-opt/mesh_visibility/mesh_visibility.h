@@ -1,5 +1,5 @@
-#ifndef MESH_H
-#define MESH_H
+#ifndef MESH_VISIBILITY_H
+#define MESH_VISIBILITY_H
 
 #include <iostream>
 #include <string>
@@ -33,7 +33,7 @@ struct Vertex
 	Vertex(){pos = color = glm::vec3(0);}
 };
 
-class RGBDMesh
+class MeshVisibility
 {
 public:
 	/* Model parameters */
@@ -68,8 +68,8 @@ public:
 	unordered_map<string, int> material_names_;
 
 public:
-	RGBDMesh();
-	~RGBDMesh();
+	MeshVisibility();
+	~MeshVisibility();
 
 	/* Rendering functions */
 	void initModelDataBuffer();
@@ -80,8 +80,8 @@ public:
 	bool readPLY(const string filename);
 	bool readOBJ(const string filename);
 	bool readMTLandTextureImages(const string filename);
-	void readCameraPoses(const string filepath, int start_fidx, int end_fidx);
-	void readCameraIntrinsicsFile(const string filepath);
+	bool readCameraPoses(const string filepath, int start_fidx, int end_fidx);
+	bool readCameraIntrinsicsFile(const string filepath);
 	void saveColor2PNG(const string filename);
 	void saveDepth2PNG(const string filename);
 	void saveVisibleVertices2Binary(const string filename);

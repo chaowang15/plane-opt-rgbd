@@ -26,7 +26,7 @@ Cluster	plane-opt/mesh_partition/partition.h	/^    struct Cluster$/;"	s	class:Pa
 CovObj	plane-opt/mesh_partition/covariance.cpp	/^CovObj::CovObj()$/;"	f	class:CovObj
 CovObj	plane-opt/mesh_partition/covariance.cpp	/^CovObj::CovObj(const Vector3d &v1, const Vector3d &v2, const Vector3d &v3)$/;"	f	class:CovObj
 CovObj	plane-opt/mesh_partition/covariance.h	/^class CovObj$/;"	c
-EBO_	plane-opt/mesh_visibility/rgbdmesh.h	/^	unsigned int VAO_, VBO_, EBO_;$/;"	m	class:RGBDMesh
+EBO_	plane-opt/mesh_visibility/mesh_visibility.h	/^	unsigned int VAO_, VBO_, EBO_;$/;"	m	class:MeshVisibility
 Edge	plane-opt/mesh_partition/partition.h	/^        Edge(int a, int b) : v1(a), v2(b) {}$/;"	f	struct:Partition::Edge
 Edge	plane-opt/mesh_partition/partition.h	/^    struct Edge : public MxHeapable$/;"	s	class:Partition
 FEQ	plane-opt/mesh_partition/heap/gfx.h	/^inline bool  FEQ(double a, double b, double e=FEQ_EPS)  {return fabs(a-b)<e;}$/;"	f
@@ -780,12 +780,12 @@ HAVE_SSTREAM	plane-opt/mesh_partition/heap/config-vc.h	37;"	d
 HAVE_VALARRAY	plane-opt/mesh_partition/heap/config-vc.h	34;"	d
 HUGE	plane-opt/mesh_partition/heap/gfx.h	56;"	d
 INVALID_OGL_VALUE	plane-opt/mesh_visibility/gl_util.h	43;"	d
-LoadShaders	plane-opt/mesh_visibility/shader.h	/^	void LoadShaders(const char * vertex_file_path, const char * fragment_file_path)$/;"	f	class:Shader
+LoadShaders	plane-opt/mesh_visibility/shader.h	/^    void LoadShaders(const char *vertex_file_path, const char *fragment_file_path)$/;"	f	class:Shader
 MAX	plane-opt/mesh_partition/heap/gfx.h	45;"	d
 MAX	plane-opt/mesh_partition/heap/gfx.h	48;"	d
 MAX	plane-opt/mesh_partition/heap/stdmix.h	40;"	d
 MAX	plane-opt/mesh_partition/heap/stdmix.h	44;"	d
-MESH_H	plane-opt/mesh_visibility/rgbdmesh.h	2;"	d
+MESH_VISIBILITY_H	plane-opt/mesh_visibility/mesh_visibility.h	2;"	d
 MIN	plane-opt/mesh_partition/heap/gfx.h	44;"	d
 MIN	plane-opt/mesh_partition/heap/gfx.h	47;"	d
 MIN	plane-opt/mesh_partition/heap/stdmix.h	37;"	d
@@ -804,6 +804,8 @@ MXMSG_NOTE	plane-opt/mesh_partition/heap/mixmsg.h	/^    MXMSG_NOTE,$/;"	e	enum:M
 MXMSG_TRACE	plane-opt/mesh_partition/heap/mixmsg.h	/^    MXMSG_TRACE$/;"	e	enum:MxSeverityLevel
 MXMSG_WARN	plane-opt/mesh_partition/heap/mixmsg.h	/^    MXMSG_WARN,$/;"	e	enum:MxSeverityLevel
 M_PI	plane-opt/mesh_partition/heap/gfx.h	52;"	d
+MeshVisibility	plane-opt/mesh_visibility/mesh_visibility.cpp	/^MeshVisibility::MeshVisibility()$/;"	f	class:MeshVisibility
+MeshVisibility	plane-opt/mesh_visibility/mesh_visibility.h	/^class MeshVisibility$/;"	c
 MxBlock	plane-opt/mesh_partition/heap/MxBlock.h	/^    MxBlock() {}$/;"	f	class:MxBlock
 MxBlock	plane-opt/mesh_partition/heap/MxBlock.h	/^    MxBlock(int n) { init_block(n); }$/;"	f	class:MxBlock
 MxBlock	plane-opt/mesh_partition/heap/MxBlock.h	/^class MxBlock$/;"	c
@@ -853,8 +855,6 @@ R	plane-opt/mesh_visibility/glm/glm/gtx/simd_vec4.hpp	/^		R = 0,$/;"	e	enum:glm:
 RANDOM	plane-opt/mesh_visibility/gl_util.h	36;"	d
 RANDOM	plane-opt/mesh_visibility/gl_util.h	40;"	d
 RENDER_MODEL	plane-opt/mesh_visibility/main.cpp	/^    RENDER_MODEL = 0,$/;"	e	enum:ProgramMode	file:
-RGBDMesh	plane-opt/mesh_visibility/rgbdmesh.cpp	/^RGBDMesh::RGBDMesh()$/;"	f	class:RGBDMesh
-RGBDMesh	plane-opt/mesh_visibility/rgbdmesh.h	/^class RGBDMesh$/;"	c
 S	plane-opt/mesh_visibility/glm/glm/gtx/simd_vec4.hpp	/^		S = 0,$/;"	e	enum:glm::comp
 SAFETY	plane-opt/mesh_partition/heap/stdmix.h	72;"	d
 SAFE_DELETE	plane-opt/mesh_visibility/gl_util.h	45;"	d
@@ -871,7 +871,7 @@ SRANDOM	plane-opt/mesh_visibility/gl_util.h	41;"	d
 STDMIX_INCLUDED	plane-opt/mesh_partition/heap/stdmix.h	2;"	d
 SanityCheck	plane-opt/mesh_partition/heap/stdmix.h	93;"	d
 SanityCheck	plane-opt/mesh_partition/heap/stdmix.h	96;"	d
-Shader	plane-opt/mesh_visibility/shader.h	/^	Shader(){}$/;"	f	class:Shader
+Shader	plane-opt/mesh_visibility/shader.h	/^    Shader() {}$/;"	f	class:Shader
 Shader	plane-opt/mesh_visibility/shader.h	/^class Shader$/;"	c
 Stub	plane-opt/mesh_visibility/glm/glm/detail/_swizzle.hpp	/^		struct Stub {};$/;"	s	struct:glm::detail::_swizzle_base2
 SwapFace	plane-opt/mesh_partition/partition.h	/^        SwapFace(int v, int f, int t)$/;"	f	struct:Partition::SwapFace
@@ -879,12 +879,12 @@ SwapFace	plane-opt/mesh_partition/partition.h	/^    struct SwapFace$/;"	s	class:
 T	plane-opt/mesh_visibility/glm/glm/gtx/simd_vec4.hpp	/^		T = 1,$/;"	e	enum:glm::comp
 TIMING	plane-opt/mesh_partition/heap/gfx.h	88;"	d
 TOOLS_H	plane-opt/common/tools.h	2;"	d
-VAO_	plane-opt/mesh_visibility/rgbdmesh.h	/^	unsigned int VAO_, VBO_, EBO_;$/;"	m	class:RGBDMesh
-VBO_	plane-opt/mesh_visibility/rgbdmesh.h	/^	unsigned int VAO_, VBO_, EBO_;$/;"	m	class:RGBDMesh
+VAO_	plane-opt/mesh_visibility/mesh_visibility.h	/^	unsigned int VAO_, VBO_, EBO_;$/;"	m	class:MeshVisibility
+VBO_	plane-opt/mesh_visibility/mesh_visibility.h	/^	unsigned int VAO_, VBO_, EBO_;$/;"	m	class:MeshVisibility
 Vertex	plane-opt/mesh_partition/partition.h	/^        Vertex() : is_valid(false), cluster_id(-1) {}$/;"	f	struct:Partition::Vertex
 Vertex	plane-opt/mesh_partition/partition.h	/^    struct Vertex$/;"	s	class:Partition
-Vertex	plane-opt/mesh_visibility/rgbdmesh.h	/^	Vertex(){pos = color = glm::vec3(0);}$/;"	f	struct:Vertex
-Vertex	plane-opt/mesh_visibility/rgbdmesh.h	/^struct Vertex$/;"	s
+Vertex	plane-opt/mesh_visibility/mesh_visibility.h	/^	Vertex(){pos = color = glm::vec3(0);}$/;"	f	struct:Vertex
+Vertex	plane-opt/mesh_visibility/mesh_visibility.h	/^struct Vertex$/;"	s
 VertexCount	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^std::size_t const VertexCount = 4;$/;"	m	class:std	file:
 W	plane-opt/mesh_partition/heap/stdmix.h	/^enum Axis {X=0, Y=1, Z=2, W=3};$/;"	e	enum:Axis
 W	plane-opt/mesh_visibility/glm/glm/gtx/simd_vec4.hpp	/^		W = 3,$/;"	e	enum:glm::comp
@@ -1017,7 +1017,7 @@ call	plane-opt/mesh_visibility/glm/glm/detail/_vectorize.hpp	/^		GLM_FUNC_QUALIF
 call	plane-opt/mesh_visibility/glm/glm/detail/_vectorize.hpp	/^		GLM_FUNC_QUALIFIER static tvec4<R, P> call(R (*Func) (T x), tvec4<T, P> const & v)$/;"	f	struct:glm::detail::functor1
 call	plane-opt/mesh_visibility/glm/glm/detail/_vectorize.hpp	/^		GLM_FUNC_QUALIFIER static tvec4<T, P> call(T (*Func) (T x, T y), tvec4<T, P> const & a, T b)$/;"	f	struct:glm::detail::functor2_vec_sca
 call	plane-opt/mesh_visibility/glm/glm/detail/_vectorize.hpp	/^		GLM_FUNC_QUALIFIER static tvec4<T, P> call(T (*Func) (T x, T y), tvec4<T, P> const & a, tvec4<T, P> const & b)$/;"	f	struct:glm::detail::functor2
-camera_initial_center_	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::vec3 camera_initial_center_;$/;"	m	class:RGBDMesh
+camera_initial_center_	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec3 camera_initial_center_;$/;"	m	class:MeshVisibility
 center_	plane-opt/mesh_partition/covariance.h	/^    Vector3d center_;$/;"	m	class:CovObj
 center_	plane-opt/mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
 char_type	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			typedef CTy char_type;$/;"	t	class:glm::io::format_punct
@@ -1043,7 +1043,7 @@ col_type	plane-opt/mesh_visibility/glm/glm/detail/type_mat4x3.hpp	/^		typedef tv
 col_type	plane-opt/mesh_visibility/glm/glm/detail/type_mat4x4.hpp	/^		typedef tvec4<T, P> col_type;$/;"	t	struct:glm::tmat4x4
 color	plane-opt/mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Cluster
 color	plane-opt/mesh_partition/partition.h	/^        Vector3f color;$/;"	m	struct:Partition::Vertex
-color	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::vec3 color; \/\/ color$/;"	m	struct:Vertex
+color	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec3 color; \/\/ color$/;"	m	struct:Vertex
 cols	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x2.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t cols = 2;$/;"	m	struct:glm::tmat2x2
 cols	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x3.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t cols = 2;$/;"	m	struct:glm::tmat2x3
 cols	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x4.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t cols = 2;$/;"	m	struct:glm::tmat2x4
@@ -1072,16 +1072,16 @@ components	plane-opt/mesh_visibility/glm/glm/detail/type_vec3.hpp	/^			static GL
 components	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t components = 4;$/;"	m	struct:glm::tvec4
 components	plane-opt/mesh_visibility/glm/glm/gtc/quaternion.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t components = 4;$/;"	m	struct:glm::tquat
 components	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t components = 2;$/;"	m	struct:glm::tdualquat
-compute3DpointFromDepth	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::vec4 compute3DpointFromDepth(int row, int col, float depth){$/;"	f	class:RGBDMesh
+compute3DpointFromDepth	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec4 compute3DpointFromDepth(int row, int col, float depth){$/;"	f	class:MeshVisibility
 computeAvgDisBtwTwoPlanes	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeAvgDisBtwTwoPlanes(int c1, int c2)$/;"	f	class:Partition
 computeEdgeEnergy	plane-opt/mesh_partition/partition.cpp	/^void Partition::computeEdgeEnergy(Edge* edge)$/;"	f	class:Partition
 computeMaxDisBetweenTwoPlanes	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection)$/;"	f	class:Partition
 computeNormal	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^glm::vec3 computeNormal$/;"	f
-computePerspectiveMatrix	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::computePerspectiveMatrix()$/;"	f	class:RGBDMesh
+computePerspectiveMatrix	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::computePerspectiveMatrix()$/;"	f	class:MeshVisibility
 computePlaneNormal	plane-opt/mesh_partition/covariance.cpp	/^void CovObj::computePlaneNormal()$/;"	f	class:CovObj
 computeSwapDeltaEnergy	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeSwapDeltaEnergy(int fidx, int from, int to)$/;"	f	class:Partition
-computeTransformation	plane-opt/mesh_visibility/rgbdmesh.cpp	/^glm::mat4 RGBDMesh::computeTransformation()$/;"	f	class:RGBDMesh
-computeTransformationForFrame	plane-opt/mesh_visibility/rgbdmesh.cpp	/^glm::mat4 RGBDMesh::computeTransformationForFrame(int frame_idx)$/;"	f	class:RGBDMesh
+computeTransformation	plane-opt/mesh_visibility/mesh_visibility.cpp	/^glm::mat4 MeshVisibility::computeTransformation()$/;"	f	class:MeshVisibility
+computeTransformationForFrame	plane-opt/mesh_visibility/mesh_visibility.cpp	/^glm::mat4 MeshVisibility::computeTransformationForFrame(int frame_idx)$/;"	f	class:MeshVisibility
 const_iterator	plane-opt/mesh_partition/heap/MxBlock.h	/^    typedef value_type *const_iterator;$/;"	t	class:MxBlock
 const_pointer	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^		typedef TYPE<VALTYPE> const * const_pointer;$/;"	t	struct:glm::detail::genType
 const_pointer_const	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^		typedef TYPE<VALTYPE> const * const const_pointer_const;$/;"	t	struct:glm::detail::genType
@@ -1099,16 +1099,16 @@ ctor	plane-opt/mesh_visibility/glm/glm/detail/setup.hpp	/^	enum ctor{uninitializ
 ctor	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^		enum ctor{null};$/;"	g	struct:glm::detail::genType
 curr_cluster_num_	plane-opt/mesh_partition/partition.h	/^    int init_cluster_num_, curr_cluster_num_, target_cluster_num_;$/;"	m	class:Partition
 curr_edge_num_	plane-opt/mesh_partition/partition.h	/^    int curr_edge_num_;$/;"	m	class:Partition
-cx_	plane-opt/mesh_visibility/rgbdmesh.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:RGBDMesh
-cy_	plane-opt/mesh_visibility/rgbdmesh.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:RGBDMesh
+cx_	plane-opt/mesh_visibility/mesh_visibility.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:MeshVisibility
+cy_	plane-opt/mesh_visibility/mesh_visibility.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:MeshVisibility
 data	plane-opt/mesh_partition/myheap.h	/^    std::vector<MxHeapable *> data;  \/\/ we keep the pointers in the heap$/;"	m	class:MxHeap
 data	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^				typename detail::simd_data<T, P>::type data;$/;"	m	union:glm::tvec4::__anon1
 ddualquat	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^	typedef highp_ddualquat			ddualquat;$/;"	t	namespace:glm
 ddualquat	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^	typedef lowp_ddualquat			ddualquat;$/;"	t	namespace:glm
 ddualquat	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^	typedef mediump_ddualquat		ddualquat;$/;"	t	namespace:glm
-deallocate	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::deallocate()$/;"	f	class:RGBDMesh
+deallocate	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::deallocate()$/;"	f	class:MeshVisibility
 defaultp	plane-opt/mesh_visibility/glm/glm/detail/precision.hpp	/^		defaultp = highp$/;"	e	enum:glm::precision
-deleteProgram	plane-opt/mesh_visibility/shader.h	/^	void deleteProgram()$/;"	f	class:Shader
+deleteProgram	plane-opt/mesh_visibility/shader.h	/^    void deleteProgram() { glDeleteProgram(programID_); }$/;"	f	class:Shader
 delim_left	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			char_type  delim_left;$/;"	m	class:glm::io::format_punct
 delim_right	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			char_type  delim_right;$/;"	m	class:glm::io::format_punct
 delimeter	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^		struct delimeter$/;"	s	namespace:glm::io
@@ -1187,7 +1187,7 @@ downheap	plane-opt/mesh_partition/myheap.h	/^    void downheap(unsigned int i)$/
 dquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef highp_dquat			dquat;$/;"	t	namespace:glm
 dquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef lowp_dquat			dquat;$/;"	t	namespace:glm
 dquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef mediump_dquat		dquat;$/;"	t	namespace:glm
-draw	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::draw()$/;"	f	class:RGBDMesh
+draw	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::draw()$/;"	f	class:MeshVisibility
 drop	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    T& drop() { return (*this)[--fill]; }$/;"	f	class:MxDynBlock
 drop	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void drop(int d) { fill -= d; }$/;"	f	class:MxDynBlock
 dual	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^		glm::tquat<T, P> real, dual;$/;"	m	struct:glm::tdualquat
@@ -1222,7 +1222,7 @@ energy	plane-opt/mesh_partition/partition.h	/^        double energy;            
 evaluate	plane-opt/mesh_partition/qemquadrics.cpp	/^double QEMQuadrics::evaluate(const Vector3d& v) const$/;"	f	class:QEMQuadrics
 extract	plane-opt/mesh_partition/heap/MxHeap.cxx	/^MxHeapable *MxHeap::extract()$/;"	f	class:MxHeap
 extract	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *extract()$/;"	f	class:MxHeap
-extractImageBuffer	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::extractImageBuffer()$/;"	f	class:RGBDMesh
+extractImageBuffer	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::extractImageBuffer()$/;"	f	class:MeshVisibility
 f32	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef highp_float32_t f32;$/;"	t	namespace:glm
 f32	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef lowp_f32 f32;$/;"	t	namespace:glm
 f32	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef mediump_float32 f32;$/;"	t	namespace:glm
@@ -1375,10 +1375,10 @@ f64vec4	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef mediump_f64vec4			f
 f64vec4	plane-opt/mesh_visibility/glm/glm/gtc/type_precision.hpp	/^	typedef tvec4<f64, defaultp> f64vec4;$/;"	t	namespace:glm
 face_id	plane-opt/mesh_partition/partition.h	/^        int face_id, from, to;$/;"	m	struct:Partition::SwapFace
 face_num_	plane-opt/mesh_partition/partition.h	/^    int vertex_num_, face_num_;$/;"	m	class:Partition
-face_num_	plane-opt/mesh_visibility/rgbdmesh.h	/^	int face_num_;$/;"	m	class:RGBDMesh
+face_num_	plane-opt/mesh_visibility/mesh_visibility.h	/^	int face_num_;$/;"	m	class:MeshVisibility
 faces	plane-opt/mesh_partition/partition.h	/^        unordered_set<int> faces;  \/\/ faces each cluster contains$/;"	m	struct:Partition::Cluster
 faces_	plane-opt/mesh_partition/partition.h	/^    vector<Face> faces_;$/;"	m	class:Partition
-faces_	plane-opt/mesh_visibility/rgbdmesh.h	/^	vector<unsigned int> faces_;$/;"	m	class:RGBDMesh
+faces_	plane-opt/mesh_visibility/mesh_visibility.h	/^	vector<unsigned int> faces_;$/;"	m	class:MeshVisibility
 faces_to_swap	plane-opt/mesh_partition/partition.h	/^        vector<SwapFace> faces_to_swap;$/;"	m	struct:Partition::Cluster
 fade	plane-opt/mesh_visibility/glm/glm/detail/_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec2<T, P> fade(tvec2<T, P> const & t)$/;"	f	namespace:glm::detail
 fade	plane-opt/mesh_visibility/glm/glm/detail/_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec3<T, P> fade(tvec3<T, P> const & t)$/;"	f	namespace:glm::detail
@@ -1397,8 +1397,8 @@ findClusterNeighbors	plane-opt/mesh_partition/partition.cpp	/^int Partition::fin
 findInnerAndBorderEdges	plane-opt/mesh_partition/partition.cpp	/^void Partition::findInnerAndBorderEdges()$/;"	f	class:Partition
 flag_new_mesh_	plane-opt/mesh_partition/partition.h	/^    bool flag_new_mesh_;  \/\/ true if removing some faces\/vertices\/clusters; false by default$/;"	m	class:Partition
 flag_read_cluster_file_	plane-opt/mesh_partition/partition.h	/^    bool flag_read_cluster_file_;$/;"	m	class:Partition
-flag_vtx_normal_	plane-opt/mesh_visibility/rgbdmesh.h	/^	bool flag_vtx_normal_, flag_vtx_texture_;$/;"	m	class:RGBDMesh
-flag_vtx_texture_	plane-opt/mesh_visibility/rgbdmesh.h	/^	bool flag_vtx_normal_, flag_vtx_texture_;$/;"	m	class:RGBDMesh
+flag_vtx_normal_	plane-opt/mesh_visibility/mesh_visibility.h	/^	bool flag_vtx_normal_, flag_vtx_texture_;$/;"	m	class:MeshVisibility
+flag_vtx_texture_	plane-opt/mesh_visibility/mesh_visibility.h	/^	bool flag_vtx_normal_, flag_vtx_texture_;$/;"	m	class:MeshVisibility
 flags_	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			flags_type      flags_;$/;"	m	class:glm::io::basic_state_saver
 flags_type	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			typedef ::std::ios_base::fmtflags      flags_type;$/;"	t	class:glm::io::basic_state_saver
 float1	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	typedef float						float1;			\/\/!< \\brief single-precision floating-point vector with 1 component. (From GLM_GTX_compatibility extension)$/;"	t	namespace:glm
@@ -1493,7 +1493,7 @@ fquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef highp_fquat				fquat;
 fquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef lowp_f32quat			fquat;$/;"	t	namespace:glm
 fquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef mediump_f32quat			fquat;$/;"	t	namespace:glm
 fquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef quat				fquat;$/;"	t	namespace:glm
-frame_num_	plane-opt/mesh_visibility/rgbdmesh.h	/^	int frame_num_;$/;"	m	class:RGBDMesh
+frame_num_	plane-opt/mesh_visibility/mesh_visibility.h	/^	int frame_num_;$/;"	m	class:MeshVisibility
 framebuffer_size_callback	plane-opt/mesh_visibility/main.cpp	/^void framebuffer_size_callback(GLFWwindow* window, int width, int height)$/;"	f
 free_block	plane-opt/mesh_partition/heap/MxBlock.h	/^    void free_block()$/;"	f	class:MxBlock
 from	plane-opt/mesh_partition/partition.h	/^        int face_id, from, to;$/;"	m	struct:Partition::SwapFace
@@ -1529,8 +1529,8 @@ fvec4	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef highp_f32vec4			fvec4
 fvec4	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef lowp_f32vec4			fvec4;$/;"	t	namespace:glm
 fvec4	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef mediump_f32vec4			fvec4;$/;"	t	namespace:glm
 fvec4	plane-opt/mesh_visibility/glm/glm/gtc/type_precision.hpp	/^	typedef tvec4<float, defaultp> fvec4;$/;"	t	namespace:glm
-fx_	plane-opt/mesh_visibility/rgbdmesh.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:RGBDMesh
-fy_	plane-opt/mesh_visibility/rgbdmesh.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:RGBDMesh
+fx_	plane-opt/mesh_visibility/mesh_visibility.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:MeshVisibility
+fy_	plane-opt/mesh_visibility/mesh_visibility.h	/^	float fx_, fy_, cx_, cy_; \/\/ intrinsic parameters$/;"	m	class:MeshVisibility
 g	plane-opt/mesh_visibility/glm/glm/detail/type_vec2.hpp	/^				struct{ T r, g; };$/;"	m	struct:glm::tvec2::__anon18::__anon20
 g	plane-opt/mesh_visibility/glm/glm/detail/type_vec2.hpp	/^			union {T y, g, t;};$/;"	m	union:glm::tvec2::__anon23
 g	plane-opt/mesh_visibility/glm/glm/detail/type_vec3.hpp	/^				struct{ T r, g, b; };$/;"	m	struct:glm::tvec3::__anon11::__anon13
@@ -1540,11 +1540,11 @@ g	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^			union { T y, g, t;
 genType	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^	struct genType$/;"	s	namespace:glm::detail
 getCommonNeighborNum	plane-opt/mesh_partition/partition.cpp	/^int Partition::getCommonNeighborNum(int v1, int v2)$/;"	f	class:Partition
 getCurrentClusterNum	plane-opt/mesh_partition/partition.h	/^    int getCurrentClusterNum() { return curr_cluster_num_; }$/;"	f	class:Partition
-getDepthValue	plane-opt/mesh_visibility/rgbdmesh.h	/^	float getDepthValue(int row, int col){$/;"	f	class:RGBDMesh
+getDepthValue	plane-opt/mesh_visibility/mesh_visibility.h	/^	float getDepthValue(int row, int col){$/;"	f	class:MeshVisibility
 getEdge	plane-opt/mesh_partition/partition.h	/^    inline void getEdge(const long long& key, int& v1, int& v2)$/;"	f	class:Partition
-getFilename	plane-opt/mesh_visibility/rgbdmesh.h	/^	inline string getFilename(int frame_idx){$/;"	f	class:RGBDMesh
-getOriginalVtxIdx	plane-opt/mesh_visibility/rgbdmesh.h	/^	int getOriginalVtxIdx(int pixel_idx){$/;"	f	class:RGBDMesh
-getOriginalVtxIdx	plane-opt/mesh_visibility/rgbdmesh.h	/^	int getOriginalVtxIdx(int row, int col){$/;"	f	class:RGBDMesh
+getFilename	plane-opt/mesh_visibility/mesh_visibility.h	/^	inline string getFilename(int frame_idx){$/;"	f	class:MeshVisibility
+getOriginalVtxIdx	plane-opt/mesh_visibility/mesh_visibility.h	/^	int getOriginalVtxIdx(int pixel_idx){$/;"	f	class:MeshVisibility
+getOriginalVtxIdx	plane-opt/mesh_visibility/mesh_visibility.h	/^	int getOriginalVtxIdx(int row, int col){$/;"	f	class:MeshVisibility
 getTotalEnergy	plane-opt/mesh_partition/partition.cpp	/^double Partition::getTotalEnergy()$/;"	f	class:Partition
 get_heap_pos	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
 get_heap_pos	plane-opt/mesh_partition/myheap.h	/^    inline int get_heap_pos() { return token; }$/;"	f	class:MxHeapable
@@ -2019,9 +2019,9 @@ i8vec4	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef mediump_i8vec4			i8v
 i8vec4	plane-opt/mesh_visibility/glm/glm/gtc/type_precision.hpp	/^	typedef tvec4<i8, defaultp> i8vec4;$/;"	t	namespace:glm
 id	plane-opt/mesh_visibility/glfw/glfw3native.h	/^  typedef void* id;$/;"	t
 id	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			static std::locale::id id;$/;"	m	class:glm::io::format_punct
-image_buffer_	plane-opt/mesh_visibility/rgbdmesh.h	/^	GBuffer image_buffer_;$/;"	m	class:RGBDMesh
-image_buffer_arr_	plane-opt/mesh_visibility/rgbdmesh.h	/^	float image_buffer_arr_[kImageHeight][kImageWidth * 3]; \/\/ rendered image buffer$/;"	m	class:RGBDMesh
-image_y_bases_	plane-opt/mesh_visibility/rgbdmesh.h	/^	vector<int> image_y_bases_;$/;"	m	class:RGBDMesh
+image_buffer_	plane-opt/mesh_visibility/mesh_visibility.h	/^	GBuffer image_buffer_;$/;"	m	class:MeshVisibility
+image_buffer_arr_	plane-opt/mesh_visibility/mesh_visibility.h	/^	float image_buffer_arr_[kImageHeight][kImageWidth * 3]; \/\/ rendered image buffer$/;"	m	class:MeshVisibility
+image_y_bases_	plane-opt/mesh_visibility/mesh_visibility.h	/^	vector<int> image_y_bases_;$/;"	m	class:MeshVisibility
 imat2	plane-opt/mesh_visibility/glm/glm/gtc/matrix_integer.hpp	/^	typedef highp_imat2								imat2;$/;"	t	namespace:glm
 imat2	plane-opt/mesh_visibility/glm/glm/gtc/matrix_integer.hpp	/^	typedef lowp_imat2								imat2;$/;"	t	namespace:glm
 imat2	plane-opt/mesh_visibility/glm/glm/gtc/matrix_integer.hpp	/^	typedef mediump_imat2							imat2;$/;"	t	namespace:glm
@@ -2066,7 +2066,7 @@ initGLFWAndShader	plane-opt/mesh_visibility/main.cpp	/^bool initGLFWAndShader()$
 initInnerEdgeQuadrics	plane-opt/mesh_partition/partition.cpp	/^void Partition::initInnerEdgeQuadrics()$/;"	f	class:Partition
 initMerging	plane-opt/mesh_partition/partition.cpp	/^void Partition::initMerging()$/;"	f	class:Partition
 initMeshConnectivity	plane-opt/mesh_partition/partition.cpp	/^void Partition::initMeshConnectivity()$/;"	f	class:Partition
-initModelDataBuffer	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::initModelDataBuffer()$/;"	f	class:RGBDMesh
+initModelDataBuffer	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::initModelDataBuffer()$/;"	f	class:MeshVisibility
 initNew	plane-opt/mesh_visibility/gbuffer.cpp	/^bool GBuffer::initNew(unsigned int WindowWidth, unsigned int WindowHeight)$/;"	f	class:GBuffer
 initSimplification	plane-opt/mesh_partition/partition.cpp	/^void Partition::initSimplification()$/;"	f	class:Partition
 init_block	plane-opt/mesh_partition/heap/MxBlock.h	/^    void init_block(int n)$/;"	f	class:MxBlock
@@ -2137,13 +2137,13 @@ ivec3	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef mediump_i
 ivec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef highp_ivec4			ivec4;$/;"	t	namespace:glm
 ivec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef lowp_ivec4			ivec4;$/;"	t	namespace:glm
 ivec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef mediump_ivec4		ivec4;$/;"	t	namespace:glm
-kDigitNumInFrameName	plane-opt/mesh_visibility/rgbdmesh.h	/^const unsigned int kDigitNumInFrameName = 6; \/\/ used to create valid output filename$/;"	v
+kDigitNumInFrameName	plane-opt/mesh_visibility/mesh_visibility.h	/^const unsigned int kDigitNumInFrameName = 6; \/\/ used to create valid output filename$/;"	v
 kFaceCoefficient	plane-opt/mesh_partition/partition.h	/^    const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;$/;"	m	class:Partition
-kFar	plane-opt/mesh_visibility/rgbdmesh.h	/^const float kFar = 10.0f;$/;"	v
-kImageHeight	plane-opt/mesh_visibility/rgbdmesh.h	/^const unsigned int kImageHeight = 480;$/;"	v
-kImageWidth	plane-opt/mesh_visibility/rgbdmesh.h	/^const unsigned int kImageWidth = 640;$/;"	v
+kFar	plane-opt/mesh_visibility/mesh_visibility.h	/^const float kFar = 10.0f;$/;"	v
+kImageHeight	plane-opt/mesh_visibility/mesh_visibility.h	/^const unsigned int kImageHeight = 480;$/;"	v
+kImageWidth	plane-opt/mesh_visibility/mesh_visibility.h	/^const unsigned int kImageWidth = 640;$/;"	v
 kMinInnerEdgeNum	plane-opt/mesh_partition/partition.h	/^    const int kMinInnerEdgeNum = 10; \/\/ minimum inner edge number in a cluster after simplification$/;"	m	class:Partition
-kNear	plane-opt/mesh_visibility/rgbdmesh.h	/^const float kNear = 0.1f;$/;"	v
+kNear	plane-opt/mesh_visibility/mesh_visibility.h	/^const float kNear = 0.1f;$/;"	v
 kPI	plane-opt/mesh_partition/partition.cpp	/^const double kPI = 3.1415926;$/;"	v
 kPointCoefficient	plane-opt/mesh_partition/partition.h	/^    const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;$/;"	m	class:Partition
 last	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    T& last() { return (*this)[last_id()]; }$/;"	f	class:MxDynBlock
@@ -2458,7 +2458,7 @@ mat4x4	plane-opt/mesh_visibility/glm/glm/detail/type_mat.hpp	/^	typedef highp_ma
 mat4x4	plane-opt/mesh_visibility/glm/glm/detail/type_mat.hpp	/^	typedef lowp_mat4x4			mat4x4;$/;"	t	namespace:glm
 mat4x4	plane-opt/mesh_visibility/glm/glm/detail/type_mat.hpp	/^	typedef mediump_mat4x4		mat4x4;$/;"	t	namespace:glm
 material	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^struct material$/;"	s	file:
-material_names_	plane-opt/mesh_visibility/rgbdmesh.h	/^	unordered_map<string, int> material_names_;$/;"	m	class:RGBDMesh
+material_names_	plane-opt/mesh_visibility/mesh_visibility.h	/^	unordered_map<string, int> material_names_;$/;"	m	class:MeshVisibility
 max	plane-opt/mesh_visibility/glm/glm/detail/_fixes.hpp	37;"	d
 maxcoord_	plane-opt/mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
 mediump	plane-opt/mesh_visibility/glm/glm/detail/precision.hpp	/^		mediump,$/;"	e	enum:glm::precision
@@ -2704,7 +2704,7 @@ mergeClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeClus
 mergeIslandClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeIslandClusters()$/;"	f	class:Partition
 mergeIslandComponentsInCluster	plane-opt/mesh_partition/partition.cpp	/^void Partition::mergeIslandComponentsInCluster(int original_cidx, vector<unordered_set<int>>& connected_components)$/;"	f	class:Partition
 mergeOnce	plane-opt/mesh_partition/partition.cpp	/^bool Partition::mergeOnce()$/;"	f	class:Partition
-mesh_suffix_	plane-opt/mesh_visibility/rgbdmesh.h	/^	string mesh_suffix_;$/;"	m	class:RGBDMesh
+mesh_suffix_	plane-opt/mesh_visibility/mesh_visibility.h	/^	string mesh_suffix_;$/;"	m	class:MeshVisibility
 message	plane-opt/mesh_partition/heap/mixmsg.h	/^    const char *message;$/;"	m	class:MxMsgInfo
 min	plane-opt/mesh_visibility/glm/glm/detail/_fixes.hpp	42;"	d
 mincoord_	plane-opt/mesh_partition/partition.h	/^    Vector3d center_, maxcoord_, mincoord_;  \/\/ bounding box$/;"	m	class:Partition
@@ -2721,7 +2721,7 @@ new_vertex_num_	plane-opt/mesh_partition/partition.h	/^    int new_vertex_num_, 
 newline	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			char_type  newline;$/;"	m	class:glm::io::format_punct
 nice	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^		nice,$/;"	e	enum:glm::profile
 normal	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^	glm::vec3 normal;$/;"	m	struct:intersection	file:
-normal	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::vec3 normal;$/;"	m	struct:Vertex
+normal	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec3 normal;$/;"	m	struct:Vertex
 normal_	plane-opt/mesh_partition/covariance.h	/^    Vector3d normal_;$/;"	m	class:CovObj
 normalizeDotA	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^T normalizeDotA(vecType<T, P> const & x, vecType<T, P> const & y)$/;"	f
 normalizeDotB	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^T normalizeDotB(vecType<T, P> const & x, vecType<T, P> const & y)$/;"	f
@@ -2733,7 +2733,7 @@ number_of_elements_	plane-opt/mesh_visibility/glm/glm/gtx/range.hpp	/^	detail::c
 number_of_elements_	plane-opt/mesh_visibility/glm/glm/gtx/range.hpp	/^	detail::component_count_t number_of_elements_(tvec2<T, P> const & v){$/;"	f	namespace:glm::detail
 number_of_elements_	plane-opt/mesh_visibility/glm/glm/gtx/range.hpp	/^	detail::component_count_t number_of_elements_(tvec3<T, P> const & v){$/;"	f	namespace:glm::detail
 number_of_elements_	plane-opt/mesh_visibility/glm/glm/gtx/range.hpp	/^	detail::component_count_t number_of_elements_(tvec4<T, P> const & v){$/;"	f	namespace:glm::detail
-obj_folder_	plane-opt/mesh_visibility/rgbdmesh.h	/^	string obj_folder_;$/;"	m	class:RGBDMesh
+obj_folder_	plane-opt/mesh_visibility/mesh_visibility.h	/^	string obj_folder_;$/;"	m	class:MeshVisibility
 operator ()	plane-opt/mesh_partition/heap/MxBlock.h	/^    T &operator()(int i) { return (*this)[i]; }$/;"	f	class:MxBlock
 operator ()	plane-opt/mesh_partition/heap/MxBlock.h	/^    const T &operator()(int i) const { return (*this)[i]; }$/;"	f	class:MxBlock
 operator ()	plane-opt/mesh_partition/qemquadrics.h	/^    double operator()(const Vector3d& v) const { return evaluate(v); }$/;"	f	class:QEMQuadrics
@@ -2769,7 +2769,7 @@ optimize	plane-opt/mesh_partition/qemquadrics.cpp	/^bool QEMQuadrics::optimize(V
 order	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			order_type order;$/;"	m	class:glm::io::format_punct
 order	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^		struct order$/;"	s	namespace:glm::io
 order_type	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^		enum order_type { column_major, row_major};$/;"	g	namespace:glm::io
-ori_texture_images_	plane-opt/mesh_visibility/rgbdmesh.h	/^	vector<cv::Mat> ori_texture_images_;$/;"	m	class:RGBDMesh
+ori_texture_images_	plane-opt/mesh_visibility/mesh_visibility.h	/^	vector<cv::Mat> ori_texture_images_;$/;"	m	class:MeshVisibility
 outerProduct_trait	plane-opt/mesh_visibility/glm/glm/detail/func_matrix.hpp	/^	struct outerProduct_trait<T, P, tvec2, tvec2>$/;"	s	namespace:glm::detail
 outerProduct_trait	plane-opt/mesh_visibility/glm/glm/detail/func_matrix.hpp	/^	struct outerProduct_trait<T, P, tvec2, tvec3>$/;"	s	namespace:glm::detail
 outerProduct_trait	plane-opt/mesh_visibility/glm/glm/detail/func_matrix.hpp	/^	struct outerProduct_trait<T, P, tvec2, tvec4>$/;"	s	namespace:glm::detail
@@ -2798,7 +2798,7 @@ place	plane-opt/mesh_partition/myheap.h	/^    void place(MxHeapable *x, unsigned
 pointer	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^		typedef TYPE<VALTYPE> * pointer;$/;"	t	struct:glm::detail::genType
 pointer_const	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^		typedef TYPE<VALTYPE> * const pointer_const;$/;"	t	struct:glm::detail::genType
 pop	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *pop() { return extract(); }$/;"	f	class:MxHeap
-pos	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::vec3 pos;\/\/ position$/;"	m	struct:Vertex
+pos	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec3 pos;\/\/ position$/;"	m	struct:Vertex
 position	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^	glm::vec4 position; \/\/ Ppli$/;"	m	struct:light	file:
 position	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^	glm::vec4 position;$/;"	m	struct:intersection	file:
 prec	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x2.hpp	/^			static GLM_RELAXED_CONSTEXPR precision prec = P;$/;"	m	struct:glm::tmat2x2
@@ -2820,7 +2820,7 @@ precision	plane-opt/mesh_visibility/glm/glm/detail/precision.hpp	/^	enum precisi
 precision	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			unsigned   precision;$/;"	m	class:glm::io::format_punct
 precision	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^		struct precision$/;"	s	namespace:glm::io
 precision_	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			streamsize_type precision_;$/;"	m	class:glm::io::basic_state_saver
-prepareImageBuffer	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::prepareImageBuffer()$/;"	f	class:RGBDMesh
+prepareImageBuffer	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::prepareImageBuffer()$/;"	f	class:MeshVisibility
 printInBlue	plane-opt/common/tools.h	/^inline void printInBlue(const std::string& str)$/;"	f
 printInColor	plane-opt/common/tools.h	/^inline void printInColor(const std::string& str, const std::string& color)$/;"	f
 printInCyan	plane-opt/common/tools.h	/^inline void printInCyan(const std::string& str)$/;"	f
@@ -2833,8 +2833,8 @@ printProgressBar	plane-opt/common/tools.h	/^inline void printProgressBar(float p
 printUsage	plane-opt/mesh_visibility/main.cpp	/^void printUsage()$/;"	f
 processIslandClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::processIslandClusters()$/;"	f	class:Partition
 profile	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^	enum profile$/;"	g	namespace:glm
-programID_	plane-opt/mesh_visibility/shader.h	/^	unsigned int programID_;$/;"	m	class:Shader
-program_mode	plane-opt/mesh_visibility/main.cpp	/^ProgramMode program_mode = RENDER_MODEL;$/;"	v
+programID_	plane-opt/mesh_visibility/shader.h	/^    unsigned int programID_;$/;"	m	class:Shader
+program_mode_	plane-opt/mesh_visibility/main.cpp	/^ProgramMode program_mode_ = RENDER_MODEL;$/;"	v
 pt	plane-opt/mesh_partition/partition.h	/^        Vector3d pt;$/;"	m	struct:Partition::Vertex
 push_back	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    void push_back(const T& t) { add(t); }$/;"	f	class:MxDynBlock
 q	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^				struct { T s, t, p, q; };$/;"	m	struct:glm::tvec4::__anon1::__anon4
@@ -2856,13 +2856,13 @@ random1	plane-opt/mesh_partition/heap/gfx.h	/^  inline double random1() { return
 random1	plane-opt/mesh_partition/heap/gfx.h	/^  inline double random1() { return (double)random() \/ (double)LONG_MAX; }$/;"	f
 random_byte	plane-opt/mesh_partition/heap/gfx.h	/^  inline char   random_byte() { return (char)(rand() & 0xff); }$/;"	f
 random_byte	plane-opt/mesh_partition/heap/gfx.h	/^  inline char   random_byte() { return (char)(random() & 0xff); }$/;"	f
-readCameraIntrinsicsFile	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::readCameraIntrinsicsFile(const string filename)$/;"	f	class:RGBDMesh
-readCameraPoses	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::readCameraPoses(const string filepath, int start_fidx, int end_fidx)$/;"	f	class:RGBDMesh
+readCameraIntrinsicsFile	plane-opt/mesh_visibility/mesh_visibility.cpp	/^bool MeshVisibility::readCameraIntrinsicsFile(const string filename)$/;"	f	class:MeshVisibility
+readCameraPoses	plane-opt/mesh_visibility/mesh_visibility.cpp	/^bool MeshVisibility::readCameraPoses(const string filepath, int start_fidx, int end_fidx)$/;"	f	class:MeshVisibility
 readClusterFile	plane-opt/mesh_partition/partition.cpp	/^bool Partition::readClusterFile(const std::string& filename)$/;"	f	class:Partition
-readMTLandTextureImages	plane-opt/mesh_visibility/rgbdmesh.cpp	/^bool RGBDMesh::readMTLandTextureImages(const string filename)$/;"	f	class:RGBDMesh
-readOBJ	plane-opt/mesh_visibility/rgbdmesh.cpp	/^bool RGBDMesh::readOBJ(const string filename)$/;"	f	class:RGBDMesh
+readMTLandTextureImages	plane-opt/mesh_visibility/mesh_visibility.cpp	/^bool MeshVisibility::readMTLandTextureImages(const string filename)$/;"	f	class:MeshVisibility
+readOBJ	plane-opt/mesh_visibility/mesh_visibility.cpp	/^bool MeshVisibility::readOBJ(const string filename)$/;"	f	class:MeshVisibility
 readPLY	plane-opt/mesh_partition/partition.cpp	/^bool Partition::readPLY(const std::string& filename)$/;"	f	class:Partition
-readPLY	plane-opt/mesh_visibility/rgbdmesh.cpp	/^bool RGBDMesh::readPLY(const string filename)$/;"	f	class:RGBDMesh
+readPLY	plane-opt/mesh_visibility/mesh_visibility.cpp	/^bool MeshVisibility::readPLY(const string filename)$/;"	f	class:MeshVisibility
 real	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^		glm::tquat<T, P> real, dual;$/;"	m	struct:glm::tdualquat
 red	plane-opt/mesh_visibility/glfw/glfw3.h	/^    unsigned short* red;$/;"	m	struct:GLFWgammaramp
 redBits	plane-opt/mesh_visibility/glfw/glfw3.h	/^    int redBits;$/;"	m	struct:GLFWvidmode
@@ -2903,10 +2903,11 @@ rows	plane-opt/mesh_visibility/glm/glm/detail/type_mat3x4.hpp	/^			static GLM_RE
 rows	plane-opt/mesh_visibility/glm/glm/detail/type_mat4x2.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t rows = 2;$/;"	m	struct:glm::tmat4x2
 rows	plane-opt/mesh_visibility/glm/glm/detail/type_mat4x3.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t rows = 3;$/;"	m	struct:glm::tmat4x3
 rows	plane-opt/mesh_visibility/glm/glm/detail/type_mat4x4.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t rows = 4;$/;"	m	struct:glm::tmat4x4
-runMainLoop	plane-opt/mesh_visibility/main.cpp	/^void runMainLoop(RGBDMesh* mesh, int kStartFrameIdx, int kEndFrameIdx, const string& output_path)$/;"	f
 runMerging	plane-opt/mesh_partition/partition.cpp	/^bool Partition::runMerging()$/;"	f	class:Partition
 runPartitionPipeline	plane-opt/mesh_partition/partition.cpp	/^bool Partition::runPartitionPipeline()$/;"	f	class:Partition
 runPostProcessing	plane-opt/mesh_partition/partition.cpp	/^void Partition::runPostProcessing()$/;"	f	class:Partition
+runRenderMode	plane-opt/mesh_visibility/main.cpp	/^void runRenderMode(MeshVisibility* mesh, int start_fidx, int end_fidx)$/;"	f
+runSaveMode	plane-opt/mesh_visibility/main.cpp	/^void runSaveMode(MeshVisibility* mesh, int start_fidx, int end_fidx, const string& output_path)$/;"	f
 runSimplification	plane-opt/mesh_partition/partition.cpp	/^void Partition::runSimplification()$/;"	f	class:Partition
 runSwapping	plane-opt/mesh_partition/partition.cpp	/^void Partition::runSwapping()$/;"	f	class:Partition
 run_mesh_simplification	plane-opt/mesh_partition/main.cpp	/^DECLARE_bool(run_mesh_simplification);$/;"	v
@@ -2923,25 +2924,25 @@ saturate	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	template <ty
 saturate	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	template <typename T, precision P> GLM_FUNC_QUALIFIER tvec2<T, P> saturate(const tvec2<T, P>& x){return clamp(x, T(0), T(1));}					\/\/!< \\brief Returns clamp(x, 0, 1) for each component in x. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
 saturate	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	template <typename T, precision P> GLM_FUNC_QUALIFIER tvec3<T, P> saturate(const tvec3<T, P>& x){return clamp(x, T(0), T(1));}					\/\/!< \\brief Returns clamp(x, 0, 1) for each component in x. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
 saturate	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	template <typename T, precision P> GLM_FUNC_QUALIFIER tvec4<T, P> saturate(const tvec4<T, P>& x){return clamp(x, T(0), T(1));}					\/\/!< \\brief Returns clamp(x, 0, 1) for each component in x. (From GLM_GTX_compatibility)$/;"	f	namespace:glm
-saveColor2PNG	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::saveColor2PNG(const string filename)$/;"	f	class:RGBDMesh
-saveDepth2PNG	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::saveDepth2PNG(const string filename)$/;"	f	class:RGBDMesh
-saveVisibilityImage2Binary	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::saveVisibilityImage2Binary(const string filename)$/;"	f	class:RGBDMesh
-saveVisibleVertices2Binary	plane-opt/mesh_visibility/rgbdmesh.cpp	/^void RGBDMesh::saveVisibleVertices2Binary(const string filename)$/;"	f	class:RGBDMesh
+saveColor2PNG	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::saveColor2PNG(const string filename)$/;"	f	class:MeshVisibility
+saveDepth2PNG	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::saveDepth2PNG(const string filename)$/;"	f	class:MeshVisibility
+saveVisibilityImage2Binary	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::saveVisibilityImage2Binary(const string filename)$/;"	f	class:MeshVisibility
+saveVisibleVertices2Binary	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::saveVisibleVertices2Binary(const string filename)$/;"	f	class:MeshVisibility
 separator	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			char_type  separator;$/;"	m	class:glm::io::format_punct
-setBool	plane-opt/mesh_visibility/shader.h	/^	void setBool(const std::string &name, bool value) const$/;"	f	class:Shader
-setFloat	plane-opt/mesh_visibility/shader.h	/^	void setFloat(const std::string &name, float value) const$/;"	f	class:Shader
-setInt	plane-opt/mesh_visibility/shader.h	/^	void setInt(const std::string &name, int value) const$/;"	f	class:Shader
-setMat2	plane-opt/mesh_visibility/shader.h	/^	void setMat2(const std::string &name, const glm::mat2 &mat) const$/;"	f	class:Shader
-setMat3	plane-opt/mesh_visibility/shader.h	/^	void setMat3(const std::string &name, const glm::mat3 &mat) const$/;"	f	class:Shader
-setMat4	plane-opt/mesh_visibility/shader.h	/^	void setMat4(const std::string &name, const glm::mat4 &mat) const$/;"	f	class:Shader
+setBool	plane-opt/mesh_visibility/shader.h	/^    void setBool(const std::string &name, bool value) const$/;"	f	class:Shader
+setFloat	plane-opt/mesh_visibility/shader.h	/^    void setFloat(const std::string &name, float value) const$/;"	f	class:Shader
+setInt	plane-opt/mesh_visibility/shader.h	/^    void setInt(const std::string &name, int value) const$/;"	f	class:Shader
+setMat2	plane-opt/mesh_visibility/shader.h	/^    void setMat2(const std::string &name, const glm::mat2 &mat) const$/;"	f	class:Shader
+setMat3	plane-opt/mesh_visibility/shader.h	/^    void setMat3(const std::string &name, const glm::mat3 &mat) const$/;"	f	class:Shader
+setMat4	plane-opt/mesh_visibility/shader.h	/^    void setMat4(const std::string &name, const glm::mat4 &mat) const$/;"	f	class:Shader
 setReadBuffer	plane-opt/mesh_visibility/gbuffer.cpp	/^void GBuffer::setReadBuffer(GBUFFER_TEXTURE_TYPE TextureType)$/;"	f	class:GBuffer
 setTargetClusterNum	plane-opt/mesh_partition/partition.h	/^    void setTargetClusterNum(int num) { target_cluster_num_ = num; }$/;"	f	class:Partition
-setVec2	plane-opt/mesh_visibility/shader.h	/^	void setVec2(const std::string &name, const glm::vec2 &value) const$/;"	f	class:Shader
-setVec2	plane-opt/mesh_visibility/shader.h	/^	void setVec2(const std::string &name, float x, float y) const$/;"	f	class:Shader
-setVec3	plane-opt/mesh_visibility/shader.h	/^	void setVec3(const std::string &name, const glm::vec3 &value) const$/;"	f	class:Shader
-setVec3	plane-opt/mesh_visibility/shader.h	/^	void setVec3(const std::string &name, float x, float y, float z) const$/;"	f	class:Shader
-setVec4	plane-opt/mesh_visibility/shader.h	/^	void setVec4(const std::string &name, const glm::vec4 &value) const$/;"	f	class:Shader
-setVec4	plane-opt/mesh_visibility/shader.h	/^	void setVec4(const std::string &name, float x, float y, float z, float w) const$/;"	f	class:Shader
+setVec2	plane-opt/mesh_visibility/shader.h	/^    void setVec2(const std::string &name, const glm::vec2 &value) const$/;"	f	class:Shader
+setVec2	plane-opt/mesh_visibility/shader.h	/^    void setVec2(const std::string &name, float x, float y) const$/;"	f	class:Shader
+setVec3	plane-opt/mesh_visibility/shader.h	/^    void setVec3(const std::string &name, const glm::vec3 &value) const$/;"	f	class:Shader
+setVec3	plane-opt/mesh_visibility/shader.h	/^    void setVec3(const std::string &name, float x, float y, float z) const$/;"	f	class:Shader
+setVec4	plane-opt/mesh_visibility/shader.h	/^    void setVec4(const std::string &name, const glm::vec4 &value) const$/;"	f	class:Shader
+setVec4	plane-opt/mesh_visibility/shader.h	/^    void setVec4(const std::string &name, float x, float y, float z, float w) const$/;"	f	class:Shader
 set_heap_pos	plane-opt/mesh_partition/heap/MxHeap.h	/^    inline void set_heap_pos(int t) { token = t; }$/;"	f	class:MxHeapable
 set_heap_pos	plane-opt/mesh_partition/myheap.h	/^    inline void set_heap_pos(int t) { token = t; }$/;"	f	class:MxHeapable
 severity	plane-opt/mesh_partition/heap/mixmsg.h	/^    MxSeverityLevel severity;$/;"	m	class:MxMsgInfo
@@ -3021,11 +3022,11 @@ taylorInvSqrt	plane-opt/mesh_visibility/glm/glm/detail/_noise.hpp	/^	GLM_FUNC_QU
 taylorInvSqrt	plane-opt/mesh_visibility/glm/glm/detail/_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec3<T, P> taylorInvSqrt(tvec3<T, P> const & r)$/;"	f	namespace:glm::detail
 taylorInvSqrt	plane-opt/mesh_visibility/glm/glm/detail/_noise.hpp	/^	GLM_FUNC_QUALIFIER tvec4<T, P> taylorInvSqrt(tvec4<T, P> const & r)$/;"	f	namespace:glm::detail
 tdualquat	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^	struct tdualquat$/;"	s	namespace:glm
-texture0_	plane-opt/mesh_visibility/rgbdmesh.h	/^	unsigned int texture0_;$/;"	m	class:RGBDMesh
-texture_image_	plane-opt/mesh_visibility/rgbdmesh.h	/^	cv::Mat texture_image_;$/;"	m	class:RGBDMesh
-texture_image_height_	plane-opt/mesh_visibility/rgbdmesh.h	/^	int texture_image_width_, texture_image_height_;$/;"	m	class:RGBDMesh
-texture_image_width_	plane-opt/mesh_visibility/rgbdmesh.h	/^	int texture_image_width_, texture_image_height_;$/;"	m	class:RGBDMesh
-texture_img_num_	plane-opt/mesh_visibility/rgbdmesh.h	/^	int texture_img_num_;$/;"	m	class:RGBDMesh
+texture0_	plane-opt/mesh_visibility/mesh_visibility.h	/^	unsigned int texture0_;$/;"	m	class:MeshVisibility
+texture_image_	plane-opt/mesh_visibility/mesh_visibility.h	/^	cv::Mat texture_image_;$/;"	m	class:MeshVisibility
+texture_image_height_	plane-opt/mesh_visibility/mesh_visibility.h	/^	int texture_image_width_, texture_image_height_;$/;"	m	class:MeshVisibility
+texture_image_width_	plane-opt/mesh_visibility/mesh_visibility.h	/^	int texture_image_width_, texture_image_height_;$/;"	m	class:MeshVisibility
+texture_img_num_	plane-opt/mesh_visibility/mesh_visibility.h	/^	int texture_img_num_;$/;"	m	class:MeshVisibility
 tmat2x2	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x2.hpp	/^	struct tmat2x2$/;"	s	namespace:glm
 tmat2x3	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x3.hpp	/^	struct tmat2x3$/;"	s	namespace:glm
 tmat2x4	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x4.hpp	/^	struct tmat2x4$/;"	s	namespace:glm
@@ -3046,8 +3047,8 @@ top	plane-opt/mesh_partition/myheap.h	/^    MxHeapable *top() { return (length()
 total_energy_	plane-opt/mesh_partition/partition.h	/^    double total_energy_;$/;"	m	class:Partition
 total_space	plane-opt/mesh_partition/heap/MxDynBlock.h	/^    int total_space() const { return MxBlock<T>::length(); }$/;"	f	class:MxDynBlock
 tquat	plane-opt/mesh_visibility/glm/glm/gtc/quaternion.hpp	/^	struct tquat$/;"	s	namespace:glm
-transform_perspective_	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::mat4 transform_perspective_; \/\/ perspective transformation$/;"	m	class:RGBDMesh
-transforms_	plane-opt/mesh_visibility/rgbdmesh.h	/^	vector<glm::mat4> transforms_; \/\/ extrinsic poses$/;"	m	class:RGBDMesh
+transform_perspective_	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::mat4 transform_perspective_; \/\/ perspective transformation$/;"	m	class:MeshVisibility
+transforms_	plane-opt/mesh_visibility/mesh_visibility.h	/^	vector<glm::mat4> transforms_; \/\/ extrinsic poses$/;"	m	class:MeshVisibility
 transpose_type	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x2.hpp	/^		typedef tmat2x2<T, P> transpose_type;$/;"	t	struct:glm::tmat2x2
 transpose_type	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x3.hpp	/^		typedef tmat3x2<T, P> transpose_type;$/;"	t	struct:glm::tmat2x3
 transpose_type	plane-opt/mesh_visibility/glm/glm/detail/type_mat2x4.hpp	/^		typedef tmat4x2<T, P> transpose_type;$/;"	t	struct:glm::tmat2x4
@@ -3246,9 +3247,9 @@ updateCurrentClusterNum	plane-opt/mesh_partition/partition.cpp	/^void Partition:
 updateNewMeshIndices	plane-opt/mesh_partition/partition.cpp	/^void Partition::updateNewMeshIndices()$/;"	f	class:Partition
 upheap	plane-opt/mesh_partition/heap/MxHeap.cxx	/^void MxHeap::upheap(unsigned int i)$/;"	f	class:MxHeap
 upheap	plane-opt/mesh_partition/myheap.h	/^    void upheap(unsigned int i)$/;"	f	class:MxHeap
-useProgram	plane-opt/mesh_visibility/shader.h	/^	void useProgram() const$/;"	f	class:Shader
+useProgram	plane-opt/mesh_visibility/shader.h	/^    void useProgram() const { glUseProgram(programID_); }$/;"	f	class:Shader
 ushort	plane-opt/mesh_partition/heap/stdmix.h	/^typedef unsigned short ushort;$/;"	t
-uv	plane-opt/mesh_visibility/rgbdmesh.h	/^	glm::vec2 uv;$/;"	m	struct:Vertex
+uv	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec2 uv;$/;"	m	struct:Vertex
 uvec1	plane-opt/mesh_visibility/glm/glm/gtc/vec1.hpp	/^	typedef highp_uvec1			uvec1;$/;"	t	namespace:glm
 uvec1	plane-opt/mesh_visibility/glm/glm/gtc/vec1.hpp	/^	typedef lowp_uvec1			uvec1;$/;"	t	namespace:glm
 uvec1	plane-opt/mesh_visibility/glm/glm/gtc/vec1.hpp	/^	typedef mediump_uvec1		uvec1;$/;"	t	namespace:glm
@@ -3317,9 +3318,9 @@ vec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef mediump_ve
 vec_type	plane-opt/mesh_visibility/glm/glm/detail/_swizzle.hpp	/^		typedef VecType         vec_type;        $/;"	t	struct:glm::detail::_swizzle_base2
 vec_type	plane-opt/mesh_visibility/glm/glm/detail/_swizzle.hpp	/^		typedef VecType vec_type;$/;"	t	struct:glm::detail::_swizzle_base2
 vertex_num_	plane-opt/mesh_partition/partition.h	/^    int vertex_num_, face_num_;$/;"	m	class:Partition
-vertex_num_	plane-opt/mesh_visibility/rgbdmesh.h	/^	int vertex_num_;$/;"	m	class:RGBDMesh
+vertex_num_	plane-opt/mesh_visibility/mesh_visibility.h	/^	int vertex_num_;$/;"	m	class:MeshVisibility
 vertices_	plane-opt/mesh_partition/partition.h	/^    vector<Vertex> vertices_;$/;"	m	class:Partition
-vertices_	plane-opt/mesh_visibility/rgbdmesh.h	/^	vector<Vertex> vertices_;$/;"	m	class:RGBDMesh
+vertices_	plane-opt/mesh_visibility/mesh_visibility.h	/^	vector<Vertex> vertices_;$/;"	m	class:MeshVisibility
 vidx_old2new_	plane-opt/mesh_partition/partition.h	/^    unordered_map<int, int> vidx_old2new_; \/\/ original vertex indices -> new mesh indices (after removing some faces)$/;"	m	class:Partition
 w	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^				struct { T x, y, z, w;};$/;"	m	struct:glm::tvec4::__anon1::__anon2
 w	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^			union { T w, a, q; };$/;"	m	union:glm::tvec4::__anon8
@@ -3357,6 +3358,6 @@ z	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^				struct { T x, y, 
 z	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^			union { T z, b, p; };$/;"	m	union:glm::tvec4::__anon7
 z	plane-opt/mesh_visibility/glm/glm/gtc/quaternion.hpp	/^		T x, y, z, w;$/;"	m	struct:glm::tquat
 ~GBuffer	plane-opt/mesh_visibility/gbuffer.cpp	/^GBuffer::~GBuffer()$/;"	f	class:GBuffer
+~MeshVisibility	plane-opt/mesh_visibility/mesh_visibility.cpp	/^MeshVisibility::~MeshVisibility()$/;"	f	class:MeshVisibility
 ~MxBlock	plane-opt/mesh_partition/heap/MxBlock.h	/^    ~MxBlock() { free_block(); }$/;"	f	class:MxBlock
 ~Partition	plane-opt/mesh_partition/partition.cpp	/^Partition::~Partition()$/;"	f	class:Partition
-~RGBDMesh	plane-opt/mesh_visibility/rgbdmesh.cpp	/^RGBDMesh::~RGBDMesh()$/;"	f	class:RGBDMesh
