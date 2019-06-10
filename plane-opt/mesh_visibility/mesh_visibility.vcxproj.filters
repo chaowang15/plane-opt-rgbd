@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="shader">
+      <UniqueIdentifier>{b0804687-d1a8-4f3f-a608-658c6749fa69}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rendermode.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="rendermode.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="savemode.frag">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="savemode.vert">
+      <Filter>shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gbuffer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="rgbdmesh.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gbuffer.h" />
+    <ClInclude Include="gl_util.h" />
+    <ClInclude Include="rgbdmesh.h" />
+    <ClInclude Include="shader.h" />
+  </ItemGroup>
+</Project>
