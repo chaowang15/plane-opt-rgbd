@@ -282,7 +282,10 @@ bool MeshVisibility::readMTLandTextureImages(const string filename)
     }
     readin.close();
 
-    // Stick multiple texture images into one final image for rendering
+    // Stick multiple texture images into one final image for rendering.
+    // The final image size will be (texture-image-columns, n * texture-image-height),
+    // and both height and width are enlarged to values power of 2. Here n is the number
+    // of input texture images (suppose all texture images have exactly the same resolution).
     texture_img_num_ = int(ori_texture_images_.size());
     int width = 0, height = 0;
     int y_base = 0;
@@ -294,7 +297,7 @@ bool MeshVisibility::readMTLandTextureImages(const string filename)
     }
     height = y_base;
 
-    // texture image's size must be power of 2
+    // Ths size of texture image loaded in OpenGL must be power of 2
     int n = 2;
     while (n < width)
         n *= 2;
@@ -304,14 +307,15 @@ bool MeshVisibility::readMTLandTextureImages(const string filename)
         n *= 2;
     texture_image_height_ = n;
 
-    // texture_image_ = cv::imread("test_red.png");
+    // texture_image_ = cv::imread("test_red.png"); // debug
     texture_image_ = cv::Mat(texture_image_height_, texture_image_width_, CV_8UC3, cv::Scalar(0, 0, 0));
     for (int i = 0; i < texture_img_num_; ++i)
+    {
         ori_texture_images_[i].copyTo(
             texture_image_(cv::Rect(0, texture_image_height_ - image_y_bases_[i] - ori_texture_images_[i].rows,
                 ori_texture_images_[i].cols, ori_texture_images_[i].rows)));
-    //// for debug
-    // cv::imwrite("test.png", texture_image_);
+    }
+    // cv::imwrite("test.png", texture_image_); // debug
 
     return true;
 }
@@ -407,7 +411,7 @@ bool MeshVisibility::readOBJ(const string filename)
                         iss >> vt;
                         vt--;
                     }
-                    // Since we merged multiple texture images into a final one image, so we need to
+                    // Since we put/stick multiple input texture images into one large final image, so we need to
                     // modify corresponding texture uv coordinates.
                     vtx.uv[0] = uvs[vt][0] * ori_texture_images_[cur_tex_idx].cols / texture_image_width_;
                     vtx.uv[1] = (uvs[vt][1] * ori_texture_images_[cur_tex_idx].rows + image_y_bases_[cur_tex_idx]) /
@@ -498,7 +502,7 @@ void MeshVisibility::initModelDataBuffer()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     // NOTE: this will generate texture on GPU. It may crash on a GPU card with insufficient memory if
-    // using a large texture image.
+    // using a super large texture image.
     glTexImage2D(GL_TEXTURE_2D,  // Type of texture
         0,                       // Pyramid level (for mip-mapping) - 0 is the top level
         GL_RGB,                  // Internal colour format to convert to
@@ -531,7 +535,7 @@ void MeshVisibility::deallocate()
     glDeleteBuffers(1, &EBO_);
 }
 
-void MeshVisibility::prepareImageBuffer()
+]void MeshVisibility::prepareImageBuffer()
 {
     image_buffer_.bindForWriting();
 }
@@ -645,7 +649,7 @@ void MeshVisibility::saveVisibleVertices2Binary(const string filename)
 //! Only for debug: compute some transformation matrix for test
 glm::mat4 MeshVisibility::computeTransformation()
 {
-    // Projection matrix : 45� Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+    // Projection matrix : 45 degree Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1.f, 100.f);
     // Or, for an ortho camera :
     // glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
@@ -677,16 +681,19 @@ glm::mat4 MeshVisibility::computeTransformation()
 //! Compute transformation matrix for one frame.
 glm::mat4 MeshVisibility::computeTransformationForFrame(int frame_idx)
 {
-    // glm::mat4 trans_projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 1.f, 100.f);
+    // In the 3D world space, the model is fixed while the camera is moving under different poses.
+    // However, in OpenGL space, the camera position is fixed while the model is transformed inversely.
     glm::mat4 trans_model = glm::inverse(transforms_[frame_idx]);
     glm::mat4 trans_scale = glm::mat4(1.0);
-    // trans_scale[0][0] = trans_scale[1][1] = trans_scale[2][2] = scale_factor_;
+    // trans_scale[0][0] = trans_scale[1][1] = trans_scale[2][2] = scale_factor_; // scale if you want
 
-    glm::mat4 trans_camera = glm::lookAt(glm::vec3(0, 0, 0),  // Camera is at (4,3,3), in World Space
-        glm::vec3(0, 0, 1),                                   // the point that camera is looking at
-        glm::vec3(0, -1, 0)                                   // Head is up (set to 0,-1,0 to look upside-down)
+    // In 3D model (world) coordinate space, +x is to the right, +z is to the inside of the screen, so +y is to the bottom.
+    glm::mat4 trans_camera = glm::lookAt(glm::vec3(0, 0, 0),  // In OpenGL camera position is fixed at (0,0,0)
+        glm::vec3(0, 0, 1),                                   // +z, position where the camera is looking at
+        glm::vec3(0, -1, 0)                                   // +y direction
     );
     // cout << endl << endl << glm::to_string(glm::transpose(trans_camera)) << endl;
+    // Note for the order of multiplication of different matrices.
     return transform_perspective_ * trans_camera * trans_scale * trans_model;
 }
 
@@ -752,5 +759,5 @@ bool MeshVisibility::readCameraIntrinsicsFile(const string filename)
         }
     }
     readin.close();
-	return true;
+    return true;
 }

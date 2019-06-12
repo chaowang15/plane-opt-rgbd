@@ -2082,7 +2082,7 @@ import	plane-opt/mesh_partition/heap/MxHeap.h	/^    double import;$/;"	m	class:M
 import	plane-opt/mesh_partition/myheap.h	/^    double import;  \/\/ key (sorted by this value in the heap)$/;"	m	class:MxHeapable
 indices	plane-opt/mesh_partition/partition.h	/^        int indices[3];$/;"	m	struct:Partition::Face
 init	plane-opt/mesh_visibility/gbuffer.cpp	/^bool GBuffer::init(unsigned int WindowWidth, unsigned int WindowHeight)$/;"	f	class:GBuffer
-initGLFWAndShader	plane-opt/mesh_visibility/main.cpp	/^bool initGLFWAndShader()$/;"	f
+initGLFW	plane-opt/mesh_visibility/main.cpp	/^bool initGLFW()$/;"	f
 initInnerEdgeQuadrics	plane-opt/mesh_partition/partition.cpp	/^void Partition::initInnerEdgeQuadrics()$/;"	f	class:Partition
 initMerging	plane-opt/mesh_partition/partition.cpp	/^void Partition::initMerging()$/;"	f	class:Partition
 initMeshConnectivity	plane-opt/mesh_partition/partition.cpp	/^void Partition::initMeshConnectivity()$/;"	f	class:Partition
@@ -2841,7 +2841,7 @@ precision	plane-opt/mesh_visibility/glm/glm/detail/precision.hpp	/^	enum precisi
 precision	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			unsigned   precision;$/;"	m	class:glm::io::format_punct
 precision	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^		struct precision$/;"	s	namespace:glm::io
 precision_	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			streamsize_type precision_;$/;"	m	class:glm::io::basic_state_saver
-prepareImageBuffer	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::prepareImageBuffer()$/;"	f	class:MeshVisibility
+prepareImageBuffer	plane-opt/mesh_visibility/mesh_visibility.cpp	/^]void MeshVisibility::prepareImageBuffer()$/;"	f	class:MeshVisibility
 printModelInfo	plane-opt/mesh_partition/partition.h	/^    void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }$/;"	f	class:Partition
 printProgressBar	plane-opt/common/tools.h	/^inline void printProgressBar(float progress)$/;"	f
 printUsage	plane-opt/mesh_visibility/main.cpp	/^void printUsage()$/;"	f

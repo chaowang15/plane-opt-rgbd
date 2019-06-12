@@ -53,7 +53,7 @@ void printUsage()
     cout << "start_frame, end_frame:" << endl << "   start and end frame index (such as 0, 1000, respectively)" << endl;
 }
 
-bool initGLFWAndShader()
+bool initGLFW()
 {
     if (!glfwInit())
     {
@@ -77,11 +77,10 @@ bool initGLFWAndShader()
     {
         std::cout << "Failed to open GLFW window. If you have an Intel GPU, they are not 3.3 compatible. Try the 2.1 version "
                      "of the tutorials."
-                  << std::endl;
+                  << std::endl; // this is from some online tutorial
         glfwTerminate();
         return false;
     }
-    // glfwHideWindow(window);
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -194,8 +193,8 @@ void runSaveMode(MeshVisibility* mesh, int start_fidx, int end_fidx, const strin
         }
         mesh->prepareImageBuffer();
 
-        // NOTE: depth test and clear function MUST be put after binding frame buffer and
-        // run for each frame, or the extracted depth and color data will not have depth test.
+        // NOTE: depth test and clear function MUST be put after binding frame buffer and also need to
+        // run for each frame, otherwise the extracted depth and color data will not have depth test.
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -233,9 +232,9 @@ void runSaveMode(MeshVisibility* mesh, int start_fidx, int end_fidx, const strin
             // This is to save the entire visibility image into binary.
             // mesh->saveVisibilityImage2Binary(output_fname + ".visimage.txt");
         }
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        // // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+        // glfwSwapBuffers(window);
+        // glfwPollEvents();
     }
     myshader.deleteProgram();
     cout << "All frames are processed." << endl;
@@ -309,7 +308,7 @@ int main(int argc, char** argv)
         delete mesh;
         return -1;
     }
-    if (!initGLFWAndShader())
+    if (!initGLFW())
     {
         delete mesh;
         return -1;

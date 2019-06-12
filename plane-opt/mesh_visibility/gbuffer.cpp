@@ -108,7 +108,6 @@ bool GBuffer::init(unsigned int WindowWidth, unsigned int WindowHeight)
 	return true;
 }
 
-
 void GBuffer::bindForWriting()
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
