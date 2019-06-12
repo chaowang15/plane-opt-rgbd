@@ -20,7 +20,7 @@ DEFINE_double(energy_increase_threshold, 0.1, "");
 DEFINE_double(island_cluster_border_ratio, 0.8, "");
 DEFINE_double(simplification_border_edge_ratio, 0.05, "");
 DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
-DEFINE_int32(smallest_connected_component_size, 500, "#faces in smallest connected components");
+DEFINE_int32(smallest_connected_component_size, 20, "#faces in smallest connected components");
 DEFINE_bool(run_post_processing, true, "");
 DEFINE_bool(run_mesh_simplification, true, "");
 
@@ -1195,7 +1195,9 @@ void Partition::runPostProcessing()
     mergeIslandClusters();
 
     // (Optional) Clean small clusters which are independent connected components (like small floating pieces).
-    removeSmallClusters();
+    // NOTE: this may cause problems since the threshold to determine a small cluster is hard to set. So it may be better
+    // not use it.
+    // removeSmallClusters();
 
     // Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
     if (flag_new_mesh_ && !FLAGS_run_mesh_simplification)

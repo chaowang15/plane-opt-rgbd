@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ ! -d "bin" ]; then
+	mkdir bin
+fi
+
 # Mesh partition
 cd mesh_partition
 if [ ! -d "build" ]; then
@@ -8,6 +12,7 @@ fi
 cd build
 cmake ..
 make
+cp mesh_partition ../../bin
 cd ../..
 
 # Mesh visibility
@@ -18,6 +23,16 @@ fi
 cd build
 cmake ..
 make
-cp ../*.vert .
-cp ../*.frag .
+cp mesh_visibility ../../bin
 cd ../..
+
+# Image Blur Estimation
+cd blur_estimation
+if [ ! -d "build" ]; then
+	mkdir build
+fi
+cd build
+cmake ..
+make
+cp blur_estimation ../../bin
+cd ../../

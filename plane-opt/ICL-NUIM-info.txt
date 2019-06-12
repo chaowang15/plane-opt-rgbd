@@ -1,0 +1,12 @@
+m_versionNumber = 4
+m_sensorName = StructureSensor
+m_colorWidth = 640
+m_colorHeight = 480
+m_depthWidth = 640
+m_depthHeight = 480
+m_depthShift = 5000
+m_calibrationColorIntrinsic = 481.20 0 319.50 0 0 480.0 239.5 0 0 0 1 0 0 0 0 1 
+m_calibrationColorExtrinsic = 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
+m_calibrationDepthIntrinsic = 481.20 0 319.50 0 0 480.0 239.5 0 0 0 1 0 0 0 0 1 
+m_calibrationDepthExtrinsic = 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
+m_frames.size = 200

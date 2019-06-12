@@ -61,6 +61,7 @@ public:
     struct Cluster
     {
         double energy;             // to save some computation time of calling CovObj::energy() too frequently
+        bool is_visited;           // used in Breath-first search to remove small floating clusters
         unordered_set<int> faces;  // faces each cluster contains
         unordered_set<int> nbr_clusters;
         vector<SwapFace> faces_to_swap;
@@ -89,7 +90,7 @@ private:
     void initMerging();
     void initMeshConnectivity();
     void computeEdgeEnergy(Edge* edge);
-    bool removeEdgeFromList(Edge *edge, vector<Edge*>& edgelist);
+    bool removeEdgeFromList(Edge* edge, vector<Edge*>& edgelist);
     bool isClusterValid(int cidx) { return !clusters_[cidx].faces.empty(); }
     bool mergeOnce();
     void applyFaceEdgeContraction(Edge* edge);
@@ -130,21 +131,22 @@ private:
     bool checkFlippedFaces(Edge* edge, int endpoint, const Vector3d& contracted_vtx);
     void applyVtxEdgeContraction(Edge* edge, int cluster_idx);
 
-
     /* Small functions */
     //! Check if a face contains two vertices
-    inline bool checkFaceContainsVertices(int fidx, int v1, int v2){
+    inline bool checkFaceContainsVertices(int fidx, int v1, int v2)
+    {
         return checkFaceContainsVertices(fidx, v1) && checkFaceContainsVertices(fidx, v2);
     }
     //! Check if a face contains one vertex
-    inline bool checkFaceContainsVertices(int fidx, int v1){
+    inline bool checkFaceContainsVertices(int fidx, int v1)
+    {
         return faces_[fidx].indices[0] == v1 || faces_[fidx].indices[1] == v1 || faces_[fidx].indices[2] == v1;
     }
     //! Convert an long long edge type to two endpoints
     inline void getEdge(const long long& key, int& v1, int& v2)
     {
-        v2 = int(key & 0xffffffffLL); // v2 is lower 32 bits of the 64-bit edge integer
-        v1 = int(key >> 32); // v1 is higher 32 bits
+        v2 = int(key & 0xffffffffLL);  // v2 is lower 32 bits of the 64-bit edge integer
+        v1 = int(key >> 32);           // v1 is higher 32 bits
     }
 
 private:
@@ -159,18 +161,18 @@ private:
     MxHeap heap_;
     double total_energy_;
     unordered_set<int> clusters_in_swap_, last_clusters_in_swap_;
-    unordered_map<long long, vector<int>> edge_to_face_;  // edge (represented by two int32 endpoints) -> face id
-    unordered_map<int, vector<long long>> cluster_inner_edges_; // edges inside each cluster
-    unordered_set<long long> border_edges_; // mesh border and cluster border edges
-    unordered_map<int, int> vidx_old2new_; // original vertex indices -> new mesh indices (after removing some faces)
-    unordered_map<int, int> fidx_old2new_; // original vertex indices -> new mesh indices (after removing some faces)
+    unordered_map<long long, vector<int>> edge_to_face_;         // edge (represented by two int32 endpoints) -> face id
+    unordered_map<int, vector<long long>> cluster_inner_edges_;  // edges inside each cluster
+    unordered_set<long long> border_edges_;                      // mesh border and cluster border edges
+    unordered_map<int, int> vidx_old2new_;  // original vertex indices -> new mesh indices (after removing some faces)
+    unordered_map<int, int> fidx_old2new_;  // original vertex indices -> new mesh indices (after removing some faces)
     int new_vertex_num_, new_face_num_;
     bool flag_new_mesh_;  // true if removing some faces/vertices/clusters; false by default
 
     // These are used to balance the importance of point and triangle quadrics, respectively.
     // However, actually equal values are good in experiments.
     const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;
-    const int kMinInnerEdgeNum = 10; // minimum inner edge number in a cluster after simplification
+    const int kMinInnerEdgeNum = 10;  // minimum inner edge number in a cluster after simplification
     int curr_edge_num_;
 };
 

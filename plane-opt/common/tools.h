@@ -27,7 +27,7 @@ inline void printInColor(const std::string& str, const std::string& color)
         prefix[5] = '7';
     else
         prefix = suffix = "";
-    cout << prefix << str << suffix << endl;
+    std::cout << prefix << str << suffix << std::endl;
 }
 
 inline void printInRed(const std::string& str)
