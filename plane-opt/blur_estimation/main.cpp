@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 {
     if (argc != 4 && argc != 7)
     {
-        printInRed("Usage: image_blur image_path start_frame end_frame [filename_prefix filename_suffix index_digit_number]");
+        PRINT_RED("Usage: image_blur image_path start_frame end_frame [filename_prefix filename_suffix index_digit_number]");
         cout << "Default image filename for a frame (such as frame 1) will be like 'frame-000001.color.jpg'." << endl;
         cout << "If with input prefix, suffix and frame index digit number, the filename for frame 1 will be 'filename_prefix' "
                 "+ '0001' (digit number is 4 here) + 'filename_suffix'. If index digit number is 0, then there will be no zeros"
@@ -33,7 +33,7 @@ int main(int argc, char** argv)
         digit_number = atoi(argv[6]);
     }
 
-    printInGreen("Computing image blurriness for frames ... ");
+    PRINT_GREEN("Computing image blurriness for frames ... ");
     float progress = 0.0;  // for printing a progress bar
     int frame_num = end_fidx - start_fidx + 1;
     const int kStep = (frame_num < 100) ? 1 : (frame_num / 100);
@@ -54,7 +54,7 @@ int main(int argc, char** argv)
         cv::Mat img = cv::imread(filename);
         if (!img.data)
         {
-            printInRed("ERROR: cannot read image file " + filename);
+            PRINT_RED("ERROR: cannot read image file %s", filename.c_str());
             return -1;
         }
         BlurEstimation blur_est(img);
@@ -62,9 +62,9 @@ int main(int argc, char** argv)
     }
     auto end = std::chrono::steady_clock::now();
     double delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    printInRed("Time: " + std::to_string(delta));
+    PRINT_RED("Time: %f ms", delta);
 
-    printInGreen("Save image blurriness data into 'blur.txt'");
+    PRINT_GREEN("Save image blurriness data into 'blur.txt'");
     std::ofstream writeout("blur.txt", std::ios::trunc);
     for (auto it : blurriness)
     {

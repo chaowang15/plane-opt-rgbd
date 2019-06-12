@@ -10,6 +10,7 @@
 #include <chrono>
 #include <queue>
 #include <gflags/gflags.h>
+#include <fstream>
 
 const double kPI = 3.1415926;
 
@@ -21,6 +22,7 @@ DEFINE_double(island_cluster_border_ratio, 0.8, "");
 DEFINE_double(simplification_border_edge_ratio, 0.05, "");
 DEFINE_int32(swapping_loop_num, 300, "0 or a negative value means no swapping at all");
 DEFINE_int32(smallest_connected_component_size, 20, "#faces in smallest connected components");
+DEFINE_int32(smallest_inner_edge_number, 10, "");
 DEFINE_bool(run_post_processing, true, "");
 DEFINE_bool(run_mesh_simplification, true, "");
 
@@ -468,6 +470,9 @@ bool Partition::writePLY(const std::string& filename)
 //! Write cluster file in binary
 void Partition::writeClusterFile(const std::string& filename)
 {
+    ofstream writeout("test-cluster.txt", std::ios::trunc);
+    writeout << curr_cluster_num_ << endl;
+
     FILE* fout = fopen(filename.c_str(), "wb");
     fwrite(&curr_cluster_num_, sizeof(int), 1, fout);  // #clusters at first
     float color[3];
@@ -479,19 +484,15 @@ void Partition::writeClusterFile(const std::string& filename)
         int num = int(clusters_[cidx].faces.size());
         fwrite(&new_cidx, sizeof(int), 1, fout);  // cluster index
         fwrite(&num, sizeof(int), 1, fout);       // #faces in this cluster
-        if (flag_new_mesh_)
-        {  // New mesh means some vertices/faces are removed.
-            for (int f : clusters_[cidx].faces)
-            {
-                int fidx = fidx_old2new_[f];          // a mapping between old face index to new index
-                fwrite(&fidx, sizeof(int), 1, fout);  // write face one by one
-            }
-        }
-        else
-        {
-            vector<int> indices(clusters_[cidx].faces.begin(), clusters_[cidx].faces.end());
-            fwrite(&indices[0], sizeof(int), num, fout);  // write all face indices at once, this saves time
-        }
+        vector<int> indices(clusters_[cidx].faces.begin(), clusters_[cidx].faces.end());
+        fwrite(&indices[0], sizeof(int), num, fout);  // write all face indices at once, this saves time
+
+        // for debug
+        writeout << new_cidx << " " << num << ": ";
+        for (int fidx : indices)
+            writeout << fidx << " ";
+        writeout << endl;
+
         for (int i = 0; i < 3; ++i)
             color[i] = clusters_[cidx].color[i];
         fwrite(&color[0], sizeof(float), 3, fout);  // cluster color
@@ -499,6 +500,7 @@ void Partition::writeClusterFile(const std::string& filename)
         count_faces += num;
     }
     fclose(fout);
+    writeout.close();
 
     if (!flag_new_mesh_)
     {
@@ -535,6 +537,7 @@ bool Partition::readClusterFile(const std::string& filename)
     }
     clusters_.resize(curr_cluster_num_);
     float color[3];
+    int count_faces = 0;
     for (int i = 0; i < curr_cluster_num_; ++i)
     {
         int cidx = -1, cluster_size = -1;
@@ -549,7 +552,15 @@ bool Partition::readClusterFile(const std::string& filename)
             cout << "ERROR in reading indices in cluster file " << filename << endl;
             return false;
         }
+        count_faces += cluster_size;
         clusters_[i].faces.insert(cluster_elems.begin(), cluster_elems.end());
+        assert(clusters_[i].faces.size() == cluster_size);
+
+        // cout << i << " " << cluster_size << ": ";
+        // for (int fidx : cluster_elems)
+        //     cout << fidx << " ";
+        // cout << endl;
+
         if (fread(&color[0], sizeof(float), 3, fin) != 3)
         {
             cout << "ERROR in reading colors in cluster file " << filename << endl;
@@ -560,26 +571,28 @@ bool Partition::readClusterFile(const std::string& filename)
     }
     fclose(fin);
     flag_read_cluster_file_ = true;  // a read-cluster flag to skip some steps later
+    assert(count_faces == face_num_);
     init_cluster_num_ = curr_cluster_num_;
     return true;
 }
 
 bool Partition::runPartitionPipeline()
 {
+    PRINT_CYAN("Merging neighbor faces.");
     if (!runMerging())
         return false;
 
     if (FLAGS_swapping_loop_num > 0)
     {
-        printInCyan("(Optional) A further optimization by swapping border faces between clusters:");
+        PRINT_CYAN("(Optional) A further optimization by swapping cluster border faces.");
         runSwapping();
     }
     if (FLAGS_run_post_processing)
     {
-        printInCyan("Post processing: merge neighbor clusters:");
-        printInCyan("#Clusters before merging: " + std::to_string(curr_cluster_num_));
+        PRINT_CYAN("Post processing: merge neighbor clusters.");
+        PRINT_CYAN("#Initial Clusters: %d", curr_cluster_num_);
         runPostProcessing();
-        printInCyan("#Clusters after merging: " + std::to_string(curr_cluster_num_));
+        PRINT_CYAN("#Clusters after post processing: %d", curr_cluster_num_);
     }
     createClusterColors();
     return true;
@@ -606,7 +619,7 @@ bool Partition::runMerging()
         // Special case: sometimes all existing clusters have no neighbors (like floating faces)
         if (heap_.size() == 0)
         {
-            printInRed("WARNING: Now heap is empty, but still not reaching the target cluster number. ");
+            PRINT_YELLOW("WARNING: Now heap is empty, but still not reaching the target cluster number. ");
             break;
         }
         count++;
@@ -999,13 +1012,14 @@ void Partition::processIslandClusters()
         if (splitCluster(cidx, connected_components) > 1)
         {
             std::sort(connected_components.begin(), connected_components.end(), cmp);
+            // Firstly merge the 'island' components (each with only 1 neighbor cluster) into their neighbor clusters.
             mergeIslandComponentsInCluster(cidx, connected_components);
             count_split_clusters++;
+
+            // For the rest components, create a new cluster for each component
             if (connected_components.size() > 1)
             {
-                // Create a new cluster for each unmerged component
-                // NOTE: leave the largest (first) component where it is
-                for (size_t i = 1; i < connected_components.size(); ++i)
+                for (size_t i = 1; i < connected_components.size(); ++i)  // leave the largest (first) component where it is
                 {
                     // Find a valid cluster index to 'hold' the component as a new cluster and create new cluster there
                     int pos = last_valid_cidx;
@@ -1020,6 +1034,7 @@ void Partition::processIslandClusters()
                         faces_[fidx].cluster_id = pos;
                         clusters_[pos].cov += faces_[fidx].cov;
                         clusters_[pos].faces.insert(fidx);
+                        clusters_[cidx].faces.erase(fidx);
                     }
                     clusters_[pos].energy = clusters_[pos].cov.energy();
                 }
@@ -1047,7 +1062,7 @@ int Partition::splitCluster(int cidx, vector<unordered_set<int>>& connected_comp
     return int(connected_components.size());
 }
 
-//! Traverse (unvisited) faces with BFS. Return the number of visited faces.
+//! Traverse (unvisited) faces from one same cluster with BFS. Return the number of visited faces.
 int Partition::traverseFaceBFS(int start_fidx, int start_cidx, unordered_set<int>& component)
 {
     if (faces_[start_fidx].is_visited)
@@ -1198,13 +1213,53 @@ void Partition::runPostProcessing()
     // NOTE: this may cause problems since the threshold to determine a small cluster is hard to set. So it may be better
     // not use it.
     // removeSmallClusters();
+    // // Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
+    // if (flag_new_mesh_ && !FLAGS_run_mesh_simplification)
+    // {
+    //     // If running mesh simplification later, the following two steps will also be run later.
+    //     updateNewMeshIndices();
+    //     updateCurrentClusterNum();
+    // }
+    updateCurrentClusterNum();
+}
 
-    // Only update vertex/face indices if faces are removed in 'removeSmallClusters()'
-    if (flag_new_mesh_ && !FLAGS_run_mesh_simplification)
+//! This function is for double checking if the mesh partition process is correct through checking each
+//! cluster's faces.
+void Partition::doubleCheckClusters()
+{
+    map<int, vector<int>> cluster_face_num;
+    for (int fidx = 0; fidx < face_num_; fidx++)
     {
-        // If running mesh simplification later, the following two steps will also be run later.
-        updateNewMeshIndices();
-        updateCurrentClusterNum();
+        Face& face = faces_[fidx];
+        if (!face.is_valid)
+            continue;
+        int cidx = face.cluster_id;
+        if (cidx == -1 || cidx >= init_cluster_num_)
+        {
+            PRINT_RED("ERROR: face %d, cluster %d, init_cluster_num: %d", fidx, cidx, init_cluster_num_);
+            continue;
+        }
+        cluster_face_num[cidx].push_back(fidx);
+    }
+    int count = 0;
+    for (auto& it : cluster_face_num)
+    {
+        int cidx = it.first;
+        int count_faces = it.second.size();
+        int cluster_faces = clusters_[cidx].faces.size();
+        if (count_faces < cluster_faces)
+        {
+            PRINT_YELLOW("Cluster %d: #faces %d, #faces counted %d", cidx, cluster_faces, count_faces);
+        }
+        else if (count_faces > cluster_faces)
+        {
+            PRINT_GREEN("Cluster %d: #faces %d, #faces counted %d", cidx, cluster_faces, count_faces);
+        }
+        count += count_faces;
+    }
+    if (count != face_num_)
+    {
+        PRINT_RED("#Count faces: %d, #faces: %d", count, face_num_);
     }
 }
 
@@ -1445,6 +1500,14 @@ void Partition::updateNewMeshIndices()
     for (int i = 0; i < vertex_num_; ++i)
         vertices_[i].is_valid = false;
     new_face_num_ = 0;
+    if (FLAGS_run_mesh_simplification)
+    {  // Have to update faces in clusters after mesh simplification, since most faces are removed.
+        for (int cidx = 0; cidx < init_cluster_num_; ++cidx)
+        {
+            if (isClusterValid(cidx))
+                clusters_[cidx].faces.clear();
+        }
+    }
     for (int fidx = 0; fidx < face_num_; ++fidx)
     {
         if (faces_[fidx].is_valid)
@@ -1452,6 +1515,11 @@ void Partition::updateNewMeshIndices()
             fidx_old2new_[fidx] = new_face_num_++;
             for (int j = 0; j < 3; ++j)
                 vertices_[faces_[fidx].indices[j]].is_valid = true;
+            if (FLAGS_run_mesh_simplification)
+            {
+                // Note to add new face index instead of original ones. Note that each face's cluster-id is still the same.
+                clusters_[faces_[fidx].cluster_id].faces.insert(fidx_old2new_[fidx]);
+            }
         }
     }
     new_vertex_num_ = 0;
@@ -1461,7 +1529,9 @@ void Partition::updateNewMeshIndices()
             vidx_old2new_[i] = new_vertex_num_++;
     }
     flag_new_mesh_ = true;  // just in case forgot to set this flag before
-    cout << "New #Vertices: " << new_vertex_num_ << ", #Faces: " << new_face_num_ << endl;
+
+    updateCurrentClusterNum();
+    cout << "New #Vertices: " << new_vertex_num_ << ", #Faces: " << new_face_num_ << ", #Clusters: " << curr_cluster_num_ << endl;
 }
 
 void Partition::runSimplification()
@@ -1472,6 +1542,7 @@ void Partition::runSimplification()
     simplifyInnerEdges();
     simplifyBorderEdges();
 
+    // Update new mesh vertex and face indices since some vertices and faces are removed
     updateNewMeshIndices();
 }
 
@@ -1510,8 +1581,7 @@ void Partition::findInnerAndBorderEdges()
         bool flag_border_edge = false;
         if (edge_fnum == 0)
         {
-            printInRed(
-                "Edge (" + std::to_string(v1) + "," + std::to_string(v2) + ") is not in any face. This shouldn't happen.");
+            PRINT_RED("Edge (%d,%d) is not in any face. This shouldn't happen.", v1, v2);
         }
         else if (edge_fnum == 1)
             flag_border_edge = true;  // mesh border
@@ -1630,7 +1700,7 @@ void Partition::simplifyInnerEdges()
             printProgressBar(progress);
         }
         if (!isClusterValid(cidx) || cluster_inner_edges_.find(cidx) == cluster_inner_edges_.end() ||
-            cluster_inner_edges_[cidx].size() < kMinInnerEdgeNum)
+            cluster_inner_edges_[cidx].size() < FLAGS_smallest_inner_edge_number)
             continue;
 
         releaseHeap();
@@ -1656,7 +1726,7 @@ void Partition::simplifyInnerEdges()
 
         // Simplify inner edges
         curr_edge_num_ = heap_.size();
-        while (curr_edge_num_ > kMinInnerEdgeNum)
+        while (curr_edge_num_ > FLAGS_smallest_inner_edge_number)
         {
             Edge* edge = (Edge*)heap_.extract();
             if (!edge)
@@ -1682,7 +1752,7 @@ void Partition::simplifyInnerEdges()
                 edge = nullptr;
             }
         }
-        assert(curr_edge_num_ <= kMinInnerEdgeNum);
+        assert(curr_edge_num_ <= FLAGS_smallest_inner_edge_number);
     }
 }
 
@@ -1925,7 +1995,8 @@ void Partition::simplifyBorderEdges()
 
     // Simplify all border edges. This step is the same as simplifying inner-cluster edges.
     curr_edge_num_ = heap_.size();
-    const int kTargetEdgeNum = max(static_cast<int>(FLAGS_simplification_border_edge_ratio * curr_edge_num_), kMinInnerEdgeNum);
+    const int kTargetEdgeNum =
+        max(static_cast<int>(FLAGS_simplification_border_edge_ratio * curr_edge_num_), FLAGS_smallest_inner_edge_number);
     while (curr_edge_num_ > kTargetEdgeNum)
     {
         Edge* edge = (Edge*)heap_.extract();

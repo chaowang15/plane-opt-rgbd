@@ -835,6 +835,12 @@ PARANOID	plane-opt/mesh_partition/heap/stdmix.h	97;"	d
 PARTITION_H	plane-opt/mesh_partition/partition.h	2;"	d
 PRECAUTION	plane-opt/mesh_partition/heap/stdmix.h	102;"	d
 PRECAUTION	plane-opt/mesh_partition/heap/stdmix.h	105;"	d
+PRINT_BLUE	plane-opt/common/tools.h	33;"	d
+PRINT_CYAN	plane-opt/common/tools.h	46;"	d
+PRINT_GREEN	plane-opt/common/tools.h	19;"	d
+PRINT_MAGENTA	plane-opt/common/tools.h	39;"	d
+PRINT_RED	plane-opt/common/tools.h	12;"	d
+PRINT_YELLOW	plane-opt/common/tools.h	26;"	d
 Partition	plane-opt/mesh_partition/partition.cpp	/^Partition::Partition()$/;"	f	class:Partition
 Partition	plane-opt/mesh_partition/partition.h	/^class Partition$/;"	c
 PositionDataF16	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^glm::uint const PositionDataF16[VertexCount] =$/;"	m	class:glm	file:
@@ -1192,6 +1198,7 @@ double4	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	typedef tvec4
 double4x2	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	typedef tmat4x2<double, highp>		double4x2;		\/\/!< \\brief double-precision floating-point matrix with 4 x 2 components. (From GLM_GTX_compatibility extension)$/;"	t	namespace:glm
 double4x3	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	typedef tmat4x3<double, highp>		double4x3;		\/\/!< \\brief double-precision floating-point matrix with 4 x 3 components. (From GLM_GTX_compatibility extension)$/;"	t	namespace:glm
 double4x4	plane-opt/mesh_visibility/glm/glm/gtx/compatibility.hpp	/^	typedef tmat4x4<double, highp>		double4x4;		\/\/!< \\brief double-precision floating-point matrix with 4 x 4 components. (From GLM_GTX_compatibility extension)$/;"	t	namespace:glm
+doubleCheckClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::doubleCheckClusters()$/;"	f	class:Partition
 downheap	plane-opt/mesh_partition/heap/MxHeap.cxx	/^void MxHeap::downheap(unsigned int i)$/;"	f	class:MxHeap
 downheap	plane-opt/mesh_partition/myheap.h	/^    void downheap(unsigned int i)$/;"	f	class:MxHeap
 dquat	plane-opt/mesh_visibility/glm/glm/fwd.hpp	/^	typedef highp_dquat			dquat;$/;"	t	namespace:glm
@@ -2156,7 +2163,6 @@ kFaceCoefficient	plane-opt/mesh_partition/partition.h	/^    const double kFaceCo
 kFar	plane-opt/mesh_visibility/mesh_visibility.h	/^const float kFar = 10.0f;$/;"	v
 kImageHeight	plane-opt/mesh_visibility/mesh_visibility.h	/^const unsigned int kImageHeight = 480;$/;"	v
 kImageWidth	plane-opt/mesh_visibility/mesh_visibility.h	/^const unsigned int kImageWidth = 640;$/;"	v
-kMinInnerEdgeNum	plane-opt/mesh_partition/partition.h	/^    const int kMinInnerEdgeNum = 10;  \/\/ minimum inner edge number in a cluster after simplification$/;"	m	class:Partition
 kNear	plane-opt/mesh_visibility/mesh_visibility.h	/^const float kNear = 0.1f;$/;"	v
 kPI	plane-opt/mesh_partition/partition.cpp	/^const double kPI = 3.1415926;$/;"	v
 kPointCoefficient	plane-opt/mesh_partition/partition.h	/^    const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;$/;"	m	class:Partition
@@ -2836,13 +2842,6 @@ precision	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			unsigned   precision
 precision	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^		struct precision$/;"	s	namespace:glm::io
 precision_	plane-opt/mesh_visibility/glm/glm/gtx/io.hpp	/^			streamsize_type precision_;$/;"	m	class:glm::io::basic_state_saver
 prepareImageBuffer	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::prepareImageBuffer()$/;"	f	class:MeshVisibility
-printInBlue	plane-opt/common/tools.h	/^inline void printInBlue(const std::string& str)$/;"	f
-printInColor	plane-opt/common/tools.h	/^inline void printInColor(const std::string& str, const std::string& color)$/;"	f
-printInCyan	plane-opt/common/tools.h	/^inline void printInCyan(const std::string& str)$/;"	f
-printInGreen	plane-opt/common/tools.h	/^inline void printInGreen(const std::string& str)$/;"	f
-printInMagenta	plane-opt/common/tools.h	/^inline void printInMagenta(const std::string& str)$/;"	f
-printInRed	plane-opt/common/tools.h	/^inline void printInRed(const std::string& str)$/;"	f
-printInYellow	plane-opt/common/tools.h	/^inline void printInYellow(const std::string& str)$/;"	f
 printModelInfo	plane-opt/mesh_partition/partition.h	/^    void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }$/;"	f	class:Partition
 printProgressBar	plane-opt/common/tools.h	/^inline void printProgressBar(float progress)$/;"	f
 printUsage	plane-opt/mesh_visibility/main.cpp	/^void printUsage()$/;"	f

@@ -39,7 +39,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void printUsage()
 {
-    printInRed("Usage: mesh_visibility -option input_mesh RGBD_path output_path start_frame end_frame");
+    PRINT_RED("Usage: mesh_visibility -option input_mesh RGBD_path output_path start_frame end_frame");
     cout << "-option:" << endl
          << "  -r: render model only (use left and right arrow to move forward and backward frames)" << endl
          << "  -d: save rendered depth images" << endl
@@ -171,10 +171,10 @@ void runSaveMode(MeshVisibility* mesh, int start_fidx, int end_fidx, const strin
     myshader.LoadShaders("savemode.vert", "savemode.frag");
     myshader.setInt("texture_sampler", 0);
 
-	cout << "Processing frames ... " << endl;
-	float progress = 0.0;  // for printing a progress bar
-	int frame_num = end_fidx - start_fidx + 1;
-	const int kStep = (frame_num < 100) ? 1 : (frame_num / 100);
+    cout << "Processing frames ... " << endl;
+    float progress = 0.0;  // for printing a progress bar
+    int frame_num = end_fidx - start_fidx + 1;
+    const int kStep = (frame_num < 100) ? 1 : (frame_num / 100);
     for (int fidx = start_fidx; fidx <= end_fidx; ++fidx)
     {
         // Clear the screen
@@ -211,11 +211,11 @@ void runSaveMode(MeshVisibility* mesh, int start_fidx, int end_fidx, const strin
         mesh->extractImageBuffer();
 
         int current_frame = fidx - start_fidx;
-		if (current_frame % kStep == 0 || fidx == end_fidx)
-		{
-			progress = (fidx == end_fidx) ? 1.0f : static_cast<float>(current_frame) / frame_num;
-			printProgressBar(progress);
-		}
+        if (current_frame % kStep == 0 || fidx == end_fidx)
+        {
+            progress = (fidx == end_fidx) ? 1.0f : static_cast<float>(current_frame) / frame_num;
+            printProgressBar(progress);
+        }
         string output_fname = output_path + mesh->getFilename(current_frame);
         if (program_mode_ == SAVE_VERTEX_COLOR_IMAGE)
             mesh->saveColor2PNG(output_fname + ".rcolor.png");
@@ -276,7 +276,7 @@ int main(int argc, char** argv)
     // Load mesh and initialize it
     MeshVisibility* mesh = new MeshVisibility();
     string mesh_suffix = mesh_fname.substr(mesh_fname.length() - 3, 3);
-    printInGreen("Reading mesh file " + mesh_fname);
+    PRINT_GREEN("Reading mesh file %s", mesh_fname.c_str());
     if (mesh_suffix == "ply" || mesh_suffix == "PLY")
     {
         if (!mesh->readPLY(mesh_fname))
@@ -297,13 +297,13 @@ int main(int argc, char** argv)
         cout << "#Vertex: " << mesh->vertex_num_ << ", #Faces: " << mesh->face_num_ << endl;
         mesh->mesh_suffix_ = "obj";
     }
-    printInGreen("Reading all camera pose files in directory " + rgbd_path);
+    PRINT_GREEN("Reading all camera pose files in directory %s", rgbd_path.c_str());
     if (!mesh->readCameraPoses(rgbd_path, kStartFrameIdx, kEndFrameIdx))
     {
         delete mesh;
         return -1;
     }
-    printInGreen("Reading intrinsic file " + rgbd_path + "info.txt");
+    PRINT_GREEN("Reading intrinsic file %sinfo.txt", rgbd_path.c_str());
     if (!mesh->readCameraIntrinsicsFile(rgbd_path + "info.txt"))
     {
         delete mesh;
@@ -317,15 +317,15 @@ int main(int argc, char** argv)
     mesh->initModelDataBuffer();
     if (program_mode_ == RENDER_MODEL)
     {
-        printInGreen("Rendering mode ... ");
-        printInBlue(
+        PRINT_GREEN("Rendering mode ... ");
+        PRINT_CYAN(
             "Usage: LEFT and RIGHT key to move backward and forward frames, C to render vertex color, D to render depth, T to "
             "render face texture.");
         runRenderMode(mesh, kStartFrameIdx, kEndFrameIdx);
     }
     else
     {
-        printInGreen("Saving mode ... ");
+        PRINT_GREEN("Saving mode ... ");
         runSaveMode(mesh, kStartFrameIdx, kEndFrameIdx, output_path);
     }
     mesh->deallocate();

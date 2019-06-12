@@ -83,6 +83,7 @@ public:
     void printModelInfo() { cout << "#Vertices: " << vertices_.size() << ", #Faces: " << faces_.size() << endl; }
     void runPostProcessing();
     void runSimplification();
+    void doubleCheckClusters();
 
 private:
     /* Merging */
@@ -172,7 +173,6 @@ private:
     // These are used to balance the importance of point and triangle quadrics, respectively.
     // However, actually equal values are good in experiments.
     const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;
-    const int kMinInnerEdgeNum = 10;  // minimum inner edge number in a cluster after simplification
     int curr_edge_num_;
 };
 

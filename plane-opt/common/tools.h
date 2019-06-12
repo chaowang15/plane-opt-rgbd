@@ -3,62 +3,52 @@
 
 #include <iostream>
 #include <string>
+#include <stdio.h>
 
 //! Print text in color in the console. Only works in Linux.
 /*!
   Ref: https://misc.flogisoft.com/bash/tip_colors_and_formatting
 */
-inline void printInColor(const std::string& str, const std::string& color)
-{
-    std::string prefix("\e[1;37m"), suffix("\e[0m");
-    if (color == "red")
-        prefix[5] = '1';
-    else if (color == "green")
-        prefix[5] = '2';
-    else if (color == "yellow")
-        prefix[5] = '3';
-    else if (color == "blue")
-        prefix[5] = '4';
-    else if (color == "magenta")
-        prefix[5] = '5';
-    else if (color == "cyan")
-        prefix[5] = '6';
-    else if (color == "white")
-        prefix[5] = '7';
-    else
-        prefix = suffix = "";
-    std::cout << prefix << str << suffix << std::endl;
-}
+#define PRINT_RED(...)        \
+    {                         \
+        printf("\033[1;31m"); \
+        printf(__VA_ARGS__);  \
+        printf("\033[0m\n");    \
+    }
 
-inline void printInRed(const std::string& str)
-{
-    printInColor(str, "red");
-}
+#define PRINT_GREEN(...)      \
+    {                         \
+        printf("\033[1;32m"); \
+        printf(__VA_ARGS__);  \
+        printf("\033[0m\n");    \
+    }
 
-inline void printInGreen(const std::string& str)
-{
-    printInColor(str, "green");
-}
+#define PRINT_YELLOW(...)     \
+    {                         \
+        printf("\033[1;33m"); \
+        printf(__VA_ARGS__);  \
+        printf("\033[0m\n");    \
+    }
 
-inline void printInYellow(const std::string& str)
-{
-    printInColor(str, "yellow");
-}
+#define PRINT_BLUE(...)       \
+    {                         \
+        printf("\033[1;34m"); \
+        printf(__VA_ARGS__);  \
+        printf("\033[0m\n");    \
+    }
+#define PRINT_MAGENTA(...)    \
+    {                         \
+        printf("\033[1;35m"); \
+        printf(__VA_ARGS__);  \
+        printf("\033[0m\n");    \
+    }
 
-inline void printInBlue(const std::string& str)
-{
-    printInColor(str, "blue");
-}
-
-inline void printInMagenta(const std::string& str)
-{
-    printInColor(str, "magenta");
-}
-
-inline void printInCyan(const std::string& str)
-{
-    printInColor(str, "cyan");
-}
+#define PRINT_CYAN(...)       \
+    {                         \
+        printf("\033[1;36m"); \
+        printf(__VA_ARGS__);  \
+        printf("\033[0m\n");    \
+    }
 
 //! Print a progress bar with given progress. Remember to print a new line after progress reaches 1.0
 inline void printProgressBar(float progress)

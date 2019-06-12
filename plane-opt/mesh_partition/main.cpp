@@ -12,20 +12,20 @@ int main(int argc, char** argv)
     gflags::ParseCommandLineFlags(&argc, &argv, true);
     if (argc != 3 && argc != 5)
     {
-        printInRed(
+        PRINT_RED(
             "Usage: mesh_partition input_ply [target_cluster_num / input_cluster_file] [output_ply] [output_cluster_file]");
-        printInRed("Example:");
-        printInRed("\tmesh_partition in.ply 2000");
-        printInRed("\tmesh_partition in.ply in_cluster.txt [out.ply out_cluster.txt]");
+        cout << "Example:" << endl
+             << "\tmesh_partition in.ply 2000" << endl
+             << "\tmesh_partition in.ply in_cluster.txt [out.ply out_cluster.txt]" << endl;
         return -1;
     }
     string ply_fname(argv[1]);
 
     Partition partition;
-    printInGreen("Read ply file: " + ply_fname);
+    PRINT_GREEN("Read ply file: %s", ply_fname.c_str());
     if (!partition.readPLY(ply_fname))
     {
-        printInRed("ERROR in reading ply file " + ply_fname);
+        PRINT_RED("ERROR in reading ply file %s", ply_fname.c_str());
         return -1;
     }
     partition.printModelInfo();
@@ -35,14 +35,14 @@ int main(int argc, char** argv)
     int target_cluster_num = -1;
     if (cluster_fname.length() > 4 && cluster_fname.substr(cluster_fname.length() - 4) == ".txt")
     {
-        printInGreen("Read cluster file: " + cluster_fname);
+        PRINT_GREEN("Read cluster file %s", cluster_fname.c_str());
         partition.readClusterFile(cluster_fname);
         flag_read_cluster_file = true;
         target_cluster_num = partition.getCurrentClusterNum();
     }
     else
         target_cluster_num = atoi(argv[2]);
-    printInGreen("Cluster number: " + std::to_string(target_cluster_num));
+    PRINT_GREEN("Initial cluster number: %d", target_cluster_num);
 
     string out_fname = ply_fname.substr(0, ply_fname.length() - 4);
     string out_ply_fname = out_fname + "-cluster" + to_string(target_cluster_num) + ".ply";
@@ -58,33 +58,36 @@ int main(int argc, char** argv)
     {
         if (FLAGS_run_post_processing)
         {
-            printInGreen("Run post processing ...");
+            PRINT_GREEN("Run post processing ...");
             partition.runPostProcessing();
+            partition.doubleCheckClusters();
         }
     }
     else
     {
         partition.setTargetClusterNum(target_cluster_num);
-        printInGreen("Run mesh partition ...");
+        PRINT_GREEN("Run mesh partition ...");
         flag_success = partition.runPartitionPipeline();
+        partition.doubleCheckClusters();
     }
     if (FLAGS_run_mesh_simplification)
     {
-        printInGreen("Run mesh simplification...");
+        PRINT_GREEN("Run mesh simplification...");
         partition.runSimplification();
+        // partition.doubleCheckClusters();
     }
-    printInGreen("Final cluster number: " + std::to_string(partition.getCurrentClusterNum()));
+    PRINT_GREEN("Final cluster number: %d", partition.getCurrentClusterNum());
     auto end = std::chrono::steady_clock::now();
     double delta = std::chrono::duration_cast<chrono::milliseconds>(end - start).count();
-    printInRed("Time: " + std::to_string(delta));
+    PRINT_RED("Time: %f ms", delta);
     if (flag_success)
     {
-        cout << "Write ply file: " << out_ply_fname << endl;
+        PRINT_GREEN("Write ply file %s", out_ply_fname.c_str());
         partition.writePLY(out_ply_fname);
 
-        cout << "Write cluster file: " << out_cluster_fname << endl;
+        PRINT_GREEN("Write cluster file %s", out_cluster_fname.c_str());
         partition.writeClusterFile(out_cluster_fname);
-        cout << "ALL DONE." << endl;
+        PRINT_GREEN("ALL DONE.");
     }
     return 0;
 }
