@@ -25,7 +25,8 @@ build
 *.slo
 *.lo
 *.o
-*.obj
+# *.obj
+plane-opt/*.obj
 
 # Precompiled Headers
 *.gch

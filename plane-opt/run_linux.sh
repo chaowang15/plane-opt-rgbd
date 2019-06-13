@@ -1,44 +1,46 @@
 #!/bin/sh
 
 # This is the original RGB-D data including color images, depth images and camera pose files
-RGBD="/home/chao/dev/data/bundlefusion/copyroom/copyroom"
-# RGBD=/home/chao/dev/data/ICL-NUIM/lr_kt2/rgbd
+# RGBD="/home/chao/dev/data/bundlefusion/copyroom/copyroom"
+RGBD=/home/chao/dev/data/ICL-NUIM/lr_kt2/rgbd
 
 # Working directory contains the input PLY model. All output files will be put inside this directory.
-WORKINGDIR="/home/chao/dev/data/bundlefusion/copyroom"
+# WORKINGDIR="/home/chao/dev/data/bundlefusion/copyroom"
 # WORKINGDIR=/home/chao/dev/data/bundlefusion/office0
-# WORKINGDIR=/home/chao/dev/data/ICL-NUIM/lr_kt2
+WORKINGDIR=/home/chao/dev/data/ICL-NUIM/lr_kt2
 
 # PLY filename
-PLYNAME=copyroom
-# PLYNAME=lr_kt2
+# PLYNAME=copyroom
+PLYNAME=lr_kt2
 
 # 0 for BundleFusion/3DLite data, 1 for ICL-NUIM data (image type, camera pose details are different)
-DATATYPE=0
+# DATATYPE=0
+DATATYPE=1
 
 # Target cluster/plane number in mesh partition
 CLUSTERNUM=2000
 
 # Start and end frame index
-START=0
-END=4479
+# START=0
+START=1
+# END=4479
 # END=6158
-# END=880
+END=880
 
 ROOTPATH="$(pwd)"
 CODEPATH=$ROOTPATH/bin
 cd $WORKINGDIR
 
-## Mesh partition and simplification
-echo ---------------------------------------
-$CODEPATH/mesh_partition $PLYNAME".ply" $CLUSTERNUM $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt"
-# For debug only
-# $CODEPATH/mesh_partition --run_post_processing=false cluster2000_simp.ply cluster2000_simp.txt
-#
-# Run again on the last output to better simplify the mesh. This will be fast.
-# NOTE: simplification_border_edge_ratio is the target percentage of border edges left after simplification.
-echo ---------------------------------------
-$CODEPATH/mesh_partition --run_post_processing=false --simplification_border_edge_ratio=0.1 $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt" $PLYNAME"_c"$CLUSTERNUM".ply" $PLYNAME"_c"$CLUSTERNUM".txt"
+# ## Mesh partition and simplification
+# echo ---------------------------------------
+# $CODEPATH/mesh_partition $PLYNAME".ply" $CLUSTERNUM $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt"
+# # For debug only
+# # $CODEPATH/mesh_partition --run_post_processing=false cluster2000_simp.ply cluster2000_simp.txt
+# #
+# # Run again on the last output to better simplify the mesh. This will be fast.
+# # NOTE: simplification_border_edge_ratio is the target percentage of border edges left after simplification.
+# echo ---------------------------------------
+# $CODEPATH/mesh_partition --run_post_processing=false --simplification_border_edge_ratio=0.1 $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt" $PLYNAME"_c"$CLUSTERNUM".ply" $PLYNAME"_c"$CLUSTERNUM".txt"
 
 ## Reset filenames of ICL-NUIM data to fit the input
 # NOTE: for ICL-NUIM data, its default poses are stored in a freiburg file
