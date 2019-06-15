@@ -6,7 +6,7 @@
     This code refers to an online code repository:
     https://github.com/tianshanfz/blur-estimation
 
-    The difference is that this code re-implement most functions using OpenCV matrix operations instead of
+    The difference is that this code re-implements most functions using OpenCV matrix operations instead of
     loops in the original code. This is neater and faster. You can set 'flag_matrix_method = false' to switch
     back to the original code.
 */

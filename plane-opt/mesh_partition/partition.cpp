@@ -241,8 +241,7 @@ bool Partition::readPLY(const std::string& filename)
                     cout << "ERROR in reading PLY vertex colors in position " << ftell(fin) << endl;
                     return false;
                 }
-                // NOTE: comment this if you think the input vertex color data is useless.
-                vtx.color = Vector3f(color[0], color[1], color[2]) / 255;
+                // NOTE: abandon vertex color
             }
             if (vertex_quality_dim)
             {
@@ -259,12 +258,6 @@ bool Partition::readPLY(const std::string& filename)
             // Save vertex
             vtx.pt = Vector3d(vert[0], vert[1], vert[2]);
             vertices_.push_back(vtx);
-            for (int j = 0; j < 3; ++j)
-            {
-                mincoord_[j] = min(mincoord_[j], double(vert[j]));
-                maxcoord_[j] = max(maxcoord_[j], double(vert[j]));
-                center_[j] += vert[j];
-            }
         }
 
         // Face data
@@ -333,7 +326,7 @@ bool Partition::readPLY(const std::string& filename)
                     token = strtok(NULL, seps);
                     sscanf(token, "%c", &(color[j]));
                 }
-                vtx.color = Vector3f(color[0], color[1], color[2]) / 255;
+                // Abandon vertex color
             }
             if (vertex_quality_dim)
             {
@@ -350,12 +343,6 @@ bool Partition::readPLY(const std::string& filename)
             // Save vertex
             vtx.pt = Vector3d(vert[0], vert[1], vert[2]);
             vertices_.push_back(vtx);
-            for (size_t j = 0; j < 3; ++j)
-            {
-                mincoord_[j] = min(mincoord_[j], double(vert[j]));
-                maxcoord_[j] = max(maxcoord_[j], double(vert[j]));
-                center_[j] += vert[j];
-            }
         }
         // Read Faces
         for (int i = 0; i < face_num_; i++)
@@ -382,12 +369,6 @@ bool Partition::readPLY(const std::string& filename)
             }
             faces_.push_back(fa);
         }
-    }
-    /************************************************************************/
-    /* Others */
-    for (int j = 0; j < 3; ++j)
-    {
-        center_[j] /= vertex_num_;
     }
 
     // Just in case some vertices or faces are not read correctly

@@ -18,5 +18,5 @@ include_directories(${EIGEN_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS})
 
 file(GLOB SRC "*.cpp")
 # message("cpp file list: ${SRC}")
-add_executable(mesh_texture_opt ${SRC})
+add_executable(mesh_texture_opt ${SRC} ../common/covariance.cpp)
 target_link_libraries( mesh_texture_opt ${OpenCV_LIBS} gflags)

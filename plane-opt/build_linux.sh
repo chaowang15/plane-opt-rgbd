@@ -36,3 +36,14 @@ cmake ..
 make
 cp blur_estimation ../../bin
 cd ../../
+
+# Texture and geometry optimization
+cd mesh_texture_opt
+if [ ! -d "build" ]; then
+	mkdir build
+fi
+cd build
+cmake ..
+make
+cp mesh_texture_opt ../../bin
+cd ../..

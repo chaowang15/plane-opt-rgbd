@@ -535,7 +535,7 @@ void MeshVisibility::deallocate()
     glDeleteBuffers(1, &EBO_);
 }
 
-]void MeshVisibility::prepareImageBuffer()
+void MeshVisibility::prepareImageBuffer()
 {
     image_buffer_.bindForWriting();
 }

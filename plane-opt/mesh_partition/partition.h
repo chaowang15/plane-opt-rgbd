@@ -8,7 +8,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <Eigen/Eigen>
-#include "covariance.h"
+#include "../common/covariance.h"
 #include "MxHeap.h"
 #include "qemquadrics.h"
 
@@ -40,7 +40,6 @@ public:
         bool is_valid;  // false if it is removed (all its adjacent faces are removed)
         int cluster_id;
         Vector3d pt;
-        Vector3f color;
         unordered_set<int> nbr_vertices, nbr_faces;
         vector<Edge*> nbr_edges;
         QEMQuadrics Q;
@@ -154,7 +153,6 @@ private:
     int vertex_num_, face_num_;
     int init_cluster_num_, curr_cluster_num_, target_cluster_num_;
     bool flag_read_cluster_file_;
-    Vector3d center_, maxcoord_, mincoord_;  // bounding box
     vector<Vertex> vertices_;
     vector<Face> faces_;
     vector<Cluster> clusters_;

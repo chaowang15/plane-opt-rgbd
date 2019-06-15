@@ -24,6 +24,6 @@ include_directories(${EIGEN_INCLUDE_DIR} "heap")
 
 file(GLOB SRC "*.cpp")
 # message("cpp file list: ${SRC}")
-add_executable(mesh_partition ${SRC} heap/MxHeap.cxx)
+add_executable(mesh_partition ${SRC} ../common/covariance.cpp heap/MxHeap.cxx)
 # target_link_libraries( mesh_partition ${Boost_LIBRARIES} )
 target_link_libraries( mesh_partition gflags)

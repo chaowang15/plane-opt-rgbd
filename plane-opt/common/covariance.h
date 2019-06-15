@@ -1,5 +1,11 @@
 /*!
-    Covariance Object defined in this file is for merging neighbor faces in mesh partition.
+    Covariance object for mesh partition.
+
+    Ref:
+    Yiqi Cai, Xiaohu Guo, Yang Liu, Wenping Wang, Weihua Mao, Zichun Zhong,
+    "Surface Approximation via Asymptotic Optimal Geometric Partition", in
+    IEEE Transactions on Visualization and Computer Graphics, Vol. 23, No.
+    12, pp. 2613-2626, 2017.
 */
 
 #ifndef COVARIANCE_H
