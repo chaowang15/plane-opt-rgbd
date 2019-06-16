@@ -2,8 +2,8 @@
 Plane-Based RGB-D reconstruction of indoor scenes with geometry and texture optimization.
 
 Plane partition (left) and face texture (right) from the result of BundleFusion scan *copyroom*.
-<img src="models/copyroom/planes.png" width="49%">
-<img src="models/copyroom/texture.png" width="49%">
+<img src="models/copyroom/planes.png" width="45%">
+<img src="models/copyroom/texture.png" width="45%">
 
 ## Related publications
 Please cite these two papers if you want to use the code and data:
@@ -32,6 +32,8 @@ year = {2019}
 ([here is PDF](http://openaccess.thecvf.com/content_CVPRW_2019/papers/SUMO/Wang_Efficient_Plane-Based_Optimization_of_Geometry_and_Texture_for_Indoor_RGB-D_CVPRW_2019_paper.pdf))
 
 ## Dependencies
+
+
 
 ## Usage
 

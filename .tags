@@ -1136,6 +1136,7 @@ components	plane-opt/mesh_visibility/glm/glm/detail/type_vec3.hpp	/^			static GL
 components	plane-opt/mesh_visibility/glm/glm/detail/type_vec4.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t components = 4;$/;"	m	struct:glm::tvec4
 components	plane-opt/mesh_visibility/glm/glm/gtc/quaternion.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t components = 4;$/;"	m	struct:glm::tquat
 components	plane-opt/mesh_visibility/glm/glm/gtx/dual_quaternion.hpp	/^			static GLM_RELAXED_CONSTEXPR length_t components = 2;$/;"	m	struct:glm::tdualquat
+compute2DPointGraycolorBilinear	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^double RGBDMeshOpt::compute2DPointGraycolorBilinear(const Vector2d& pt2, int frame_idx)$/;"	f	class:RGBDMeshOpt
 compute2DPointGraycolorGradientBilinear	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^Vector2d RGBDMeshOpt::compute2DPointGraycolorGradientBilinear(const Vector2d& pt2, int frame_idx)$/;"	f	class:RGBDMeshOpt
 compute2DPointRGBcolorBilinear	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^Vector3f RGBDMeshOpt::compute2DPointRGBcolorBilinear(const Vector2d& pt2, int frame_idx)$/;"	f	class:RGBDMeshOpt
 compute3DpointFromDepth	plane-opt/mesh_visibility/mesh_visibility.h	/^	glm::vec4 compute3DpointFromDepth(int row, int col, float depth){$/;"	f	class:MeshVisibility
@@ -1143,7 +1144,6 @@ computeAllTexelColors	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^void RGBDMeshOpt
 computeAvgDisBtwTwoPlanes	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeAvgDisBtwTwoPlanes(int c1, int c2)$/;"	f	class:Partition
 computeBarycentricCoordinates	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^bool RGBDMeshOpt::computeBarycentricCoordinates($/;"	f	class:RGBDMeshOpt
 computeEdgeEnergy	plane-opt/mesh_partition/partition.cpp	/^void Partition::computeEdgeEnergy(Edge* edge)$/;"	f	class:Partition
-computeImgPointGraycolorBilinear	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^double RGBDMeshOpt::computeImgPointGraycolorBilinear(const Vector2d& pt2, int frame_idx)$/;"	f	class:RGBDMeshOpt
 computeMaxDisBetweenTwoPlanes	plane-opt/mesh_partition/partition.cpp	/^double Partition::computeMaxDisBetweenTwoPlanes(int c1, int c2, bool flag_use_projection)$/;"	f	class:Partition
 computeNormal	plane-opt/mesh_visibility/glm/glm/detail/dummy.cpp	/^glm::vec3 computeNormal$/;"	f
 computePerspectiveMatrix	plane-opt/mesh_visibility/mesh_visibility.cpp	/^void MeshVisibility::computePerspectiveMatrix()$/;"	f	class:MeshVisibility
@@ -2276,6 +2276,7 @@ ivec3	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef mediump_i
 ivec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef highp_ivec4			ivec4;$/;"	t	namespace:glm
 ivec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef lowp_ivec4			ivec4;$/;"	t	namespace:glm
 ivec4	plane-opt/mesh_visibility/glm/glm/detail/type_vec.hpp	/^	typedef mediump_ivec4		ivec4;$/;"	t	namespace:glm
+jrow	plane-opt/mesh_texture_opt/mesh_opt.h	/^        vector<VectorXd> jrow;                    \/\/ Jacobian row, used in pose optimization$/;"	m	struct:RGBDMeshOpt::TexturePatch
 kDepthResidue	plane-opt/mesh_texture_opt/mesh_opt.h	/^    const double kDepthResidue = 0.05;$/;"	m	class:RGBDMeshOpt
 kDigitNumInFrameName	plane-opt/mesh_visibility/mesh_visibility.h	/^const unsigned int kDigitNumInFrameName = 6; \/\/ used to create valid output filename$/;"	v
 kFaceCoefficient	plane-opt/mesh_partition/partition.h	/^    const double kFaceCoefficient = 1.0, kPointCoefficient = 1.0;$/;"	m	class:Partition
@@ -3008,6 +3009,7 @@ processIslandClusters	plane-opt/mesh_partition/partition.cpp	/^void Partition::p
 profile	plane-opt/mesh_visibility/glm/glm/detail/type_gentype.hpp	/^	enum profile$/;"	g	namespace:glm
 programID_	plane-opt/mesh_visibility/shader.h	/^    unsigned int programID_;$/;"	m	class:Shader
 program_mode_	plane-opt/mesh_visibility/main.cpp	/^ProgramMode program_mode_ = RENDER_MODEL;$/;"	v
+proj_graycolor	plane-opt/mesh_texture_opt/mesh_opt.h	/^        vector<double> proj_graycolor;            \/\/ grayscale color of each 3D texel projected in 2D, used in pose opt too$/;"	m	struct:RGBDMeshOpt::TexturePatch
 projectCameraPointToFrame	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^bool RGBDMeshOpt::projectCameraPointToFrame(const Vector3d& pt3, CalibrationParams& calib)$/;"	f	class:RGBDMeshOpt
 projectCameraPointToFrame	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^bool RGBDMeshOpt::projectCameraPointToFrame(const Vector3d& pt3, CalibrationParams& calib, Vector2d& pt2)$/;"	f	class:RGBDMeshOpt
 projectGlobalPointToFrame	plane-opt/mesh_texture_opt/mesh_opt.cpp	/^bool RGBDMeshOpt::projectGlobalPointToFrame(const Vector3d& pt3, CalibrationParams& calib, const Matrix4d& inv_T)$/;"	f	class:RGBDMeshOpt

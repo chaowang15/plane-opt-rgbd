@@ -847,7 +847,6 @@ void RGBDMeshOpt::runPlaneAndCameraPoseOpt()
 void RGBDMeshOpt::optimizePoses()
 {
     VectorXd jrow(6);
-    MatrixXd Xi(6, 1);
     for (int iter = 0; iter < FLAGS_pose_opt_loop_number; ++iter)
     {
         double energy1 = 0, energy2 = 0;  // energy 1 is for color difference, energy2 is for point-plane distance
@@ -888,7 +887,7 @@ void RGBDMeshOpt::optimizePoses()
                     jrow[3] = a;
                     jrow[4] = b;
                     jrow[5] = c;
-                    double r = computeImgPointGraycolorBilinear(pt2_color, fidx) - opt_graycolor;
+                    double r = compute2DPointGraycolorBilinear(pt2_color, fidx) - opt_graycolor;
                     for (int i = 0; i < 6; ++i)
                     {
                         frames_[fidx].JTr(i, 0) += jrow[i] * r;
@@ -1012,7 +1011,7 @@ void RGBDMeshOpt::optimizePlanes()
                             m34(i, j) = -Rjni(i) * texel.pt3_global[j] - dis_pt2plane * frames_[fidx].opt_inv_R(i, j);
                     }
                     m14 = m13 * m34;
-                    double r = computeImgPointGraycolorBilinear(pt2_color, fidx) - opt_graycolor;
+                    double r = compute2DPointGraycolorBilinear(pt2_color, fidx) - opt_graycolor;
                     for (int i = 0; i < 4; ++i)
                     {
                         clusters_[cidx].JTr(i, 0) += m14(0, i) * r;  // Note that JTr is 4x1 but m14 matrix is 1x4
@@ -1688,7 +1687,7 @@ void RGBDMeshOpt::computeTexelColorByAverage(Texel& texel)
         Vector2d pt2_color;
         if (!isCameraPointVisibleInFrame(pt3, fidx, pt2_color))
             continue;
-        graycolor += computeImgPointGraycolorBilinear(pt2_color, fidx);
+        graycolor += compute2DPointGraycolorBilinear(pt2_color, fidx);
         rgb += compute2DPointRGBcolorBilinear(pt2_color, fidx);
         count++;
     }
@@ -1819,7 +1818,7 @@ Vector2d RGBDMeshOpt::compute2DPointGraycolorGradientBilinear(const Vector2d& pt
 }
 
 //! Compute the grayscale color of a 2D point using bilinear interpolation
-double RGBDMeshOpt::computeImgPointGraycolorBilinear(const Vector2d& pt2, int frame_idx)
+double RGBDMeshOpt::compute2DPointGraycolorBilinear(const Vector2d& pt2, int frame_idx)
 {
     int x = int(pt2[0]), y = int(pt2[1]);
     double grayy1 = (static_cast<double>(x) + 1 - pt2[0]) * static_cast<double>(frames_[frame_idx].gray_img.at<uchar>(y, x)) +

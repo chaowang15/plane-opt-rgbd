@@ -165,6 +165,8 @@ private:
         unordered_map<int, int> vertex_to_patch;  // mesh vertex index -> new index in patch (start from 0)
         vector<Vector2d> uv_textures;             // texture uv-coords for each vertex, same size as 'vertex_to_patch'
         vector<pair<int, int>> texel_positions;   // texel positions (i, j) in texture image 'texture_img_idx'
+        vector<VectorXd> jrow;                    // Jacobian row, used in pose optimization
+        vector<double> proj_graycolor;            // grayscale color of each 3D texel projected in 2D, used in pose opt too
         TexturePatch() : width(0), height(0), area(0), texture_img_idx(-1), cluster_id(-1), base_vtx_index(0) {}
     };
 
@@ -198,7 +200,7 @@ private:
     bool isTwoPosesClose(const Matrix4d& T1, const Matrix4d& T2);
     double computePixelGraycolorGradient(const Vector2i& pt2, int frame_idx, const double kernel[3][3]);
     Vector2d compute2DPointGraycolorGradientBilinear(const Vector2d& pt2, int frame_idx);
-    double computeImgPointGraycolorBilinear(const Vector2d& pt2, int frame_idx);
+    double compute2DPointGraycolorBilinear(const Vector2d& pt2, int frame_idx);
     Vector3f compute2DPointRGBcolorBilinear(const Vector2d& pt2, int frame_idx);
 
     bool isCameraPointVisibleInFrame(const Vector3d& pt3, int frame_idx, Vector2d& pt2_color);
