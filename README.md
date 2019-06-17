@@ -1,10 +1,13 @@
 # PlaneRecon
 Plane-Based RGB-D reconstruction of indoor scenes with geometry and texture optimization.
 
-Example: plane partition (left) and face texture (right) from the result of BundleFusion scan *copyroom*.
+Plane partition result of BundleFusion scan *copyroom*:
 
-<img src="models/copyroom/planes.png" width="45%">
-<img src="models/copyroom/texture.png" width="45%">
+<img src="models/copyroom/planes.png" width="80%">
+
+Textured mesh:
+
+<img src="models/copyroom/texture.png" width="80%">
 
 ## Related publications
 Please cite these two papers if you want to use the code and data:
