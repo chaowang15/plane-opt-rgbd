@@ -37,54 +37,54 @@ ROOTPATH="$(pwd)"
 CODEPATH=$ROOTPATH/bin
 cd $WORKINGDIR
 
-# ## Mesh partition and simplification
-# echo ---------------------------------------
-# $CODEPATH/mesh_partition $PLYNAME".ply" $CLUSTERNUM $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt"
-# # For debug only
-# # $CODEPATH/mesh_partition --run_post_processing=false cluster2000_simp.ply cluster2000_simp.txt
-# #
-# # Run again on the last output to better simplify the mesh. This will be fast.
-# # NOTE: simplification_border_edge_ratio is the target percentage of border edges left after simplification.
-# echo ---------------------------------------
-# $CODEPATH/mesh_partition --run_post_processing=false --simplification_border_edge_ratio=0.1 $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt" $PLYNAME"_c"$CLUSTERNUM".ply" $PLYNAME"_c"$CLUSTERNUM".txt"
+## Mesh partition and simplification
+echo ---------------------------------------
+$CODEPATH/mesh_partition $PLYNAME".ply" $CLUSTERNUM $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt"
+# For debug only
+# $CODEPATH/mesh_partition --run_post_processing=false cluster2000_simp.ply cluster2000_simp.txt
 #
-# ## Reset filenames of ICL-NUIM data to fit the input
-# if [ $DATATYPE = 1 ]; then
-#     echo ---------------------------------------
-#     echo Resetting filenames for ICL-NUIM dataset
-# 	for i in  $(seq $START $END)
-# 	do
-#         printf -v j "%06d" $i # NOTE to run by 'bash ./run_linux.sh' instead of 'sh' command, otherwise there would be error about the -v option
-# 		mv $RGBD/rgb/$i.png $RGBD/frame-$j.color.png
-# 		mv $RGBD/depth/$i.png $RGBD/frame-$j.depth.png
-#         # NOTE: you need to pre-put all poses files (filename like 1.pose.txt) into the RGBD folder
-#         mv $RGBD/$i.pose.txt $RGBD/frame-$j.pose.txt
-# 	done
-#     rm -rf $RGBD/rgb
-#     rm -rf $RGBD/depth
-#     # NO info.txt file in ICL-NUIM data so we provide one
-# 	cp $ROOTPATH/ICL-NUIM-info.txt $RGBD/info.txt
-# fi
-#
-# ## Mesh visibility
-# echo ---------------------------------------
-# # Create a new folder 'visibility' to store visibility files
-# if [ ! -d "visibility" ]; then
-# 	mkdir visibility
-# fi
-# cp $ROOTPATH/mesh_visibility/*.vert .
-# cp $ROOTPATH/mesh_visibility/*.frag .
-# $CODEPATH/mesh_visibility -v $PLYNAME"_c"$CLUSTERNUM".ply" $RGBD visibility $START $END
-# rm *.vert
-# rm *.frag
-#
-# ## Image blur estimation
-# echo ---------------------------------------
-# if [ $DATATYPE = 0 ]; then
-#     $CODEPATH/blur_estimation $RGBD $START $END blur.txt
-# elif [ $DATATYPE = 1 ]; then
-#     $CODEPATH/blur_estimation $RGBD $START $END blur.txt frame- .color.png 6
-# fi
+# Run again on the last output to better simplify the mesh. This will be fast.
+# NOTE: simplification_border_edge_ratio is the target percentage of border edges left after simplification.
+echo ---------------------------------------
+$CODEPATH/mesh_partition --run_post_processing=false --simplification_border_edge_ratio=0.1 $PLYNAME"_c"$CLUSTERNUM"_ini.ply" $PLYNAME"_c"$CLUSTERNUM"_ini.txt" $PLYNAME"_c"$CLUSTERNUM".ply" $PLYNAME"_c"$CLUSTERNUM".txt"
+
+## Reset filenames of ICL-NUIM data to fit the input
+if [ $DATATYPE = 1 ]; then
+    echo ---------------------------------------
+    echo Resetting filenames for ICL-NUIM dataset
+	for i in  $(seq $START $END)
+	do
+        printf -v j "%06d" $i # NOTE to run by 'bash ./run_linux.sh' instead of 'sh' command, otherwise there would be error about the -v option
+		mv $RGBD/rgb/$i.png $RGBD/frame-$j.color.png
+		mv $RGBD/depth/$i.png $RGBD/frame-$j.depth.png
+        # NOTE: you need to pre-put all poses files (filename like 1.pose.txt) into the RGBD folder
+        mv $RGBD/$i.pose.txt $RGBD/frame-$j.pose.txt
+	done
+    rm -rf $RGBD/rgb
+    rm -rf $RGBD/depth
+    # NO info.txt file in ICL-NUIM data so we provide one
+	cp $ROOTPATH/ICL-NUIM-info.txt $RGBD/info.txt
+fi
+
+## Mesh visibility
+echo ---------------------------------------
+# Create a new folder 'visibility' to store visibility files
+if [ ! -d "visibility" ]; then
+	mkdir visibility
+fi
+cp $ROOTPATH/mesh_visibility/*.vert .
+cp $ROOTPATH/mesh_visibility/*.frag .
+$CODEPATH/mesh_visibility -v $PLYNAME"_c"$CLUSTERNUM".ply" $RGBD visibility $START $END
+rm *.vert
+rm *.frag
+
+## Image blur estimation
+echo ---------------------------------------
+if [ $DATATYPE = 0 ]; then
+    $CODEPATH/blur_estimation $RGBD $START $END blur.txt
+elif [ $DATATYPE = 1 ]; then
+    $CODEPATH/blur_estimation $RGBD $START $END blur.txt frame- .color.png 6
+fi
 
 ## Texture and Geometry Optimization
 echo ---------------------------------------
