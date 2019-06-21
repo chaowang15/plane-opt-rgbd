@@ -1,7 +1,7 @@
 # PlaneRecon
 Plane-Based RGB-D reconstruction of indoor scenes with geometry and texture optimization.
 
-Plane partition result of BundleFusion scan *copyroom*:
+An example of plane partition result of scan *copyroom* from [BundleFusion dataset](http://graphics.stanford.edu/projects/bundlefusion/):
 
 <img src="models/copyroom/planes.png" width="80%">
 
@@ -22,7 +22,6 @@ Please cite these two papers if you want to use the code and data:
 }
 ```
 ([here is PDF](http://www.utdallas.edu/~xxg061000/3DV2018.pdf))
-
 and
 ```
 @InProceedings{Wang_2019_CVPR_Workshops,
@@ -47,8 +46,6 @@ PlaneRecon pipeline contains 4 programs running in time order:
 You can use the script `run_linux.sh` to run the entire pipeline. Note to modify relevant input parameters.
 
 Each code has its own ReadMe file about usage and compilation. Refer to them for more details.
-
-
 
 ## Dependencies
 

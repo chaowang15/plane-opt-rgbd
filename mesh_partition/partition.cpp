@@ -25,6 +25,7 @@ DEFINE_int32(smallest_connected_component_size, 20, "#faces in smallest connecte
 DEFINE_int32(smallest_inner_edge_number, 10, "");
 DEFINE_bool(run_post_processing, true, "");
 DEFINE_bool(run_mesh_simplification, true, "");
+DEFINE_bool(output_mesh_face_color, true, "false for no face color in the output PLY mesh");
 
 Partition::Partition()
 {
@@ -399,10 +400,13 @@ bool Partition::writePLY(const std::string& filename)
     int fnum = flag_new_mesh_ ? new_face_num_ : face_num_;
     fprintf(fout, "element face %d\n", fnum);
     fprintf(fout, "property list uchar int vertex_indices\n");
-    fprintf(fout, "property uchar red\n");  // face color
-    fprintf(fout, "property uchar green\n");
-    fprintf(fout, "property uchar blue\n");
-    fprintf(fout, "property uchar alpha\n");
+    if (FLAGS_output_mesh_face_color)
+    {
+        fprintf(fout, "property uchar red\n");  // face color
+        fprintf(fout, "property uchar green\n");
+        fprintf(fout, "property uchar blue\n");
+        fprintf(fout, "property uchar alpha\n");
+    }
     fprintf(fout, "end_header\n");
     float pt3[3];
     unsigned char kFaceVtxNum = 3;
@@ -431,17 +435,21 @@ bool Partition::writePLY(const std::string& filename)
             }
             else
                 fwrite(faces_[i].indices, sizeof(int), 3, fout);
-            int cidx = faces_[i].cluster_id;
-            if (cidx == -1)
+            if (FLAGS_output_mesh_face_color)
             {
-                cout << "ERROR: face " << i << " doesn't belong to any cluster!" << endl;
+                int cidx = faces_[i].cluster_id;
+                if (cidx == -1)
+                {
+                    PRINT_RED("ERROR: face %d doesn't belong to any cluster. This shouldn't happen.", i);
+                    // Will use default color (0,0,0)
+                }
+                else
+                {
+                    for (int j = 0; j < 3; ++j)
+                        rgba[j] = static_cast<unsigned char>(clusters_[cidx].color[j] * 255);
+                }
+                fwrite(rgba, sizeof(unsigned char), 4, fout);
             }
-            else
-            {
-                for (int j = 0; j < 3; ++j)
-                    rgba[j] = static_cast<unsigned char>(clusters_[cidx].color[j] * 255);
-            }
-            fwrite(rgba, sizeof(unsigned char), 4, fout);
         }
     }
     fclose(fout);
@@ -1512,7 +1520,8 @@ void Partition::updateNewMeshIndices()
     flag_new_mesh_ = true;  // just in case forgot to set this flag before
 
     updateCurrentClusterNum();
-    cout << "New #Vertices: " << new_vertex_num_ << ", #Faces: " << new_face_num_ << ", #Clusters: " << curr_cluster_num_ << endl;
+    cout << "New #Vertices: " << new_vertex_num_ << ", #Faces: " << new_face_num_ << ", #Clusters: " << curr_cluster_num_
+         << endl;
 }
 
 void Partition::runSimplification()
