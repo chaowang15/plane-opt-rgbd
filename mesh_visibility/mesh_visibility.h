@@ -18,8 +18,8 @@ using namespace std;
 /* Constants */
 const float kNear = 0.1f;
 const float kFar = 10.0f;
-const unsigned int kImageWidth = 640;
-const unsigned int kImageHeight = 480;
+const unsigned int kImageWidth = 1280;
+const unsigned int kImageHeight = 960;
 const unsigned int kDigitNumInFrameName = 6; // used to create valid output filename
 
 
