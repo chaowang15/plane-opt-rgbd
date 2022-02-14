@@ -2,7 +2,7 @@
 
 Given as input a mesh (PLY model with or without vertex color, OBJ model with or without face texture) and camera poses across frames, `mesh_visibility` can render the model under the given poses, and generate vertex/face color image, depth image and vertex visibility data per frame.
 
-<img src="./examples/demo_mesh_visibility.gif" width="75%">
+<img src="./examples/demo_mesh_visibility_better.gif" width="75%">
 
 
 ## Dependencies
@@ -50,4 +50,4 @@ Options:
 ## Note
 - A typical input data for this code can be found from [BundleFusion](http://graphics.stanford.edu/projects/bundlefusion/) or [3DLite](http://graphics.stanford.edu/projects/3dlite/) data, which contains reconstructed PLY model and camera pose files for each RGB-D sequence.
 - Default image size is 640x480 and set as constants. You can change it in `mesh_visibility.h`.
-- If you find the code cannot render face textures (from OBJ model) into images, one possible reason is that graphics memory is not enough to save large texture images.
+- If you find the code cannot render face textures from OBJ model (like you get a pure black rendered image), one possible reason is that the texture image for your mesh is too large than your graphics memory. Try to lower down the texture image quality.

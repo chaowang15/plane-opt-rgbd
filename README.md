@@ -9,6 +9,11 @@ Textured mesh:
 
 <img src="models/copyroom/texture.png" width="80%">
 
+Re-rendered RGB and depth sequence on textured mesh:
+
+<img src="./mesh_visibility/examples/demo_mesh_visibility_better.gif" width="70%">
+
+
 ## Related publications
 Please cite these two papers if you want to use the code and data:
 ```
@@ -78,7 +83,12 @@ The folder `models` contains result textured meshes used in the paper.
 - It's not hard to combine these programs into one program. Actually, this can also save some data I/O time. We use separate programs just for better debugging and easier reusing.
 - `mesh_partition` program needs large amount of memory. For instance, for a mesh with 1M faces, it takes about 20G memory.
 
+## License
+
+MIT License. See the LICENSE file for details.
+
+
 ## Other relevant code
-#### Plane detection on RGB-D frames
+### Plane detection on RGB-D frames
 
 Source code can be found here: https://github.com/chaowang15/RGBDPlaneDetection
