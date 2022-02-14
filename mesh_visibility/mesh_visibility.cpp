@@ -270,7 +270,7 @@ bool MeshVisibility::readMTLandTextureImages(const string filename)
             {
                 iss >> str_img;
                 str_img = obj_folder_ + str_img;
-                cv::Mat img = cv::imread(str_img, CV_LOAD_IMAGE_COLOR);
+                cv::Mat img = cv::imread(str_img, cv::IMREAD_UNCHANGED);
                 if (img.empty() || img.depth() != CV_8U)
                 {
                     cout << "ERROR: cannot read color image " << str_img << endl;
